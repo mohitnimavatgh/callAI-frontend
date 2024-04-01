@@ -1,0 +1,10 @@
+.box {
+    border: 1px solid #e5ecf6;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+body {
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 400;
+  }
