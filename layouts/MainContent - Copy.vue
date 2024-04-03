@@ -1,8 +1,8 @@
-<template>
+<!-- <template>
     
 <div class="xl:mt-16 sm:mt-16 md:mt-16 p-5 sm:ml-64 relative">
     <Breadcrumb />
-    <!-- <Toast message="item added succefully" status="success"/> -->
+    <Toast message="item added succefully" status="success"/>
     <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" />
     <FormInput 
     id="First Name"
@@ -66,4 +66,4 @@ export default {
 </script>
 <style>
 
-</style>
+</style> -->

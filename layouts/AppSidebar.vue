@@ -7,25 +7,27 @@
         </svg>
       </button>
     
-      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar" aria-label="Sidebar">
+      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar shadow-lg" aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-prime-50 dark:bg-gray-800">
           <div class="flex justify-end">
             <div v-if="isSidebarOpen" @click="toggleSidebar">Close</div>
           </div>
-          <ul class="space-y-2 font-medium">
-            <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'text-primary': menu.isActive, 'text-secondary' : !menu.isActive}">
-              <button @click="toggleSubMenu(index)" class="flex justify-between items-center w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <div class="flex justify-center">
+            <AppLogo />
+          </div>
+          <ul class="space-y-2 font-medium mt-8">
+            <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'bg-gray-100 rounded-lg text-primary-500': menu.isActive, 'text-gray-700' : !menu.isActive}">
+              <button @click="toggleSubMenu(index)" class="flex justify-between items-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 <div class="flex items-center">
-                  <i class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" :class="menu.icon"></i>
+                  <i class="flex items-center w-5 h-5 transition duration-75 group-hover:text-gray-700" :class="{ 'bg-gray-100 rounded-lg text-primary-500': menu.isActive, 'text-gray-700' : !menu.isActive}, menu.icon" ></i>
                   <span class="ms-3">{{ menu.title }}</span>
                 </div>
-                <svg v-if="menu.submenu && menu.submenu.length" :class="{ 'transform rotate-180': menu.showSubMenu }" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <i  v-if="menu.submenu && menu.submenu.length" :class="{ 'transform rotate-180': menu.showSubMenu }" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white fas fa-chevron-down" ></i>
               </button>
-              <ul v-if="menu.submenu && menu.submenu.length" :class="{ 'block': menu.showSubMenu, 'hidden': !menu.showSubMenu }" class="pl-4 transition-all duration-300">
+              <ul v-if="menu.submenu && menu.submenu.length" :class="{ 'block': menu.showSubMenu, 'hidden': !menu.showSubMenu }" class="pl-4 transition-all duration-300 mt-2">
                 <li v-for="(subMenuItem, subIndex) in menu.submenu" :key="subIndex">
-                  <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                  <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <i class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white" :class="subMenuItem.icon"></i>
                     <span class="ms-3">{{ subMenuItem.title }}</span>
                   </a>
                 </li>
@@ -47,15 +49,16 @@
             title: 'Dashboard',
             icon: 'fas fa-house',
             showSubMenu: false,
-            isActive: false,
+            isActive: true,
           },
           {
             title: 'Call AI',
             icon: 'fas fa-phone',
             submenu: [
-              { title: 'Home' },
-              { title: 'Calls' },
-              { title: 'Setting' }
+              { title: 'Home', icon: 'fas fa-home', active: true, url: 'callAI' },
+              { title: 'Calls', icon: 'fas fa-phone', active: false, url: 'callAI/calls' },
+              { title: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: 'callAI/analysis' },
+              { title: 'Settings', icon: 'fas fa-gear', active: false, url: 'callAI/settings' }
             ],
             showSubMenu: false,
             isActive: false,
@@ -80,9 +83,9 @@
   };
   </script>
   
-  <style>
+  <!-- <style>
    .sidebar {
     top: 60px;
   }
-  </style>
+  </style> -->
   

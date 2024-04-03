@@ -12,7 +12,7 @@
         </li>
   
         <li v-for="page in totalPage" :key="page">
-          <a href="#" @click.prevent="navigateToPage(page)" :class="['flex', 'items-center', 'justify-center', 'px-3', 'h-8', 'leading-tight', {'text-blue-600': currentPage === page, 'text-gray-500': currentPage !== page}, 'bg-white', 'border', 'border-gray-300', 'hover:bg-gray-100', 'hover:text-gray-700', 'dark:bg-gray-800', 'dark:border-gray-700', 'dark:text-gray-400', 'dark:hover:bg-gray-700', 'dark:hover:text-white']">{{ page }}</a>
+          <a href="#" @click.prevent="navigateToPage(page)" :class="['flex', 'items-center', 'justify-center', 'px-3', 'h-8', 'leading-tight', {'text-primary-500 bg-primary-100': currentPage === page, 'text-gray-500': currentPage !== page}, 'bg-white', 'border', 'border-gray-300', 'hover:bg-gray-100', 'hover:text-gray-700', 'dark:bg-gray-800', 'dark:border-gray-700', 'dark:text-gray-400', 'dark:hover:bg-gray-700', 'dark:hover:text-white']">{{ page }}</a>
         </li>
   
         <li v-if="currentPage < totalPage">

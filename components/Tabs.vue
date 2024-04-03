@@ -7,14 +7,14 @@
              :class="{
                'inline-flex items-center justify-center p-4 rounded-t-lg': true,
                'border-b-2 border-transparent': !menuItem.active,
-               'border-b-2 border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-500': menuItem.active,
+               'border-b-2 border-primary-500 text-primary-600 dark:border-primary-500 dark:text-primary-500': menuItem.active,
                'active': menuItem.active
              }">
              <i v-if="menuItem.icon" 
              :class="[
                 menuItem.icon,
                'me-2 ',
-               {'text-blue-600 dark:text-blue-500': menuItem.active}
+               {'text-primary-500 dark:text-primary-500': menuItem.active}
              ]"></i>
             {{ menuItem.label }}
           </a>

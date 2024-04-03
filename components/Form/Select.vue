@@ -1,19 +1,18 @@
 <template>
-    <div>
-      <label v-if="label && label != ''" :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ label }}</label>
+    <div class="mb-6">
+      <label :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ label }}</label>
       <div class="relative">
-        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none" v-if="icon">
-          <i :class="icon" class="w-4 h-4 text-gray-500"></i>
-        </div>
-        <input
-          :type="type"
+        <select
           :id="id"
           :name="name"
           :value="modelValue"
           v-bind="$attrs"
           @input="updateModelValue($event.target.value)"
-          :class="inputClasses"
-        />
+          :class="selectClasses"
+        >
+          <option :value="''" disabled>{{ placeholder }}</option>
+          <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
+        </select>
       </div>
       <p v-if="hasError" v-for="error of errorMessage" :key="error.$uid" class="mt-2 text-xs text-red-600 dark:text-red-500">{{ error.$message }}</p>
     </div>
@@ -21,8 +20,7 @@
   
   <script>
   import useVuelidate from "@vuelidate/core";
-  import { required, helpers, email } from "@vuelidate/validators";
-  import '@fortawesome/fontawesome-free/css/all.css';
+  import { required, helpers } from "@vuelidate/validators";
   
   export default {
     props: {
@@ -42,13 +40,13 @@
         type: String,
         default: "",
       },
-      type: {
-        type: String,
-        default: "text",
+      options: {
+        type: Array,
+        default: () => [],
       },
-      icon: {
+      placeholder: {
         type: String,
-        default: "",
+        default: "Choose an option",
       },
       rules: {
         type: String,
@@ -70,12 +68,10 @@
           var name = name.charAt(0).toUpperCase() + name.slice(1);
           if (rule == 'required') {            
             message = `${name} is required`;
-          } else if (rule == 'email') {
-            message = `${name} is invalid`
           }
           validateRule[rule] = helpers.withMessage(
             message,
-            rule == "required" ? required : rule == "email" ? email : required
+            rule == "required" ? required : required
           );
         });
         validateRule.$autoDirty = true;
@@ -92,7 +88,7 @@
       errorMessage() {
         return this.v$?.modelValue?.$errors ? this.v$.modelValue.$errors : [];
       },
-      inputClasses() {
+      selectClasses() {
         return [
           "bg-gray-50",
           "border",
@@ -106,7 +102,7 @@
           "dark:text-white",
           "focus:ring-primary-600",
           "focus:border-primary-600",
-          { "border-red-500": this.hasError, "ps-10": this.icon },
+          { "border-red-500": this.hasError },
         ];
       },
     },
