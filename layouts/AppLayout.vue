@@ -3,7 +3,7 @@
         <app-sidebar></app-sidebar>
         <div class="xl:mt-16 sm:mt-16 md:mt-16 sm:ml-64 relative">
           <app-topbar></app-topbar>
-          <div class="p-5 "><Router-view></Router-view></div>            
+          <div class="p-5 mt-20"><Router-view></Router-view></div>            
         </div>
 
     </div>

@@ -15,6 +15,7 @@
                 @search="handleSearch"
                 :filterTab="tabItems"
                 @tab-click="handleTabClick"
+                @select="onSelect"
             >
                 <template v-slot:action="{ item, value }">
                     <Button frontIcon="fas fa-pen" outline />
@@ -63,6 +64,9 @@ export default {
   },
   methods : {
     handleTabClick (item) {
+        console.log(item)
+    },
+    onSelect (item) {
         console.log(item)
     }
   }
