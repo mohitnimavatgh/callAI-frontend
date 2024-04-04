@@ -35,7 +35,7 @@ import { RouterView } from 'vue-router';
     background: white; 
   }
   ::-webkit-scrollbar-thumb {
-    background: #B6B9C0; 
+    background: #D1D5DB; 
     border-radius: 15px;
   }
   ::-webkit-scrollbar-thumb:hover {

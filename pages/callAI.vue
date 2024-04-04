@@ -6,10 +6,10 @@
         <h4 class="text-2xl font-bold text-gray-700 ">Call AI</h4>
         <p class="mb-6 text-sm font-normal text-gray-500 mt-1">AI-Powered Meeting Recording Simplified</p>
       </div>
-      <Button :text="'Join Call'" frontIcon="fas fa-video" @click="joinModal = !joinModal"/>
-      <Modal :title="'Join Call'" :show="joinModal" @close="joinModal = false">
+      <Button :text="'Meeting Bot'" frontIcon="fas fa-video" @click="joinModal = !joinModal" class="h-full"/>
+      <Modal :title="'Meeting Bot'" :subTitle="'Call Ai will join and record the meeting'" :show="joinModal" @close="joinModal = false">
         <div class="modal-content  p-4 md:p-5">
-          <div class="col-span-2">
+          <div class="col-span-2 mb-3">
             <FormInput 
                 v-model="meeting.name"
                 id="Name"
@@ -20,7 +20,7 @@
                 rules="required"
             />
           </div>
-          <div class="col-span-2">
+          <div class="col-span-2 mb-3">
             <FormSelect label="Folder" id="Folder" name="folder" v-model="meeting.folder" :options="countryOptions" rules="required" />
           </div>
           <div class="col-span-2">
@@ -65,7 +65,7 @@ export default {
       actionList: ['Reward', 'Promote', 'Activate account', 'Delete User'],
       menuItems: [
         { label: 'Home', icon: 'fas fa-home', active: false, url: '/callAI' },
-        { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/callAI/calls' },
+        { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/callAI/call' },
         { label: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: '/callAI/analysis' },
         { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/callAI/settings' }
       ],

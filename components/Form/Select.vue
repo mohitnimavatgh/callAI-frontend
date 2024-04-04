@@ -1,6 +1,6 @@
 <template>
-    <div class="mb-6">
-      <label :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ label }}</label>
+    <div>
+      <label :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">{{ label }}</label>
       <div class="relative">
         <select
           :id="id"
@@ -99,6 +99,7 @@
           "block",
           "w-full",
           "p-2.5",
+          "placeholder-gray-500",
           "dark:text-white",
           "focus:ring-primary-600",
           "focus:border-primary-600",

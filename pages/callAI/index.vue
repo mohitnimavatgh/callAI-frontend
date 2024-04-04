@@ -1,7 +1,13 @@
 <template>
     <div> 
         <div class="box">
-            <Table class="mt-5" title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="tableData" :actions="actionList" @search="handleSearch" />
+            <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="tableData" :actions="actionList" @search="handleSearch" >
+              <template v-slot:action="{ item, value }">
+                  <div class="">
+                        <i class="fas fa-pencil text-primary-400"></i>
+                    </div>
+                </template>
+            </Table>
             <Pagination class="mt-4 flex justify-end" :totalPage="10" :currentPage="3"/>
         </div>  
         <div class="box mt-5">
@@ -18,7 +24,11 @@
                 @select="onSelect"
             >
                 <template v-slot:action="{ item, value }">
-                    <Button frontIcon="fas fa-pen" outline />
+                  <div class="flex justify-around">
+                        <i class="fas fa-share-nodes text-primary-400"></i>
+                        <i class="fas fa-eye text-blue-400"></i>
+                        <i class="fas fa-trash text-red-400"></i>
+                    </div>
                 </template>
             </Table>
             <Pagination class="mt-4 flex justify-end" :totalPage="10" :currentPage="3"/>

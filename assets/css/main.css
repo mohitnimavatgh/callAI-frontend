@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.w-80 {
+    width: 80%;
+}
+.min-h-600 {
+    min-height: 600px;
+}
+.h-600 {
+    height: 600px;
+}
+.max-w-80 {
+    max-width: 80%;
+  }
+  

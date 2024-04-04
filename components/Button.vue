@@ -1,5 +1,5 @@
 <template>
-    <button :class="buttonClasses" @click="onClick" class="h-full">
+    <button :class="buttonClasses" @click="onClick" >
       <i v-if="frontIconClass" :class="frontIconClass"></i>
       <span v-if="text" class="mx-2">{{ text }}</span>
       <i v-if="backIconClass" :class="backIconClass"></i>
