@@ -10,7 +10,7 @@
         </h2>
         <div :id="`accordion-${index}-body`" :class="{ hidden: !accordion.isOpen }" :aria-labelledby="`accordion-${index}-heading`">
           <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-            <p class="text-sm mb-2 text-gray-500 dark:text-gray-400">{{ accordion.description }}</p>
+            <p class="text-sm mb-2 text-gray-500 dark:text-gray-400 leading-6">{{ accordion.description }}</p>
           </div>
         </div>
       </div>

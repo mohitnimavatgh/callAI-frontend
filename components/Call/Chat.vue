@@ -29,7 +29,7 @@
             </div>
         </div>
         <div>
-            <div class="bg-white"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
+            <div class="bg-white rounded"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
         </div>
       </div>
     </div>

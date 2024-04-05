@@ -10,7 +10,7 @@
 export default {
     data () {
         return {
-            selectedTab: 'Chat To Call',
+            selectedTab: 'Calls',
             tabItems: [
                 { label: 'Calls', icon: 'fas fa-phone' },
                 { label: 'Chat To Call', icon: 'fas fa-comment' },
