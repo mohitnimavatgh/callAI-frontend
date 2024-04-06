@@ -52,7 +52,7 @@
             isActive: true,
           },
           {
-            title: 'Call AI',
+            title: 'Meet AI',
             icon: 'fas fa-phone',
             submenu: [
               { title: 'Home', icon: 'fas fa-home', active: true, url: 'callAI' },

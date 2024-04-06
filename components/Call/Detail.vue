@@ -20,7 +20,17 @@
                     Sandeep: That sounds reassuring. I'm also concerned about data security. How do you address that?<br/>
                     Mohit: Security is our top priority. Our platform is built with robust encryption protocols and undergoes regular security audits to ensure compliance with industry standards. We also provide advanced access controls, multi-factor authentication, and regular data backups to safeguard your information. You can trust that your data is secure with us.
                 </div>
-
+            </div>
+            <div class="mt-5">
+                <FormTextArea
+                    label="Notes"
+                    id="meeting notes"
+                    v-model="notes"
+                    :rows="4"
+                    placeholder="Write your thoughts here..."
+                    />
+                    <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" /></div>
+                        
             </div>
         </div>
         <div>
@@ -90,6 +100,7 @@
 export default {
     data() {
         return{
+            notes: null,
             faqsList: [
             { 
                 title: 'What does your new product line focus on?', 
