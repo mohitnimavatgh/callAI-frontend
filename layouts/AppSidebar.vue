@@ -7,7 +7,7 @@
         </svg>
       </button>
     
-      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar shadow-lg" aria-label="Sidebar">
+      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar shadow-md" aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto dark:bg-gray-800">
           <div class="flex justify-end">
             <div v-if="isSidebarOpen" @click="toggleSidebar">Close</div>

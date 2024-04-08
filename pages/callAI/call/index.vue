@@ -29,7 +29,7 @@
                    </div>
                </div>
                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                   <Button :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareModal = false"/>
+                   <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareModal = false"/>
                    <Button :text="'Cancel'" @click="shareModal = false" outline/>
                </div>
            </Modal>

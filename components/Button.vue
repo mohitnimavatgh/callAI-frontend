@@ -38,7 +38,6 @@
           'text-center',
           'inline-flex',
           'items-center',
-          'me-2',
           this.outline ? 'text-primary-500 border border-primary-500' : 'text-white bg-primary-500',
           this.outline ? 'hover:text-primary-600 hover:border-primary-600' : 'hover:bg-primary-600',
           this.outline ? 'focus:ring-primary-300 focus:ring-4' : 'focus:ring-4 focus:outline-none',

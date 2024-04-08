@@ -36,7 +36,7 @@
           </div>
       </div>
        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button :text="'Add Meeintg'" frontIcon="fas fa-plus"/>
+                <Button class="mr-2" :text="'Add Meeintg'" frontIcon="fas fa-plus"/>
                 <Button :text="'Cancel'" @click="joinModal = false" outline/>
             </div>
       </Modal>
@@ -66,7 +66,7 @@ export default {
       menuItems: [
         { label: 'Home', icon: 'fas fa-home', active: false, url: '/callAI' },
         { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/callAI/call' },
-        { label: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: '/callAI/analysis' },
+        // { label: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: '/callAI/analysis' },
         { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/callAI/settings' }
       ],
       meeting: {
@@ -95,7 +95,11 @@ export default {
     setActiveMenuItem() {
       const currentPath = this.$route.path;
       this.menuItems.forEach(item => {
-        item.active = item.url === currentPath;
+        if (item.url === '/callAI') {
+          item.active = currentPath === '/callAI';
+        } else {
+          item.active = currentPath.startsWith(item.url);
+        }
       });
     },
     handleMenuChange(menuItem) {
