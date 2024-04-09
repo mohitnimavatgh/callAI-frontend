@@ -37,7 +37,7 @@
                             
                             <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                         </div>
-                        <Button :text="'Sign in'" class="flex text-center" @click="increment"/>
+                        <Button :text="'Sign in'" class="flex text-center" @click="incrementFun"/>
                         
                 </div>
                 <div class="flex items-center">
@@ -64,10 +64,11 @@ export default defineComponent({
     ...mapState(useLoginStore, ['count'])
     },
     methods: {
-    // ...mapActions(useLoginStore, ['increment'])
-    increment () {
-        this.$router.push("/")
-    }
+        ...mapActions(useLoginStore, ['increment']),
+        incrementFun () {
+            this.increment()
+            // this.$router.push("/")
+        }
     }
 })
 </script>

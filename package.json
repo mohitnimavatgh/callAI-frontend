@@ -15,6 +15,7 @@
     "@pinia/nuxt": "^0.5.1",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "axios": "^1.6.8",
     "flowbite": "^2.3.0",
     "nuxt": "^3.11.1",
     "pinia": "^2.1.7",
