@@ -20,7 +20,7 @@
   
   <script>
   import useVuelidate from "@vuelidate/core";
-  import { required, helpers } from "@vuelidate/validators";
+  import { required, helpers,email } from "@vuelidate/validators";
   
   export default {
     props: {

@@ -7,6 +7,7 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-700 md:text-2xl dark:text-white text-center">
                         Sign in
                     </h1>
+                    {{ auth.userInfo }}
                         <div>
                             <FormInput 
                                 id="Email"
@@ -16,8 +17,8 @@
                                 type="email"
                                 icon="fas fa-envelope"
                                 placeholder="Email"
-                                rules="required|email"
-                                v-model="login"
+                                v-model="v$.login.email.$model"
+                                :errors="v$.login.email.$errors"
                             />
                         </div>
                         <div>
@@ -29,15 +30,15 @@
                                 type="password"
                                 icon="fas fa-lock"
                                 placeholder="password"
-                                rules="required"
-                                v-model="password"
+                                v-model="v$.login.password.$model"
+                                :errors="v$.login.password.$errors"
                             />
                         </div>
                         <div class="flex items-center justify-between">
                             
                             <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                         </div>
-                        <Button :text="'Sign in'" class="flex text-center" @click="incrementFun"/>
+                        <Button :text="'Sign in'" class="flex text-center" @click="loginBtn"/>
                         
                 </div>
                 <div class="flex items-center">
@@ -47,31 +48,34 @@
         </div>
     </section>
 </template>
-<script>
-import { mapState, mapActions } from 'pinia'
- definePageMeta({
-    layout: 'loginLayout'
+<script setup lang="ts">
+import { useAuthStore } from "@/stores/user/authStore";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email,helpers } from "@vuelidate/validators";
+definePageMeta({
+    layout: 'loginLayout',
+    middleware: ["is-authenticate"]
 })
-import { useLoginStore } from '@/store/user/login'
-export default defineComponent({
-    data () {
-        return {
-            login: '',
-            password: ''
-        }
-    },
-    computed: {
-    ...mapState(useLoginStore, ['count'])
-    },
-    methods: {
-        ...mapActions(useLoginStore, ['increment']),
-        incrementFun () {
-            this.increment()
-            // this.$router.push("/")
-        }
+const login = ref({
+    email: '',
+    password: ''
+})
+const rules = {
+    login: {
+        email: { 
+            required: helpers.withMessage("The Email field is required", required),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        password: { required: helpers.withMessage("The Password field is required", required) }
     }
-})
-</script>
-<style>
-
-</style>
+}
+const v$ = useVuelidate(rules, {login})
+const { $api } = useNuxtApp()
+const auth = useAuthStore()
+function loginBtn() {
+    const result = v$.value.$validate()
+        if (result) {
+            auth.login(login.value)
+        }
+}
+</script>~/stores/user/authStore

@@ -1,128 +1,70 @@
 <template>
-    <div>
-      <label v-if="label && label != ''" :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">{{ label }}</label>
-      <div class="relative">
-        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none" v-if="icon">
-          <i :class="icon" class="w-4 h-4 text-gray-500"></i>
-        </div>
-        <input
-          :type="type"
-          :id="id"
-          :name="name"
-          :value="modelValue"
-          v-bind="$attrs"
-          @input="updateModelValue($event.target.value)"
-          :class="inputClasses"
-        />
-        <Button v-if="size == 'large'" class="absolute end-2.5  bottom-0 px-4 py-2 margin-10-px" outline frontIcon="fas fa-paper-plane"/>
+  <div>
+    <label v-if="label" :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">{{ label }}</label>
+    <div class="relative">
+      <div v-if="icon" class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+        <i :class="icon" class="w-4 h-4 text-gray-500"></i>
       </div>
-      <p v-if="hasError" v-for="error of errorMessage" :key="error.$uid" class="mt-2 text-xs text-red-600 dark:text-red-500">{{ error.$message }}</p>
+      <input
+        :type="type"
+        :id="id"
+        :name="name"
+        v-model="valueUpdate"
+        :class="inputClasses"
+        :placeholder="placeholder"
+        @input="updateModelValue($event.target.value)"
+      />
+      <Button v-if="size === 'large'" class="absolute end-2.5 bottom-0 px-4 py-2 margin-10-px" outline frontIcon="fas fa-paper-plane"/>
     </div>
-  </template>
-  
-  <script>
-  import useVuelidate from "@vuelidate/core";
-  import { required, helpers, email } from "@vuelidate/validators";
-  import '@fortawesome/fontawesome-free/css/all.css';
-  
-  export default {
-    props: {
-      label: {
-        type: String,
-        default: "",
-      },
-      modelValue: {
-        type: String,
-        default: "",
-      },
-      id: {
-        type: String,
-        default: "",
-      },
-      name: {
-        type: String,
-        default: "",
-      },
-      type: {
-        type: String,
-        default: "text",
-      },
-      icon: {
-        type: String,
-        default: "",
-      },
-      rules: {
-        type: String,
-        default: "",
-      },
-      size: {
-        type: String,
-        default: "medium",
-      },
-    },
-    data() {
-      return {
-        v$: useVuelidate(),
-      };
-    },
-    validations() {
-      let validateRule = {};
-      if (typeof this.rules === "string" && this.rules.trim() !== "") {
-        const ruleArray = this.rules.split("|");
-        ruleArray.forEach((rule) => {
-          var message = ''
-          var name = this.name
-          var name = name.charAt(0).toUpperCase() + name.slice(1);
-          if (rule == 'required') {            
-            message = `${name} is required`;
-          } else if (rule == 'email') {
-            message = `${name} is invalid`
-          }
-          validateRule[rule] = helpers.withMessage(
-            message,
-            rule == "required" ? required : rule == "email" ? email : required
-          );
-        });
-        validateRule.$autoDirty = true;
-        validateRule.$lazy = true;
-      }
-      return {
-        modelValue: validateRule,
-      };
-    },
-    computed: {
-      hasError() {
-        return this.v$?.modelValue?.$error;
-      },
-      errorMessage() {
-        return this.v$?.modelValue?.$errors ? this.v$.modelValue.$errors : [];
-      },
-      inputClasses() {
-        return [
-          "bg-gray-50",
-          "border",
-          "border-gray-300",
-          "text-gray-900",
-          "text-sm",
-          "rounded-lg",
-          "block",
-          "w-full",
-          "dark:text-white",
-          "focus:ring-primary-600",
-          "focus:border-primary-600",
-          {"p-2.5" : this.size == 'medium',"p-4" : this.size == 'large' },
-          { "border-red-500": this.hasError, "ps-10": this.icon },
-        ];
-      },
-    },
-    methods: {
-      updateModelValue(newValue) {
-        this.$emit("update:modelValue", newValue);
-      },
-    },
-  };
-  </script>
-  <style>
+    <p v-if="hasError" v-for="error of errors" :key="error.$uid" class="mt-2 text-xs text-red-600 dark:text-red-500">{{ error.$message }}</p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, helpers } from "@vuelidate/validators";
+
+const emit = defineEmits(["update:modelValue"]);
+const props = defineProps({
+  label: { type: String, default: "" },
+  modelValue: { type: String, default: "" },
+  id: { type: String, default: "" },
+  name: { type: String, default: "" },
+  placeholder: { type: String, default: "" },
+  type: { type: String, default: "text" },
+  icon: { type: String, default: "" },
+  rules: { type: String, default: "" },
+  size: { type: String, default: "medium" },
+  errors: { type: Array, default: [] },
+});
+
+const valueUpdate = ref(props.modelValue);
+
+const hasError = computed(() => props.errors.length);
+
+const inputClasses = computed(() => [
+  "bg-gray-50",
+  "border",
+  "border-gray-300",
+  "text-gray-900",
+  "text-sm",
+  "rounded-lg",
+  "block",
+  "w-full",
+  "dark:text-white",
+  "focus:ring-primary-600",
+  "focus:border-primary-600",
+  { "p-2.5": props.size === 'medium', "p-4": props.size === 'large' ,"ps-10": props.icon },
+  { "border-red-500": hasError.value},
+]);
+
+const updateModelValue = (val) => {
+  valueUpdate.value = val;
+  emit("update:modelValue", val);
+};
+</script>
+
+<style>
 .margin-10-px {
   margin: 10px !important;
 }
