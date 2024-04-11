@@ -2,7 +2,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const session = {};
   const router = useRouter();
   const $api = $fetch.create({
-    baseURL: 'http://192.168.1.16:8000/api',
+    baseURL: 'http://192.168.1.16:8000/api/v1',
 
     onRequest({ request, options }) {
       const token = localStorage.getItem("access_token");

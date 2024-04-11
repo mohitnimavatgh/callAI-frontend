@@ -10,30 +10,32 @@
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2 mb-3">
             <FormInput 
-                v-model="meeting.name"
                 id="Name"
                 label="Meeting Name"
                 name="Name"
                 type="text"
                 placeholder="Name"
+                v-model="v$.bot.name.$model"
+                :errors="v$.bot.name.$errors"
             />
           </div>
           <div class="col-span-2 mb-3">
-            <FormSelect label="Folder" id="Folder" name="folder" v-model="meeting.folder" :options="countryOptions" :rules="[requiredRule]" />
+            <FormSelect label="Folder" placeholder="Folders" id="Folder" name="folder" v-model="v$.bot.folder_id.$model" :errors="v$.bot.folder_id.$errors" :options="folders.folders" />
           </div>
           <div class="col-span-2">
             <FormInput 
-                v-model="meeting.url"
                 id="Meeting URL"
                 label="Meeting URL"
                 name="Meeting URL"
                 type="text"
                 placeholder="Meeting URL"
+                v-model="v$.bot.meeting_link.$model"
+                :errors="v$.bot.meeting_link.$errors"
             />
           </div>
         </div>
         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-          <Button class="mr-2" :text="'Add Meeting'" frontIcon="fas fa-plus"/>
+          <Button class="mr-2" :text="'Add Meeting'" frontIcon="fas fa-plus" @click="createBot"/>
           <Button :text="'Cancel'" @click="joinModal = false" outline/>
         </div>
       </Modal>
@@ -46,24 +48,38 @@
 </template>
 
 <script setup lang="ts">
+import { useMeetings } from "@/stores/user/meetings";
+import { useFolders } from "@/stores/user/folders";
+import { useVuelidate } from "@vuelidate/core";
+import { required, url,helpers } from "@vuelidate/validators";
 definePageMeta({
   // middleware: ["auth"]
 })
-const meeting = ref({
-  name: '',
-  folder: '',
-  url: '',
-});
+const meetings = useMeetings()
+const folders = useFolders()
+const bot = ref({
+    name: '',
+    folder_id: '',
+    meeting_link: 'https://goggle.com'
+
+})
+const rules = {
+    bot: {
+        name: {
+          required: helpers.withMessage("The Name field is required", required),
+        },
+        folder_id: {
+          required: helpers.withMessage("The Folder field is required", required),
+        },
+        meeting_link: { 
+            required: helpers.withMessage("The Meeting field is required", required),
+            url: helpers.withMessage("Please Enter a valid Meeting URL", url),
+        }
+    }
+}
+const v$ = useVuelidate(rules, {bot})
 
 const joinModal = ref(false);
-
-const countryOptions = ref([
-  { value: 'Marketing', label: 'Marketing'},
-  { value: 'Sales', label: 'Sales'},
-  { value: 'IT Department', label: 'IT Department'},
-  { value: 'Software', label: 'Software'},
-]);
-
 const menuItems = ref([
   { label: 'Home', icon: 'fas fa-home', active: false, url: '/callAI' },
   { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/callAI/call' },
@@ -72,6 +88,10 @@ const menuItems = ref([
 
 const router = useRouter();
 
+onMounted(async () => {
+  await nextTick();
+  await folders.list()
+})
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
   menuItems.value.forEach(item => {
@@ -96,6 +116,16 @@ const handleMenuChange = (menuItem) => {
 const handleSearch = (value) => {
   console.log('Search value:', value);
 };
+async function createBot() {
+    const result = await v$.value.$validate()
+    if (result) {
+      meetings.create(bot.value).then((resp:any) => {
+            if(resp.success) {
+              
+            }
+        })
+    }
+}
 </script>
 
 <style>

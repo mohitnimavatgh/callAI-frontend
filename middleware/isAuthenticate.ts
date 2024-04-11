@@ -1,6 +1,6 @@
-import { useAuthStore } from "~/stores/user/authStore";
+import { useAuth } from "~/stores/auth";
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const authState = useAuthStore();
+    const authState = useAuth();
     if(authState.authenticated) {
         return navigateTo('/callAI');
     }

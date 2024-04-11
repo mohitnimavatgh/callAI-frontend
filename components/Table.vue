@@ -59,7 +59,11 @@
 export default {
   props: {
     headings: Array,
-    data: Array,
+    data: {
+      required: false,
+      type: Array,
+      default: () => []
+    },
     actions: {
       required: false,
       type: Array,

@@ -7,7 +7,6 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-700 md:text-2xl dark:text-white text-center">
                         Sign in
                     </h1>
-                    {{ auth.userInfo }}
                         <div>
                             <FormInput 
                                 id="Email"
@@ -49,12 +48,13 @@
     </section>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from "@/stores/user/authStore";
+import { useAuth } from "@/stores/auth";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email,helpers } from "@vuelidate/validators";
+const router = useRouter()
 definePageMeta({
     layout: 'loginLayout',
-    middleware: ["is-authenticate"]
+    // middleware: ["is-authenticate"]
 })
 const login = ref({
     email: '',
@@ -70,12 +70,15 @@ const rules = {
     }
 }
 const v$ = useVuelidate(rules, {login})
-const { $api } = useNuxtApp()
-const auth = useAuthStore()
-function loginBtn() {
-    const result = v$.value.$validate()
+const auth = useAuth()
+async function loginBtn() {
+    const result = await v$.value.$validate()
         if (result) {
-            auth.login(login.value)
+            auth.login(login.value).then((resp:any) => {
+                if(resp.success) {
+                    router.push(`callAI`);
+                }
+            })
         }
 }
-</script>~/stores/user/authStore
+</script>
