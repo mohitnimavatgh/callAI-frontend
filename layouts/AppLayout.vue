@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-app main-body bg-gray-100">
+    <div class="bg-app main-body bg-gray-100 dark:bg-gray-800">
         <app-sidebar></app-sidebar>
         <div class="xl:mt-16 sm:mt-16 md:mt-16 sm:ml-64 relative">
           <app-topbar></app-topbar>

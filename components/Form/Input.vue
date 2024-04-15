@@ -21,8 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { useVuelidate } from "@vuelidate/core";
-import { required, email, helpers } from "@vuelidate/validators";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -51,9 +49,12 @@ const inputClasses = computed(() => [
   "rounded-lg",
   "block",
   "w-full",
+  "dark:bg-gray-700",
+  "dark:border-gray-600",
+  "dark:placeholder-gray-400",
   "dark:text-white",
-  "focus:ring-primary-600",
-  "focus:border-primary-600",
+  "dark:focus:ring-primary-500",
+  "dark:focus:border-primary-500",
   { "p-2.5": props.size === 'medium', "p-4": props.size === 'large' ,"ps-10": props.icon },
   { "border-red-500": hasError.value},
 ]);

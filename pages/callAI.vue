@@ -2,8 +2,8 @@
   <div>
     <div class="flex justify-between align-items-center">
       <div>
-        <h4 class="text-2xl font-bold text-gray-700">Meet AI</h4>
-        <p class="mb-6 text-sm font-normal text-gray-500 mt-1">AI-Powered Meeting Recording Simplified</p>
+        <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Meet AI</h4>
+        <p class="mb-6 text-sm font-normal text-gray-500 mt-1 dark:text-gray-400">AI-Powered Meeting Recording Simplified</p>
       </div>
       <Button :text="'Meeting Bot'" frontIcon="fas fa-video" @click="joinModal = !joinModal" class="h-full"/>
       <Modal :title="'Meeting Bot'" :subTitle="'Meet AI will join and record the meeting'" :show="joinModal" @close="joinModal = false">

@@ -2,6 +2,7 @@
     <section class="bg-gray-50 dark:bg-gray-900">
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <AppLogo class="mb-6"/>
+            <Loader :loading="loading"/>
             <div class="flex bg-white rounded-lg shadow dark:border md:mt-0 w-4/2 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-700 md:text-2xl dark:text-white text-center">
@@ -56,6 +57,7 @@ definePageMeta({
     layout: 'loginLayout',
     // middleware: ["is-authenticate"]
 })
+const loading = ref(false)
 const login = ref({
     email: '',
     password: ''
@@ -71,11 +73,18 @@ const rules = {
 }
 const v$ = useVuelidate(rules, {login})
 const auth = useAuth()
+const { $toast } = useNuxtApp()
+
+
 async function loginBtn() {
+    $toast('success', 'Login Successfully', { duration: 10000 })
     const result = await v$.value.$validate()
         if (result) {
+            loading.value = true
             auth.login(login.value).then((resp:any) => {
                 if(resp.success) {
+                    loading.value = false
+                    $toast('success', 'Login Successfully', { duration: 10000 })
                     router.push(`callAI`);
                 }
             })

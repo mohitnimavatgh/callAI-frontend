@@ -15,7 +15,7 @@
         rules="required:First Name Is Required|email:Email Should Be unique"
       />
     
-        <div class="mt-8 box" >  
+        <div class="mt-8 box bg-white dark:bg-gray-800 " >  
         <Table isActionable :isSearchable="true" :headings="tableHeadings" :data="tableData" :actions="actionList" @search="handleSearch" />
         <Pagination class="mt-4 flex justify-end" :totalPage="10" :currentPage="3"/>
        </div>

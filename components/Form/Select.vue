@@ -47,6 +47,10 @@ const selectClasses = computed(() => [
   "dark:text-white",
   "focus:ring-primary-600",
   "focus:border-primary-600",
+  "dark:bg-gray-700",
+  "dark:border-gray-600",
+  "dark:placeholder-gray-400",
+  "dark:text-white",
   { "border-red-500": hasError.value },
 ]);
 

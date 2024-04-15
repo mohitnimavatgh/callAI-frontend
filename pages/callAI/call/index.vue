@@ -1,5 +1,5 @@
 <template>
-    <div class="box mt-5">
+    <div class="box mt-5 bg-white dark:bg-gray-800">
            <Table
                :headings="tableHeadings"
                :data="tableData"

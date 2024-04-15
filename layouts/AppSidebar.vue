@@ -7,7 +7,7 @@
         </svg>
       </button>
     
-      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar shadow-md" aria-label="Sidebar">
+      <aside id="logo-sidebar" :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }" class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform sm:translate-x-0 bg-white dark:bg-gray-800 sidebar shadow-md dark:border-r dark:border-gray-500" aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto dark:bg-gray-800">
           <div class="flex justify-end">
             <div v-if="isSidebarOpen" @click="toggleSidebar">Close</div>
@@ -16,15 +16,15 @@
             <AppLogo />
           </div>
           <ul class="space-y-2 font-medium mt-8">
-            <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'bg-gray-100 rounded-lg text-primary-500': menu.isActive, 'text-gray-700' : !menu.isActive}">
-              <button @click="toggleSubMenu(index)" class="flex justify-between items-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group">
+            <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'bg-gray-100 rounded-lg text-primary-500 dark:bg-gray-600': menu.isActive, 'text-gray-700' : !menu.isActive}">
+              <button @click="toggleSubMenu(index)" class="flex justify-between items-center w-full p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 <div class="flex items-center">
-                  <i class="flex items-center w-5 h-5 transition duration-75 group-hover:text-gray-700" :class="{ 'bg-gray-100 rounded-lg text-primary-500': menu.isActive, 'text-gray-700' : !menu.isActive}, menu.icon" ></i>
+                  <i class="flex items-center w-5 h-5 transition duration-75 group-hover:text-gray-700" :class="{ 'rounded-lg text-primary-500': menu.isActive, 'text-gray-700' : !menu.isActive}, menu.icon" ></i>
                   <span class="ms-3">{{ menu.title }}</span>
                 </div>
                 <i  v-if="menu.submenu && menu.submenu.length" :class="{ 'transform rotate-180': menu.showSubMenu }" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white fas fa-chevron-down" ></i>
               </button>
-              <ul v-if="menu.submenu && menu.submenu.length" :class="{ 'block': menu.showSubMenu, 'hidden': !menu.showSubMenu }" class="pl-4 transition-all duration-300 mt-2">
+              <ul v-if="menu.submenu && menu.submenu.length" :class="{ 'block': menu.showSubMenu, 'hidden': !menu.showSubMenu }" class="pl-4 transition-all duration-300 mt-2 dark:bg-gray-800">
                 <li v-for="(subMenuItem, subIndex) in menu.submenu" :key="subIndex">
                   <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <i class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white" :class="subMenuItem.icon"></i>

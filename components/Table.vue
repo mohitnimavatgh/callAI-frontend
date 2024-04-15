@@ -1,7 +1,7 @@
 <template>
   <div class="relative overflow-x-auto sm:rounded-lg">
     <label class="block mb-2 text-md font-medium text-gray-700 dark:text-white">{{ title }}</label>
-    <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+    <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-800">
       <div class="mr-2">
         <tab-button-group :items="filterTab" @tab-click="handleTabClick" />
       </div>

@@ -2,7 +2,7 @@
     <div v-if="show" class="fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center">
       <div class="fixed top-0 right-0 left-0 bottom-0 bg-gray-500 opacity-50"></div>
       <div class="relative p-4 w-full max-w-md max-h-full">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
           <div class="flex items-center justify-between p-4 md:px-5 py-2 border-b rounded-t dark:border-gray-600">
             <div>
               <h4 class="text-lg font-semibold text-gray-600 dark:text-white">{{ title }}</h4>

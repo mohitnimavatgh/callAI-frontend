@@ -1,6 +1,6 @@
 <template>
-    <div> 
-        <div class="box">
+    <div class=""> 
+        <div class="box bg-white dark:bg-gray-800 ">
             <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="handleSearch" >
               <template v-slot:action="{ item, value }">
                   <div class="">
@@ -10,7 +10,7 @@
             </Table>
             <Pagination class="mt-4 flex justify-end" :totalPage="10" :currentPage="3"/>
         </div>  
-        <div class="box mt-5">
+        <div class="box mt-5 bg-white dark:bg-gray-800">
           
             <Table
                 :headings="tableHeadings"

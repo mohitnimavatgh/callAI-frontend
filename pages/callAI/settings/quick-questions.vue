@@ -4,7 +4,7 @@
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Quick Questions</h4>
             <p class="text-xs font-normal text-gray-500 mt-0.5">Customize your Quick Questions</p>
         </div>    
-        <div class="box mt-3 lg:w-2/3 w-full">
+        <div class="box mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
             <FormInput 
                 id="Title"
                 class="mt-4"
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <div class="box mt-5">
+        <div class="box mt-5 bg-white dark:bg-gray-800">
             <Table
                :headings="tableHeadings"
                :data="tableData"

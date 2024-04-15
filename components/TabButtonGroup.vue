@@ -7,7 +7,7 @@
         :class="{
           // 'bg-primary-100 text-primary-500': activeIndex === index,
           'border border-primary-300 text-primary-500 shadow-md': activeIndex === index,
-          'inline-flex items-center px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 hover:text-primary-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:text-white': true,
+          'inline-flex items-center px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 hover:text-primary-700 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:text-white': true,
           'rounded-s-lg': index === 0,
           'rounded-e-lg': index === items.length - 1,
         }"
