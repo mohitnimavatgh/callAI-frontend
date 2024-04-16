@@ -85,7 +85,7 @@ async function loginBtn() {
                 if(resp.success) {
                     loading.value = false
                     $toast('success', 'Login Successfully', { duration: 10000 })
-                    router.push(`callAI`);
+                    router.push(`call-ai`);
                 }
             })
         }

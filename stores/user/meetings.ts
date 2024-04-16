@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useMeetings = defineStore('meetings', {
   state: () => ({
     upcoming: null,
+    recorded: null,
   }),
   actions: {
     async create(bot) {
@@ -18,10 +19,12 @@ export const useMeetings = defineStore('meetings', {
         throw error;
       }
     },
-    async upcomingMeeting() {
+    async upcomingMeeting(search) {
       try {
+        console.log(search)
         const response = await useAPI('/meeting', {
-          method: 'get'
+          method: 'get',
+          params : search
         });
         const responseData = response.data.value;
         this.upcoming = responseData.data;
@@ -29,7 +32,21 @@ export const useMeetings = defineStore('meetings', {
       } catch (error) {
         throw error;
       }
-    }
+    },
+    async recordedMeeting(search) {
+      try {
+        console.log(search)
+        const response = await useAPI('/meeting', {
+          method: 'get',
+          params : search
+        });
+        const responseData = response.data.value;
+        this.recorded = responseData.data;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
   persist: {
     storage: persistedState.localStorage,

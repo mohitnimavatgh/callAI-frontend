@@ -81,9 +81,9 @@ const v$ = useVuelidate(rules, {bot})
 
 const joinModal = ref(false);
 const menuItems = ref([
-  { label: 'Home', icon: 'fas fa-home', active: false, url: '/callAI' },
-  { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/callAI/call' },
-  { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/callAI/settings' }
+  { label: 'Home', icon: 'fas fa-home', active: false, url: '/call-ai' },
+  { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/call-ai/call' },
+  { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/call-ai/settings' }
 ]);
 
 const router = useRouter();
@@ -95,8 +95,8 @@ onMounted(async () => {
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
   menuItems.value.forEach(item => {
-    if (item.url === '/callAI') {
-      item.active = currentPath === '/callAI';
+    if (item.url === '/call-ai') {
+      item.active = currentPath === '/call-ai';
     } else {
       item.active = currentPath.startsWith(item.url);
     }

@@ -55,10 +55,10 @@
             title: 'Meet AI',
             icon: 'fas fa-phone',
             submenu: [
-              { title: 'Home', icon: 'fas fa-home', active: true, url: 'callAI' },
-              { title: 'Calls', icon: 'fas fa-phone', active: false, url: 'callAI/calls' },
-              { title: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: 'callAI/analysis' },
-              { title: 'Settings', icon: 'fas fa-gear', active: false, url: 'callAI/settings' }
+              { title: 'Home', icon: 'fas fa-home', active: true, url: 'call-ai' },
+              { title: 'Calls', icon: 'fas fa-phone', active: false, url: 'call-ai/calls' },
+              { title: 'Analysis', icon: 'fas fa-magnifying-glass-chart', active: false, url: 'call-ai/analysis' },
+              { title: 'Settings', icon: 'fas fa-gear', active: false, url: 'call-ai/settings' }
             ],
             showSubMenu: false,
             isActive: false,

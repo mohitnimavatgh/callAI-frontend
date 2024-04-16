@@ -51,7 +51,7 @@
         this.$emit('tab-click', item);
       },
       updateTab() {
-        const tabIndex = this.items.findIndex(item => item.label == this.selectedTab );
+        const tabIndex = this.selectedTab ? this.items.findIndex(item => item.label == this.selectedTab ) : 0;
         this.activeIndex = tabIndex;
       }
     }

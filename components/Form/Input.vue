@@ -49,6 +49,8 @@ const inputClasses = computed(() => [
   "rounded-lg",
   "block",
   "w-full",
+  "focus:ring-primary-500",
+  "focus:border-primary-500",
   "dark:bg-gray-700",
   "dark:border-gray-600",
   "dark:placeholder-gray-400",

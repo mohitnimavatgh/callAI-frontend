@@ -14,7 +14,7 @@
       <div v-show="dropdownOpen" class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
           <li v-for="(action, index) in actions" :key="index" @click="$emit('select', action);">
-            <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ action }}</a>
+            <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ action.name }}</a>
           </li>
         </ul>
       </div>
