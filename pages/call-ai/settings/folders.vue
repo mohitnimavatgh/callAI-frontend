@@ -31,46 +31,73 @@
       <Modal :title="'Add Folder'" :show="ShowAddModal" @close="ShowAddModal = false">
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2 mb-3">
-            <FormInput 
-                v-model="folder_name"
+            <FormInput                
                 id="Name"
                 label="Folder Name"
                 name="Folder Name"
                 type="text"
                 placeholder="Add Folder Name"
                 rules="required"
+                v-model="v$.folder.name.$model"
+                :errors="v$.folder.name.$errors"                
             />
           </div>
           <div>
             <label class="text-sm font-medium text-gray-500 ">Folder Access</label>
             <ul class="w-full">
                 <li v-for="(item, index) in items" :key="index" class="mt-2">
-                    <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="access" />
+                    <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="v$.folder.access_type.$model" :errors="v$.folder.access_type.$errors" />
                     <FormRadioLabel :icon="item.icon" :id="`radio-${index}`" :labelText="item.labelText" :description="item.description" />
                 </li>
             </ul>
           </div>
       </div>
        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Add Folder'" @click="ShowAddModal = false" frontIcon="fas fa-plus"/>
+                <Button class="mr-2" :text="'Add Folder'" @click="createFolder" frontIcon="fas fa-plus"/>
                 <Button :text="'Cancel'" @click="ShowAddModal = false" outline/>
             </div>
         </Modal>
     </div>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        ShowAddModal: false,
-        access: 'private',
-        items: [
-            { value: "private", icon: 'fas fa-lock',labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
-            { value: "public", icon: 'fas fa-user-group',labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
-        ]
-      };
-    },
-  };
+<script setup lang="ts">
+import { useFolders } from "@/stores/user/folders";
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+const ShowAddModal = ref(false);
+const folders = useFolders()
+
+const items = [
+      { value: "private", icon: 'fas fa-lock',labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
+      { value: "public", icon: 'fas fa-user-group',labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
+    ]
+
+const folder = ref({
+    name: '',
+    access_type: 'private',   
+})
+
+const rules = {
+    folder: {
+        name: {
+          required: helpers.withMessage("The Name field is required", required),
+        },
+        access_type: {
+          required: helpers.withMessage("The Folder Access field is required", required),
+        }       
+    }
+}
+const v$ = useVuelidate(rules, {folder})
+
+async function createFolder() {  
+    const result = await v$.value.$validate()
+    if (result) {
+      folders.create(folder.value).then((resp:any) => {
+            if(resp.success) {
+              ShowAddModal.value = false;
+            }
+        })
+    }
+}
   </script>
   
