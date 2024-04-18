@@ -73,7 +73,7 @@ const handleMenuChange = (menuItem) => {
     item.active = false;
   });
   menuItem.active = true;
-  router.push(menuItem.url);
+  router.push(menuItem.link);
 };
 const changeTheme = () => {
   currentTheme.value = localStorage.getItem("color-theme");
@@ -96,7 +96,7 @@ const getMenuClass = (active) => {
 
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
-  userMenuItems.value.forEach(item => {
+  mainMenuItems.value.forEach(item => {
     if (item.link === '/call-ai') {
       item.active = currentPath === '/call-ai';
     } else {
@@ -107,7 +107,3 @@ const setActiveMenuItem = () => {
 
 watch(router.currentRoute, setActiveMenuItem);
 </script>
-
-<style>
-/* Your styles here */
-</style>
