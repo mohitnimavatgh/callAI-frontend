@@ -1,13 +1,19 @@
 <template>
-    <div class="bg-app main-body bg-gray-100 dark:bg-gray-800">
+  <div class="bg-gray-100 dark:bg-gray-800">
+        <app-topbar></app-topbar>
+        <div class="mt-5 container mx-auto"><Router-view></Router-view></div>            
+  </div>
+</template>
+<!-- <template>
+    <div class="bg-app main-body bg-gray-50 dark:bg-gray-800">
         <app-sidebar></app-sidebar>
-        <div class="xl:mt-16 sm:mt-16 md:mt-16 sm:ml-64 relative">
+        <div class="xl:mt-16 sm:mt-16 md:mt-16 sm:ml-60 relative">
+          <div class="xl:mt-16 sm:mt-16 md:mt-16 relative">
           <app-topbar></app-topbar>
-          <div class="p-5 mt-20"><Router-view></Router-view></div>            
+          <div class="w-96 mt-20"><Router-view></Router-view></div>            
         </div>
-
     </div>
-  </template>
+  </template> -->
   <script>
   import AppTopbar from '@/layouts/AppTopbar'
   import AppSidebar from '@/layouts/AppSideBar'

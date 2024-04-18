@@ -38,7 +38,7 @@
           </th>
         </tr>
       </thead>
-      <tbody class="relative h-60">
+      <tbody >
         <tr v-if="filteredData && filteredData.length" v-for="(item, index) in filteredData" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
           <td class="w-4 p-4" v-if="1 != 1">
             <div class="flex items-center">
@@ -50,16 +50,19 @@
             <slot :item="item" :value="value" :key="key" :name="key">{{ value }}</slot>
           </td>
         </tr>
-        <div v-else class="py-16 text-center flex justify-center absolute empty-state items-center">
-          <div class="flex flex-col items-center justify-center">
-            <div class="flex items-center justify-center mx-auto mb-6 w-16 h-16 border rounded-full">
-              <h1 class="fas fa-search text-xl text-gray-400"></h1>
-            </div>
-            <p class="mb-6 text-gray-400">You don’t have any meetings yet. <br/>Start by creating.</p>
-          </div>
-        </div>
+        
       </tbody>
     </table>
+    <div  v-if="!filteredData?.length" class="py-12">
+          <div  class="text-center flex justify-center items-center w-full overflow-hidden">
+            <div class="flex flex-col items-center justify-center">
+              <div class="flex items-center justify-center mx-auto mb-6 w-16 h-16 border rounded-full">
+                <h1 class="fas fa-search text-xl text-gray-400"></h1>
+              </div>
+              <p class="mb-6 text-gray-400">You don’t have any meetings yet. <br/>Start by creating.</p>
+            </div>
+          </div>
+    </div>
   </div>
 </template>
 <script setup>
