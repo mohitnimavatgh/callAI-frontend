@@ -40,7 +40,7 @@
         </div>
       </Modal>
     </div>  
-    <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" />
+    <!-- <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" /> -->
     <div class="mt-5">
       <NuxtPage />
     </div>
