@@ -98,7 +98,7 @@
                             
                         <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                     </div>
-                    <Button :text="'Log In'" class="flex text-center mt-5" @click="loginBtn"/>
+                    <Button :text="'Sign in'" class="flex text-center mt-5" @click="loginBtn"/>
                 </div>
                 </div>
             </div>

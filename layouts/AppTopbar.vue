@@ -1,12 +1,12 @@
 <template>
-  <nav class="bg-gray-50 border-gray-200 dark:bg-gray-900 shadow-md">
-    <div class="flex items-center justify-between mx-auto px-4 py-2">
+  <nav class="bg-gray-50 border-b border-gray-300 dark:bg-gray-900">
+    <div class="flex items-center justify-between mx-auto px-4 py-1.5">
       <div class="flex items-center">
         <AppLogo />
         <div class="hidden w-full md:flex md:w-auto ml-10">
-          <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)">
-              <nuxt-link :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }}</nuxt-link>
+              <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }}</nuxt-link>
             </li>
           </ul>
         </div>
@@ -28,7 +28,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const userMenuItems = ref(['Dashboard', 'Settings', 'Earnings', 'Sign out']);
@@ -52,7 +51,7 @@ const setTheme = (theme) => {
 };
 
 onMounted(() => {
-  // setActiveMenuItem()
+  setActiveMenuItem()
   currentTheme.value = localStorage.getItem("color-theme");
   if (!currentTheme.value) {
     localStorage.setItem("color-theme", 'light');

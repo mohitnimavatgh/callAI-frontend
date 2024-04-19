@@ -4,10 +4,12 @@ const props = defineProps({
 });
 
 const detail = ref(null)
+const notes = ref('')
 
 const faqsList = computed(() => {
     if(props.meetingDetail[0]?.faqs){
         detail.value = props.meetingDetail[0]
+        notes.value = detail.value.notes
         return JSON.parse(JSON.parse(props.meetingDetail[0]?.faqs))
     }
     return  [];
