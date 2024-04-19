@@ -1,15 +1,75 @@
 <template>
-    <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <AppLogo class="mb-6"/>
-            <Loader :loading="loading"/>
-            <div class="flex bg-white rounded-lg shadow dark:border md:mt-0 w-4/2 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-700 md:text-2xl dark:text-white text-center">
-                        Sign in
-                    </h1>
-                        <div>
-                            <FormInput 
+    <div class="flex flex-col min-h-screen">
+      <section class="flex-grow bg-white dark:bg-gray-900">
+        <AuthHeader />
+        <div class="flex justify-center items-center ">
+            <div class="container mx-auto md:px-60 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="md:mr-8">
+                    <p class="text-2xl font-semibold text-gray-600 text-center">Welcome Back!</p>
+                    <span class="text-sm text-gray-500 mt-3 px-20 flex justify-center text-center">Log in to access your Bot Creation Platform account.</span>
+                <ul class="mt-6">
+                    <li class="flex items-center mt-1.5">
+                    <i class="fas fa-check mr-2 text-primary-500"></i>
+                    <span class="text-sm text-gray-500">Create bots for seamless integration with your favorite video conferencing platforms.</span>
+                    </li>
+                    <li class="flex items-center mt-1.5">
+                    <i class="fas fa-check mr-2 text-primary-500"></i>
+                    <span class="text-sm text-gray-500">Access call recordings and transcripts effortlessly after each session.</span>
+                    </li>
+                    <li class="flex items-center mt-1.5">
+                    <i class="fas fa-check mr-2 text-primary-500"></i>
+                    <span class="text-sm text-gray-500">Engage in post-call chat discussions to provide feedback and collaborate.</span>
+                    </li>
+                </ul>
+                <div class="flex mt-5">
+                    <div class="w-1/2 mr-2">
+                    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <a href="#">
+                        <img class="rounded-t-lg" src="https://hencework.com/theme/jampack/compact/dist/img/slide3.jpg" alt="" />
+                        </a>
+                        <div class="p-5">
+                        <a href="#">
+                            <h5 class="mb-2 text-md font-normal text-gray-700 dark:text-white">Help Center</h5>
+                        </a>
+                        <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">This is a wider card with supporting text.</p>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="w-1/2 ml-2">
+                    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <a href="#">
+                        <img class="rounded-t-lg" src="https://hencework.com/theme/jampack/compact/dist/img/slide4.jpg" alt="" />
+                        </a>
+                        <div class="p-5">
+                        <a href="#">
+                            <h5 class="mb-2 text-md font-normal text-gray-700 dark:text-white">Research Center</h5>
+                        </a>
+                        <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">This is a wider card with supporting text.</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <span class="text-xs text-gray-500 mt-5 flex justify-center">Join us today and revolutionize your virtual meetings! <a href="#" class="underline decoration-gray-400">Learn More</a></span>
+                </div>
+                <div class=" md:pl-8 md:border-l border-gray-200">
+                    <h3 class="text-md flex justify-center font-semibold text-gray-600">Log In to Your Account</h3>
+                <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
+                    <div>
+                    <Button :text="'Sign Up with Google'" class="w-full flex justify-center" frontIcon="fa-brands fa-google" outline/>
+                    </div>
+                    <div>
+                    <Button :text="'Sign Up with Facebook'" class="w-full flex justify-center" frontIcon="fa-brands fa-facebook" />
+                    </div>
+                </div>
+                <div class="flex items-center my-5">
+                    <div class="flex-grow border-b border-gray-300"></div>
+                    <h2 class="px-3 text-xs text-gray-400">Or</h2>
+                    <div class="flex-grow border-b border-gray-300"></div>
+                </div>
+                <div>
+                    <div class="mb-6">
+                        <FormInput 
                                 id="Email"
                                 class="mt-3"
                                 label="Email"
@@ -20,9 +80,9 @@
                                 v-model="v$.login.email.$model"
                                 :errors="v$.login.email.$errors"
                             />
-                        </div>
-                        <div>
-                            <FormInput 
+                    </div>
+                    <div class="mb-6">
+                        <FormInput 
                                 id="Password"
                                 class="mt-3"
                                 label="Password"
@@ -33,22 +93,26 @@
                                 v-model="v$.login.password.$model"
                                 :errors="v$.login.password.$errors"
                             />
-                        </div>
-                        <div class="flex items-center justify-between">
+                    </div>
+                    <div class="flex items-center justify-between">
                             
-                            <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
-                        </div>
-                        <Button :text="'Sign in'" class="flex text-center" @click="loginBtn"/>
-                        
+                        <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                    </div>
+                    <Button :text="'Log In'" class="flex text-center mt-5" @click="loginBtn"/>
                 </div>
-                <div class="flex items-center">
-                    <img  class="h-80" src="@/assets/image/user-computer.png">
                 </div>
             </div>
+            </div>
         </div>
-    </section>
-</template>
+        <AppFooter/>
+      </section>
+    </div>
+  </template>
+  
+
 <script setup lang="ts">
+import AuthHeader from '@/layouts/AuthHeader'
+import AppFooter from '@/layouts/AppFooter'
 import { useAuth } from "@/stores/auth";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email,helpers } from "@vuelidate/validators";

@@ -21,6 +21,14 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  router: {
+    extendRoutes(routes) {
+      routes.push({
+        path: '/',
+        redirect: '/call-ai'
+      })
+    }
+  },
   runtimeConfig: {
     public: {
       API_BASE_URL: 'http://192.168.1.16:8000/api', 
