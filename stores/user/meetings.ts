@@ -4,6 +4,7 @@ export const useMeetings = defineStore('meetings', {
   state: () => ({
     upcoming: null,
     recorded: null,
+    meetingDetail: null,
   }),
   actions: {
     async create(bot) {
@@ -47,6 +48,31 @@ export const useMeetings = defineStore('meetings', {
         throw error;
       }
     },
+    async meetingDetail(id: any) {
+      try {
+        const response = await useAPI('/meeting-detail', {
+          method: 'get',
+          params : id
+        });
+        const responseData = response.data.value;
+        this.meetingDetail = responseData.data;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async shareMeeting(shareMeetingData: any) {
+      try {
+        const response = await useAPI('/share-folder', {
+          method: 'post',
+          body : shareMeetingData
+        });
+        const responseData = response.data.value;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    }
   },
   persist: {
     storage: persistedState.localStorage,

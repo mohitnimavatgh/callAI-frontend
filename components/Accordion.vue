@@ -38,6 +38,14 @@
         this.accordions[index].isOpen =  !this.accordions[index].isOpen;
       }
     },
+    watch: {
+      accordions(newQuestion, oldQuestion) {
+        console.log(oldQuestion);
+        this.accordions.forEach(accordion => {
+            accordion.isOpen = true;
+        });
+      }
+    },
     created() {
         this.accordions.forEach(accordion => {
             accordion.isOpen = true;
