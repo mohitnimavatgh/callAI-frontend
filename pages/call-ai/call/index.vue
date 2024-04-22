@@ -51,12 +51,12 @@ const rules = {
 }
 const v$ = useVuelidate(rules, {folder})
 
-const ShareCall = (item) => {    
+const shareCall = (item) => {    
     folder.value.meeting_id = item.id
     shareModal.value = true
 }
 
-const shareFoler = async () => {
+const shareFolder = async () => {
     const result = await v$.value.$validate();
     if (result) {
         console.log("folder.value",folder.value)
@@ -128,7 +128,7 @@ const recordedMeeting = computed(() => meetings.recorded);
         >
             <template v-slot:action="{ item, value }">
             <div class="flex justify-around">
-                    <i @click="ShareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
+                    <i @click="shareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
                     <i @click="viewCall(item)" class="fas fa-eye text-blue-400"></i>
                     <i @click="deleteMeet(item)" class="fas fa-trash text-red-400"></i>
                 </div>
@@ -142,7 +142,7 @@ const recordedMeeting = computed(() => meetings.recorded);
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFoler()"/>
+                <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder()"/>
                 <Button :text="'Cancel'" @click="shareModal = false" outline/>
             </div>
         </Modal>

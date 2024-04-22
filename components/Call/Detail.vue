@@ -17,7 +17,7 @@ const faqsList = computed(() => {
     return  [];
 });
 
-const meeting_date_time = (type) => {
+const meetingDateTime = (type) => {
     const specificDate = new Date(detail.value?.meeting_date);
     if(type == 'date'){
         const date = specificDate.getDate();
@@ -130,11 +130,11 @@ const getDuration = () =>{
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Date :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ meeting_date_time('date') }}</span>
+                    <span class="font-medium text-gray-600 ml-2">{{ meetingDateTime('date') }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Time :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ meeting_date_time('time') }}</span>
+                    <span class="font-medium text-gray-600 ml-2">{{ meetingDateTime('time') }}</span>
                 </div>                
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Folder :</span>
