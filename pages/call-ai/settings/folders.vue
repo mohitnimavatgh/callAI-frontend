@@ -11,7 +11,7 @@
       </div>
   
       <div class="mt-3 flex justify-end">
-        <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" @search="handleSearch" class="w-56 "/>
+        <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch" class="w-56 "/>
       </div>
       <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">        
         <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative col-span-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1">
@@ -28,7 +28,9 @@
           </div>
         </div>   
       </div>
-      <Pagination v-if="foldersLists && foldersLists.total && foldersLists.per_page && foldersLists.total > foldersLists.per_page" class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page" :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange"/>
+      <div class="flex justify-center">
+        <Pagination v-if="foldersLists && foldersLists.total && foldersLists.per_page && foldersLists.total > foldersLists.per_page" class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page" :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange"/>
+      </div>
       <Modal :title="'Add Folder'" :show="ShowAddModal" @close="ShowAddModal = false">
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2 mb-3">
@@ -67,6 +69,7 @@
   import { required, helpers } from "@vuelidate/validators";
   const ShowAddModal = ref(false);
   const folders = useFolders()
+  const search = ref('')
   const folderParams = { page: 1,search:'' }
   const items = [
         { value: "private", icon: 'fas fa-lock',labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
@@ -113,9 +116,9 @@
       }
   }
 
-  const handleSearch = (value) => {
-    folderParams.search = value  
-    getFolder();  
+  const handleSearch = () => {
+    folderParams.search = search.value  
+    getFolder();   
   };
 
   const folderPageChange = (page: any) => {

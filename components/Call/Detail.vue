@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useMeetings } from "@/stores/user/meetings";
+const meetings = useMeetings()
 const props = defineProps({
     meetingDetail: null,
 });
@@ -7,10 +9,10 @@ const detail = ref(null)
 const notes = ref('')
 
 const faqsList = computed(() => {
-    if(props.meetingDetail[0]?.faqs){
-        detail.value = props.meetingDetail[0]
-        notes.value = detail.value.notes
-        return JSON.parse(JSON.parse(props.meetingDetail[0]?.faqs))
+    detail.value = props.meetingDetail       
+    notes.value = detail.value?.notes
+    if(props.meetingDetail?.faqs){
+        return JSON.parse(JSON.parse(props.meetingDetail?.faqs))
     }
     return  [];
 });
@@ -44,6 +46,19 @@ const getStatusColor = (status) =>{
     }
 }
 
+const saveNote = () =>{
+    let data = {
+        id:  detail.value.details_id,
+        note: notes.value
+    }
+    console.log("data: ",data)
+    meetings.notes(data).then((resp:any) => {
+        if(resp.success) {               
+            detail.value.notes = notes.value   
+        }
+    })
+}
+
 const formatTimestamp = (timestamp) =>{
     const date = new Date(timestamp);
     const formatted = new Intl.DateTimeFormat('en-US', {
@@ -56,6 +71,24 @@ const formatTimestamp = (timestamp) =>{
     }).format(date);
     
     return formatted;
+}
+
+const getDuration = () =>{
+    const date1 = new Date(detail.value?.start_time);
+    const date2 = new Date(detail.value?.end_time);
+    const durationMs = date2 - date1;
+
+    const hours = Math.floor(durationMs / 3600000);  // 1 hour = 3600000 milliseconds
+    const minutes = Math.floor((durationMs % 3600000) / 60000);  // 1 minute = 60000 milliseconds
+    const seconds = Math.floor((durationMs % 60000) / 1000);  // 1 second = 1000 milliseconds
+
+    if(hours > 0){
+        return minutes > 0 ? `${hours} hours ${minutes} minutes` : `${hours} hours`
+    }else if(minutes > 0){
+        return `${minutes} minutes`
+    }else{
+        return `${seconds} seconds`
+    }
 }
 </script>
 <template>
@@ -79,7 +112,7 @@ const formatTimestamp = (timestamp) =>{
                     :rows="4"
                     placeholder="Write your thoughts here..."
                     />
-                    <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" /></div>
+                    <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" @click="saveNote()" /></div>
                         
             </div>
         </div>
@@ -93,7 +126,7 @@ const formatTimestamp = (timestamp) =>{
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Duration :</span>
-                    <span class="font-medium text-gray-600 ml-2">1 hours 23 Minutes</span>
+                    <span class="font-medium text-gray-600 ml-2">{{ getDuration() }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Date :</span>
@@ -105,7 +138,7 @@ const formatTimestamp = (timestamp) =>{
                 </div>                
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Folder :</span>
-                    <span class="font-medium text-gray-600 ml-2">Mohit Nimavat Meeting </span>
+                    <span class="font-medium text-gray-600 ml-2">{{ detail?.folders_name }}</span>
                 </div>                                
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700">Type :</span>
@@ -117,10 +150,10 @@ const formatTimestamp = (timestamp) =>{
                     <div class="mt-5 ml-5">
                         <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
                             <li class="ms-4" v-for="getStatus in detail?.meeting_status">
-                                <div class="absolute w-3 h-3 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" :class="`bg-${getStatusColor(getStatus?.status)}-400`"></div>
+                                <div :class="`absolute w-3 h-3 bg-${getStatusColor(getStatus?.status)}-400 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700`"></div>
                                 <time class="mb-1 text-xs font-normal leading-none text-gray-600 dark:text-gray-500">{{ formatTimestamp(getStatus?.created_at) }}</time>
-                                <p  :class="`text-${getStatusColor(getStatus?.status)}-500`" class="pb-8 mt-2 dark:text-white"><span  :class="`text-${getStatusColor(getStatus?.status)}-500 bg-${getStatusColor(getStatus?.status)}-100 dark:bg-${getStatusColor(getStatus?.status)}-900 dark:text-${getStatusColor(getStatus?.status)}-300`" class="text-xs font-medium px-2.5 py-0.5 rounded capitalize">{{ getStatus?.status }}</span></p>
-                            </li> 
+                                <p class="pb-8 mt-2 dark:text-white" :class="`text-${getStatusColor(getStatus?.status)}-500`"><span  class="text-xs font-medium px-2.5 py-0.5 rounded" :class="`text-${getStatusColor(getStatus?.status)}-500 bg-${getStatusColor(getStatus?.status)}-100 dark:bg-${getStatusColor(getStatus?.status)}-900 dark:text-${getStatusColor(getStatus?.status)}-300`">{{ getStatus?.status }}</span></p>
+                            </li>
                         </ol>
                     </div>
                     

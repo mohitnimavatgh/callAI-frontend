@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
 const meetings = useMeetings()
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const selectedTab = ref('Calls')
 const tabItems = ref([
     { label: 'Calls', icon: 'fas fa-phone' },
@@ -14,27 +16,21 @@ const tabChanged = (item) => {
 
 onMounted(async () => {
   await nextTick()
-  await getMeetingDetail()
+  await getMeetingDetail(route.params.id)
 });
 
-const getMeetingDetail = () => {
-  meetings.meetingDetail({meeting_id:5})
+const getMeetingDetail = async (id) => {
+    await meetings.meetingDetail({ meeting_id: id })
 }
 
-const fqMeeting = computed(() => {
-    if(meetings.meetingDetail[0]?.faqs){
-        return JSON.parse(meetings.meetingDetail[0]?.faqs)
-    }
-});
-
-const meetingDetail = computed(() => meetings.meetingDetail);
+const meetingDetail = computed(() => meetings.getMeetingDetail);
 
 </script>
 <template>
     <div>
         <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab"/>
         <CallDetail v-if="selectedTab == 'Calls'"  :meetingDetail="meetingDetail"  />
-        <CallChat v-if="selectedTab == 'Chat To Call'"  />
+        <CallChat v-if="selectedTab == 'Chat To Call'"  :meetingDetail="meetingDetail" />
         <CallHistory v-if="selectedTab == 'History'" />
     </div>
 </template>

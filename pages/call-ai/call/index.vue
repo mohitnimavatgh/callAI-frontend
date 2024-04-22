@@ -69,7 +69,15 @@ const shareFoler = async () => {
 }
 
 const viewCall = (item) => {
-    router.push(`call/5`);
+    router.push(`call/${item.id}`);
+}
+
+const deleteMeet = (item) => {
+  // meetings.delete(item.id).then((resp:any) => {
+  //   if(resp.success) {               
+  //    getRecorded();
+  //   }
+  // })
 }
 
 const actionList = ref(["Reward", "Promote", "Activate account", "Delete User"]);
@@ -122,7 +130,7 @@ const recordedMeeting = computed(() => meetings.recorded);
             <div class="flex justify-around">
                     <i @click="ShareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
                     <i @click="viewCall(item)" class="fas fa-eye text-blue-400"></i>
-                    <i class="fas fa-trash text-red-400"></i>
+                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400"></i>
                 </div>
             </template>
         </Table>
