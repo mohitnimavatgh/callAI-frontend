@@ -78,9 +78,9 @@ const getDuration = () =>{
     const date2 = new Date(detail.value?.end_time);
     const durationMs = date2 - date1;
 
-    const hours = Math.floor(durationMs / 3600000);  // 1 hour = 3600000 milliseconds
-    const minutes = Math.floor((durationMs % 3600000) / 60000);  // 1 minute = 60000 milliseconds
-    const seconds = Math.floor((durationMs % 60000) / 1000);  // 1 second = 1000 milliseconds
+    const hours = Math.floor(durationMs / 3600000);  
+    const minutes = Math.floor((durationMs % 3600000) / 60000);  
+    const seconds = Math.floor((durationMs % 60000) / 1000); 
 
     if(hours > 0){
         return minutes > 0 ? `${hours} hours ${minutes} minutes` : `${hours} hours`
@@ -96,7 +96,7 @@ const getDuration = () =>{
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div class="col-span-2 ">
             <div class="bg-white rounded rounded-lg">
-                <VideoPlayer />
+                <VideoPlayer :videoUrl="detail?.video_url" />
             </div>
             <div class="mt-5">
                 <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Meeintg Summary</label>

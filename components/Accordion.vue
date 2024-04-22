@@ -23,7 +23,7 @@ watch(() => props.accordions, (newQuestion, oldQuestion) => {
   newQuestion.forEach(accordion => {
     accordion.isOpen = true;
   });
-}, { deep: true, immediate: true });
+});
 
 onMounted(() => {
   props.accordions.forEach(accordion => {
