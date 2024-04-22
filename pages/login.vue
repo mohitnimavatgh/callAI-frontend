@@ -95,8 +95,7 @@
                             />
                     </div>
                     <div class="flex items-center justify-between">
-                            
-                        <a href="#" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                        <NuxtLink to="reset-password" class="flex justify-end text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</NuxtLink>
                     </div>
                     <Button :text="'Log In'" class="flex text-center mt-5" @click="loginBtn"/>
                 </div>
@@ -141,7 +140,6 @@ const { $toast } = useNuxtApp()
 
 
 async function loginBtn() {
-    $toast('success', 'Login Successfully', { duration: 10000 })
     const result = await v$.value.$validate()
         if (result) {
             loading.value = true
