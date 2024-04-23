@@ -19,11 +19,10 @@ const toggleAccordion = (index: number) => {
 };
 
 watch(() => props.accordions, (newQuestion, oldQuestion) => {
-  console.log(oldQuestion);
   newQuestion.forEach(accordion => {
     accordion.isOpen = true;
   });
-});
+},{ deep: true, immediate: true });
 
 onMounted(() => {
   props.accordions.forEach(accordion => {

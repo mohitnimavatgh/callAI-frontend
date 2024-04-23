@@ -1,8 +1,22 @@
 <script setup lang="ts">
-
+import { useQuickQuestions } from "@/stores/user/quickQuestions";
+import { useChatToCall } from "@/stores/user/chatToCall";
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const quickQuestions = useQuickQuestions()
+const chatToCall = useChatToCall()
 const props = defineProps({
     meetingDetail: null,
 });
+const meetingId = ref(route.params.id)
+
+const chat = ref({
+    meeting_id: meetingId.value,
+    chat_to_call_id: chatToCall.chatId, 
+    quick_question_id: null,
+    question: null,  
+})
+
 const detail = ref(null)
 const faqsList = computed(() => {
     detail.value = props.meetingDetail
@@ -12,11 +26,48 @@ const faqsList = computed(() => {
     return  [];
 });
    
+const quickQuestionParams = { page: 1,search:'' }
+const chatToCallParams = { meeting_id: meetingId.value }
 
-const chats = ref([
-  { type: 'sender', message: "Hey, how's it going? I just wanted to catch up and see what's new with you. It feels like it's been ages since we last talked." },
-  { type: 'receiver', message: "I'm doing well, thanks. Just been busy with work and life in general. How about you? What have you been up to lately?" },
-]);
+onMounted(async () => {
+  await nextTick()
+  await getChatToCall()
+  await getQuickQuestions()
+});
+
+const getQuickQuestions = () => {
+    quickQuestions.list(quickQuestionParams)
+}
+const getChatToCall = () => {
+    chatToCall.list(chatToCallParams)
+}
+const quickQuestionPageChange = (page: any) => {
+    quickQuestionParams.page = page
+    getQuickQuestions()
+};
+
+const quickQuestionLists = computed(() => quickQuestions.quickQuestions);
+const chatToCallLists = computed(() => chatToCall.getChatList);
+
+const handleKeyEvent = () => {
+    chat.value.quick_question_id = null;
+}
+
+const sendMessage = () => {
+    chatToCall.create(chat.value).then((resp:any) => {
+        if(resp.success) {
+            chat.value.question = null;
+            document.getElementById("question").value = null;
+            getChatToCall();
+        }
+    })
+}
+
+const quickQuestionCall = (item) => {    
+    chat.value.question = null;
+    chat.value.quick_question_id = item.id;
+    document.getElementById("question").value = item.name;
+}
 
 </script>
 <template>
@@ -25,16 +76,21 @@ const chats = ref([
         <div class="col-span-2 ">
             <div class="bg-white rounded rounded-lg">
                 <div class="p-5 h-600 min-h-600 overflow-y-scroll ">
-                    <CallChatTiles :lists="chats"/>
+                    <CallChatTiles :lists="chatToCallLists"/>
                 </div>
                 <div class="p-4">
-                    <FormInput size="large" placeholder="Ask Someting"/>
+                    <FormInput size="large" id="question" v-model="chat.question" placeholder="Ask Someting" @keypress="handleKeyEvent()" @click="sendMessage()"/>
                 </div>
             </div>
             <div class="mt-5">
-                <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Meeintg Summary</label>
+                <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Quick Questions</label>
                 <div class="bg-white rounded-lg p-5 text-gray-600 text-sm leading-7">
-                    {{ detail?.summary }}
+                    <button type="button" v-for="quickQuestion in quickQuestionLists.data" @click="quickQuestionCall(quickQuestion)" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2">
+                        {{ quickQuestion.name }}
+                    </button>
+                    <div class="flex justify-end">
+                        <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
+                    </div>
                 </div>
             </div>
         </div>
