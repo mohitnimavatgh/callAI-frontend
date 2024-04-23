@@ -4,7 +4,7 @@
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Bot Configuration</h4>
             <p class="text-xs font-normal text-gray-500 mt-0.5">Change your meeting bot settings</p>
         </div>    
-        <div class="box mt-3 lg:w-1/2 w-full bg-white dark:bg-gray-800">
+        <div class="p-5 mt-3 lg:w-1/2 w-full bg-white dark:bg-gray-800 rounded-lg">
             <FormInput 
                 id="Bot Name"
                 class="mt-4"

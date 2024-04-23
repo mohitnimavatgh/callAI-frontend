@@ -39,7 +39,7 @@
         </tr>
       </thead>
       <tbody >
-        <tr v-if="filteredData && filteredData.length" v-for="(item, index) in filteredData" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <tr v-if="filteredData && filteredData.length" v-for="(item, index) in filteredData" :key="index" class="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
           <td class="w-4 p-4" v-if="1 != 1">
             <div class="flex items-center">
               <input :id="'checkbox-table-search-' + index" type="checkbox" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">

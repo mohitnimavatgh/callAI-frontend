@@ -1,6 +1,6 @@
 <template>
     <div class=""> 
-        <div class="box bg-white dark:bg-gray-800 ">
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-[20px]">
             <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
               <template v-slot:action="{ item, value }">
                   <div class="">
@@ -10,7 +10,7 @@
             </Table>
             <Pagination v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page" class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total" :currentPage="upcomingParams.page" :recordsPerPage="upcomingMeeting.per_page" @pageChange="upcomingPageChange"/>
         </div>  
-        <div class="box mt-5 bg-white dark:bg-gray-800">
+        <div class="p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
             <Table
                 :headings="tableHeadings"
                 :data="recordedMeeting?.data"

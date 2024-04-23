@@ -1,12 +1,23 @@
 <template>
-  <nav class="bg-gray-50 border-b border-gray-300 dark:bg-gray-900">
+  <nav class="bg-primary-50 border-gray-300 dark:bg-gray-900">
     <div class="flex items-center justify-between mx-auto px-4 py-1.5">
       <div class="flex items-center">
         <AppLogo />
         <div class="hidden w-full md:flex md:w-auto ml-10">
           <ul class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)">
+            <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative" >
+              <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
+                <div :class="{'rounded-full border-b-4 border-primary-500' : menu.active}" class="w-full"></div>
+              </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }}</nuxt-link>
+              <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
+              <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                  <li v-for="submenu in menu.submenu">
+                    <nuxt-link class="block px-4 py-2 hover:bg-primary-500 hover:text-gray-50 dark:hover:bg-gray-600 dark:hover:text-white" :to="submenu.link" aria-current="page">{{ submenu.label }}</nuxt-link>
+                  </li>
+                </ul>
+              </div> -->
             </li>
           </ul>
         </div>
@@ -36,7 +47,14 @@ const mainMenuItems = ref([
   { label: 'Dashboard', active: false, link: '/call-ai' },
   { label: 'Home', active: false, link: '/call-ai' },
   { label: 'Calls', active: false, link: '/call-ai/call' },
-  { label: 'Settings', active: false, link: '/call-ai/settings' }
+  { label: 'Settings', active: false, link: '/call-ai/settings'
+    // submenu: [
+    //   { label: 'Bot', link: '/call-ai/settings' },
+    //   { label: 'Calender', link: '/call-ai/settings/calender' },
+    //   { label: 'Folders', link: '/call-ai/settings/folders' },
+    //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
+    // ]  
+  }
 ]);
 
 const router = useRouter();
@@ -89,8 +107,8 @@ const currentMenuItem = ref('Home');
 
 const getMenuClass = (active) => {
   return active
-    ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500'
-    : 'block py-2 px-3 md:p-0 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-normal';
+    ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
+    : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium ';
 };
 
 const setActiveMenuItem = () => {
