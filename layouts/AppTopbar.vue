@@ -44,7 +44,7 @@ import { useRouter } from 'vue-router';
 const userMenuItems = ref(['Dashboard', 'Settings', 'Earnings', 'Sign out']);
 
 const mainMenuItems = ref([
-  { label: 'Dashboard', active: false, link: '/call-ai' },
+  { label: 'Dashboard', active: false, link: '/' },
   { label: 'Home', active: false, link: '/call-ai' },
   { label: 'Calls', active: false, link: '/call-ai/call' },
   { label: 'Settings', active: false, link: '/call-ai/settings'
