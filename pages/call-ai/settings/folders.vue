@@ -117,6 +117,7 @@
   }
 
   const handleSearch = () => {
+    folderParams.page = 1
     folderParams.search = search.value  
     getFolder();   
   };
