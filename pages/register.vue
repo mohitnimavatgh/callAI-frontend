@@ -70,28 +70,31 @@
                 <div>
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
-                        <FormInput id="First Name" class="mt-3" label="First Name" name="First Name" type="text" placeholder="Enter First Name" />
+                        <FormInput id="First Name" class="mt-3" v-model="v$.register.firstName.$model" :errors="v$.register.firstName.$errors" label="First Name" name="First Name" type="text" placeholder="Enter First Name" />
                     </div>
                     <div>
-                        <FormInput id="Last Name" class="mt-3" label="Last Name" name="Last Name" type="text" placeholder="Enter Last Name" />
+                        <FormInput id="Last Name" class="mt-3" v-model="v$.register.lastName.$model" :errors="v$.register.lastName.$errors" label="Last Name" name="Last Name" type="text" placeholder="Enter Last Name" />
                     </div>
                     </div>
                     <div class="mb-6">
-                    <FormInput id="Email" class="mt-3" label="Email" name="Email" type="text" placeholder="Enter Email" />
+                    <FormInput id="Email" class="mt-3" v-model="v$.register.email.$model" :errors="v$.register.email.$errors" label="Email" name="Email" type="text" placeholder="Enter Email" />
                     </div>
                     <div class="mb-6">
-                    <FormInput id="Password" class="mt-3" label="Password" name="Password" type="text" placeholder="Enter Password" />
+                    <FormInput id="Password" class="mt-3" v-model="v$.register.password.$model" :errors="v$.register.password.$errors" label="Password" name="Password" type="text" placeholder="Enter Password" />
                     </div>
                     <div class="mb-6">
-                    <FormInput id="Confirm Password" class="mt-3" label="Confirm Password" name="Confirm Password" type="text" placeholder="Enter Confirm Password" />
+                    <FormInput id="Confirm Password" class="mt-3" v-model="v$.register.confirmPassword.$model" :errors="v$.register.confirmPassword.$errors" label="Confirm Password" name="Confirm Password" type="text" placeholder="Enter Confirm Password" />
                     </div>
-                    <div class="flex items-start mb-6">
-                    <div class="flex items-center h-5">
-                        <input id="remember" type="checkbox" value="" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <div class="items-start mb-6">
+                        <div class="flex items-center h-5">
+                            <input id="remember" type="checkbox" v-model="v$.register.tac.$model"  :errors="v$.register.tac.$errors" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="remember" class="ms-2 text-xs text-gray-500 dark:text-gray-300">By creating an account you specify that you have read and agree with our <a href="#" class="text-primary-500 hover:underline dark:text-primary-500">Terms of use</a> and <a href="#" class="text-primary-600 hover:underline dark:text-primary-500">Privacy policy</a>.</label>
+                        </div>
+                        <div v-if="v$?.register?.tac?.$errors" class="text-xs text-red-500 mt-3">
+                            {{ v$?.register?.tac?.$errors[0]?.$message }}
+                        </div>
                     </div>
-                    <label for="remember" class="ms-2 text-xs text-gray-500 dark:text-gray-300">By creating an account you specify that you have read and agree with our <a href="#" class="text-primary-500 hover:underline dark:text-primary-500">Terms of use</a> and <a href="#" class="text-primary-600 hover:underline dark:text-primary-500">Privacy policy</a>.</label>
-                    </div>
-                    <Button :text="'Create Account'" />
+                    <Button :text="'Create Account'" @click="signup()" />
                 </div>
                 </div>
             </div>
@@ -106,7 +109,70 @@
 <script setup lang="ts">
 import AuthHeader from '@/layouts/AuthHeader'
 import AppFooter from '@/layouts/AppFooter'
+import { useAuth } from "@/stores/auth";
+const auth = useAuth()
+const { $toast } = useNuxtApp()
+const router = useRouter()
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength, maxLength, sameAs ,helpers } from "@vuelidate/validators";
 definePageMeta({
     layout: 'loginLayout',
 });
+
+const register = ref({
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+    tac: false,
+});
+
+const rules = {
+    register: {
+        firstName: {
+              required: helpers.withMessage("The First Name field is required", required),
+        },
+        lastName: {
+              required: helpers.withMessage("The Last Name field is required", required),
+        },
+        email: {
+            required: helpers.withMessage("The Email field is required", required),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        password: {
+            required: helpers.withMessage("The Password field is required", required),
+            minLength:minLength(6),
+            maxLength:maxLength(8),
+        }, 
+        confirmPassword: {
+            required: helpers.withMessage("The Confirm password field is required.",required),
+            sameAs: helpers.withMessage("The Confirm password must be same as password.",sameAs(computed(() => register.value.password))),
+        },   
+        tac: {
+            sameAs: helpers.withMessage("The Terms of use and Privacy policy is required.",sameAs(computed(() => true))),
+        }, 
+    }
+}
+const v$ = useVuelidate(rules, {register})
+
+const signup = async() =>{
+    const result = await v$.value.$validate()
+    if (result) {    
+        let data = {
+            name: `${register.value.firstName} ${register.value.lastName}`,
+            email: register.value.email,
+            password : register.value.password,
+        }
+
+        auth.signup(data).then((resp:any) => {
+            if(resp.success) {   
+                $toast('success', 'Register Successfully', { duration: 10000 })
+                router.push(`login`);
+            }
+        }).catch((error) => {
+            console.log("Error:", error);                  
+        })
+    }
+}
 </script>

@@ -27,7 +27,31 @@ export const useAuth = defineStore('auth', {
       } catch (error) {
         throw error;
       }
-    }
+    },
+    async signup(data: any) {
+      try {
+        const response = await useAPI('/signup', {
+          method: 'post',
+          body: data,
+        });
+        const responseData = response.data.value;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async resetPassword(data: any) {
+      try {
+        const response = await useAPI('/reset-link-email', {
+          method: 'get',
+          params: data,
+        });
+        const responseData = response.data.value; 
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
   persist: {
     storage: persistedState.localStorage,
