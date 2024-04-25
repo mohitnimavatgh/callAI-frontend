@@ -2,11 +2,11 @@
   <div>
     <div class="flex justify-between align-items-center">
       <div>
-        <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Meet AI</h4>
+        <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Confra</h4>
         <p class="mb-6 text-sm font-normal text-gray-500 mt-1 dark:text-gray-400">AI-Powered Meeting Recording Simplified</p>
       </div>
       <Button :text="'Meeting Bot'" frontIcon="fas fa-video" @click="joinModal = !joinModal" class="h-full"/>
-      <Modal :title="'Meeting Bot'" :subTitle="'Meet AI will join and record the meeting'" :show="joinModal" @close="joinModal = false">
+      <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal" @close="joinModal = false">
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2 mb-3">
             <FormInput 
