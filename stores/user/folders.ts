@@ -28,7 +28,7 @@ export const useFolders = defineStore('folders', {
         if(folder?.page){
           this.folderPagination = responseData.data
         }else{
-          this.folders = responseData
+          this.folders = responseData.data
         }       
         return responseData;
         } catch (error) {

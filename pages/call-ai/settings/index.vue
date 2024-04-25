@@ -1,3 +1,64 @@
+<script setup lang="ts">
+  import { useBots } from "@/stores/user/bots";
+  const bots = useBots()
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers,email,requiredIf } from "@vuelidate/validators";   
+
+var action_type = 'Send Email';
+const bot = ref({
+    bot_name: null, 
+    after_complete_run_actions: null,
+    action: null,
+    transcription_tool:null,
+    recording_type:null,
+    multiple_emails: null,
+})
+
+const rules = {
+    bot:{
+        bot_name: {
+            required: helpers.withMessage("The Bot Name field is required", required),          
+        },
+        after_complete_run_actions: {
+            required: helpers.withMessage("The Meeting Action field is required", required),          
+        },
+        action:{
+            required: requiredIf(function (nestedModel) {
+                return bot.value.after_complete_run_actions == action_type
+            }),          
+        },
+        multiple_emails:{
+            required: requiredIf(function (nestedModel) {
+                return bot.value.after_complete_run_actions == action_type
+            }),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        transcription_tool:{},
+        recording_type:{}
+    }
+}
+const v$ = useVuelidate(rules, {bot})
+
+const actionList = ref([
+    { value: 'nothing', name: 'Nothing'},
+    { value: 'action', name: 'Send Email'}
+])
+
+const botSave = async() => {
+    const result = await v$.value.$validate()
+    if (result) { 
+        bots.create(bot.value).then((resp:any) => {
+            if(resp?.success) {   
+                $toast('success', 'bot create Successfully', { duration: 10000 })
+            }
+        }).catch((error) => {
+            console.log("Error:", error);                  
+        })
+    }
+}
+
+</script>
+
 <template>
     <div class="mt-5">
         <div>
@@ -13,11 +74,12 @@
                 type="text"
                 placeholder="Enter Bot Name"
                 rules="required"
-                v-model="bot_name"
+                v-model="v$.bot.bot_name.$model" 
+                :errors="v$.bot.bot_name.$errors"
             />
 
-            <FormSelect class="mt-4" label="Action After Meeting Complete" id="action" name="action" v-model="meeting_action" :options="actionList" rules="required" />
-            <div v-if="meeting_action == 'action'">
+            <FormSelect class="mt-4" label="Action After Meeting Complete" id="action" name="action" v-model="v$.bot.after_complete_run_actions.$model" :errors="v$.bot.after_complete_run_actions.$errors" :options="actionList" rules="required" />
+            <div v-if="bot.after_complete_run_actions == action_type">
                 <FormInput 
                     
                     id="Action"
@@ -27,7 +89,8 @@
                     type="text"
                     placeholder="Enter Action"
                     rules="required"
-                    v-model="action"
+                    v-model="v$.bot.action.$model" 
+                    :errors="v$.bot.action.$errors"
                 />
                 <FormInput 
                     
@@ -38,29 +101,13 @@
                     type="text"
                     placeholder="Enter Email"
                     rules="required|email"
-                    v-model="email"
+                    v-model="v$.bot.multiple_emails.$model" 
+                    :errors="v$.bot.multiple_emails.$errors"
                 />
             </div>
             <div class="mt-4 flex justify-end">
-                <Button :text="'Save'" class="m-0"/>
+                <Button :text="'Save'" class="m-0" @click="botSave()" />
             </div>
         </div>
     </div>
 </template>
-
-<script>
-export default {
- data() {
-   return {
-    meeting_action: 'nothing',
-    bot_name: '',
-    email: '',
-    action :'',
-     actionList: [
-       { value: 'nothing', label: 'Nothing'},
-       { value: 'action', label: 'Send Email'}
-     ],
-   };
- },
-}
-</script>

@@ -145,6 +145,7 @@
   }
 
   const handleSearch = (value) => {
+    quickQuestionParams.page = 1
     quickQuestionParams.search = value    
     getQuickQuestion();
   };
