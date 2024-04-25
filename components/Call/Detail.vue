@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
 const meetings = useMeetings()
+const { $toast } = useNuxtApp()
 const props = defineProps({
     meetingDetail: null,
 });
@@ -55,6 +56,7 @@ const saveNote = () =>{
     meetings.notes(data).then((resp:any) => {
         if(resp.success) {               
             detail.value.notes = notes.value   
+            $toast('success', 'Note Save Successfully', { duration: 10000 })
         }
     })
 }

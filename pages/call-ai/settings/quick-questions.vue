@@ -58,6 +58,7 @@
   import { required, helpers } from "@vuelidate/validators";
   const QuickQuestionUpdate = ref(false);
   const quickQuestions = useQuickQuestions()
+  const { $toast } = useNuxtApp()
   const quickQuestionParams = { page: 1,search:'' }
   const items = [
     { value: "private", icon: 'fas fa-lock',labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
@@ -103,6 +104,7 @@
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
         if(resp.success) {
+          $toast('success', 'Quick Question Create Successfully', { duration: 10000 })
           fromRest();
           getQuickQuestion();               
         }
