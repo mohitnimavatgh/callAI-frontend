@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-gray-100 dark:bg-gray-800">
+  <div class="bg-primary-50 dark:bg-gray-800">
         <app-topbar></app-topbar>
-        <div class="mt-5 container mx-auto"><Router-view></Router-view></div>            
+        <div class="mt-16 container mx-auto"><Router-view></Router-view></div>            
   </div>
 </template>
 <!-- <template>
