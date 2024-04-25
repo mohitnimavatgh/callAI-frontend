@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useFolders = defineStore('folders', {
   state: () => ({
     folders: null,
+    folderPagination :null
   }),
   actions: {
     async create(bot: any) {
@@ -17,13 +18,18 @@ export const useFolders = defineStore('folders', {
         throw error;
       }
     },
-    async list() {
-      try {
+    async list(folder) {
+      try {      
         const response = await useAPI('/folders', {
-            method: 'get'
+            method: 'get',
+            params : folder
         });
         const responseData = response.data.value;
-        this.folders = responseData.data
+        if(folder?.page){
+          this.folderPagination = responseData.data
+        }else{
+          this.folders = responseData
+        }       
         return responseData;
         } catch (error) {
         throw error;
