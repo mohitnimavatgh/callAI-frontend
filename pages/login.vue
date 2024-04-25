@@ -144,12 +144,14 @@ async function loginBtn() {
         if (result) {
             loading.value = true
             auth.login(login.value).then((resp:any) => {
-                if(resp.success) {
+                if(resp?.success) {
                     loading.value = false
                     $toast('success', 'Login Successfully', { duration: 10000 })
                     router.push(`call-ai`);
                 }
-            })
+            }).catch(error => {
+                console.log("error: " + error)
+            });
         }
 }
 </script>

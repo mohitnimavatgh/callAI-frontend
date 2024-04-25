@@ -68,6 +68,7 @@
   import { useVuelidate } from "@vuelidate/core";
   import { required, helpers } from "@vuelidate/validators";
   const ShowAddModal = ref(false);
+  const { $toast } = useNuxtApp()
   const folders = useFolders()
   const search = ref('')
   const folderParams = { page: 1,search:'' }
@@ -109,6 +110,7 @@
       if (result) {
         folders.create(folder.value).then((resp:any) => {
               if(resp.success) {
+                $toast('success', 'Folder Create Successfully', { duration: 10000 })
                 getFolder();
                 ShowAddModal.value = false;
               }

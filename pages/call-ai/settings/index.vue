@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import { useBots } from "@/stores/user/bots";
+  import { useVuelidate } from "@vuelidate/core";
+  import { required, helpers,email,requiredIf } from "@vuelidate/validators";   
   const bots = useBots()
-import { useVuelidate } from "@vuelidate/core";
-import { required, helpers,email,requiredIf } from "@vuelidate/validators";   
+  const { $toast } = useNuxtApp()
 
 var action_type = 'Send Email';
 const bot = ref({
