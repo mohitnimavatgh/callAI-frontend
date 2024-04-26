@@ -40,11 +40,23 @@ export const useAuth = defineStore('auth', {
         throw error;
       }
     },
-    async resetPassword(data: any) {
+    async resetSendLink(data: any) {
       try {
         const response = await useAPI('/reset-link-email', {
           method: 'get',
           params: data,
+        });
+        const responseData = response.data.value; 
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async forgotPassword(data: any) {
+      try {
+        const response = await useAPI('/forgot-password', {
+          method: 'post',
+          body: data,
         });
         const responseData = response.data.value; 
         return responseData;
