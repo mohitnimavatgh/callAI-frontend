@@ -1,57 +1,3 @@
-<template>
-    <div class="mt-5">
-        <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Quick Questions</h4>
-            <p class="text-xs font-normal text-gray-500 mt-0.5">Customize your Quick Questions</p>
-        </div>    
-        <div class="box mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
-            <FormInput 
-                id="Title"
-                class="mt-4"
-                label="Title"
-                name="Title"
-                type="text"
-                placeholder="Enter Title"
-                v-model="v$.quickQuestion.name.$model"
-                :errors="v$.quickQuestion.name.$errors" 
-                :modelValue="quickQuestion.name"
-            />
-            <div class="mt-3">
-                <label class="text-sm font-medium text-gray-500 ">Quick Question Access</label>
-                <ul class="grid w-full gap-3 md:grid-cols-2">
-                    <li v-for="(item, index) in items" :key="index" class="mt-2">
-                        <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="v$.quickQuestion.access_type.$model" :errors="v$.quickQuestion.access_type.$errors" />
-                        <FormRadioLabel :icon="item.icon" :id="`radio-${index}`" :labelText="item.labelText" :description="item.description" />
-                    </li>
-                </ul>
-            </div>
-            <div class="my-4 flex justify-end">
-                <Button text="Add Quick Question" v-if="!QuickQuestionUpdate" @click="createQuickQuestion"  frontIcon="fas fa-plus" class="m-0"/>
-                <Button text="Update Quick Question" v-else @click="updateQuickQuestion"  frontIcon="fas fa-plus" class="m-0"/>
-            </div>
-        </div>
-
-        <div class="box mt-5 bg-white dark:bg-gray-800">
-            <Table
-               :headings="tableHeadings"
-               :data="quickQuestionLists?.data"
-               :isSearchable="true"
-               title="Quick Questions"
-               @search="handleSearch"
-           >
-            <template v-slot:action="{ item, value }">
-                    <div class="flex justify-start">
-                        <i @click="edit(item)" class="fas fa-pen text-blue-400 mr-3"></i>
-                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash text-red-400"></i>
-                    </div>
-                    
-                </template>
-            </Table>                
-            <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
   import { useQuickQuestions } from "@/stores/user/quickQuestions";
   import { useVuelidate } from "@vuelidate/core";
@@ -158,4 +104,56 @@
   };
 
 </script>
-  
+<template>
+    <div class="mt-5">
+        <div>
+            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Quick Questions</h4>
+            <p class="text-xs font-normal text-gray-500 mt-0.5">Customize your Quick Questions</p>
+        </div>    
+        <div class="box mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
+            <FormInput 
+                id="Title"
+                class="mt-4"
+                label="Title"
+                name="Title"
+                type="text"
+                placeholder="Enter Title"
+                v-model="v$.quickQuestion.name.$model"
+                :errors="v$.quickQuestion.name.$errors" 
+                :modelValue="quickQuestion.name"
+            />
+            <div class="mt-3">
+                <label class="text-sm font-medium text-gray-500 ">Quick Question Access</label>
+                <ul class="grid w-full gap-3 md:grid-cols-2">
+                    <li v-for="(item, index) in items" :key="index" class="mt-2">
+                        <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="v$.quickQuestion.access_type.$model" :errors="v$.quickQuestion.access_type.$errors" />
+                        <FormRadioLabel :icon="item.icon" :id="`radio-${index}`" :labelText="item.labelText" :description="item.description" />
+                    </li>
+                </ul>
+            </div>
+            <div class="my-4 flex justify-end">
+                <Button text="Add Quick Question" v-if="!QuickQuestionUpdate" @click="createQuickQuestion"  frontIcon="fas fa-plus" class="m-0"/>
+                <Button text="Update Quick Question" v-else @click="updateQuickQuestion"  frontIcon="fas fa-plus" class="m-0"/>
+            </div>
+        </div>
+
+        <div class="box mt-5 bg-white dark:bg-gray-800">
+            <Table
+               :headings="tableHeadings"
+               :data="quickQuestionLists?.data"
+               :isSearchable="true"
+               title="Quick Questions"
+               @search="handleSearch"
+           >
+            <template v-slot:action="{ item, value }">
+                    <div class="flex justify-start">
+                        <i @click="edit(item)" class="fas fa-pen text-blue-400 mr-3"></i>
+                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash text-red-400"></i>
+                    </div>
+                    
+                </template>
+            </Table>                
+            <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
+        </div>
+    </div>
+</template>

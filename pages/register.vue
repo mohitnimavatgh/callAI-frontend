@@ -1,3 +1,128 @@
+<script setup lang="ts">
+import AuthHeader from '@/layouts/AuthHeader'
+import AppFooter from '@/layouts/AppFooter'
+import FacebookBtn from '@/components/Facebook'
+import { useAuth } from "@/stores/auth";
+import type { useTokenClient ,AuthCodeFlowSuccessResponse } from "vue3-google-signin";
+const auth = useAuth()
+const { $toast } = useNuxtApp()
+const router = useRouter()
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength, maxLength, sameAs ,helpers } from "@vuelidate/validators";
+definePageMeta({
+    layout: 'loginLayout',
+});
+
+const register = ref({
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+    tac: false,
+});
+
+const signupData = ref({
+    name: `${register.value.firstName} ${register.value.lastName}`,
+    email: register.value.email,
+    password : register.value.password,
+    login_type: null,
+    social_login_type: null,
+    google_id:null,
+    facebook_id:null
+});
+
+const rules = {
+    register: {
+        firstName: {
+              required: helpers.withMessage("The First Name field is required", required),
+        },
+        lastName: {
+              required: helpers.withMessage("The Last Name field is required", required),
+        },
+        email: {
+            required: helpers.withMessage("The Email field is required", required),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        password: {
+            required: helpers.withMessage("The Password field is required", required),
+            minLength:minLength(6),
+            maxLength:maxLength(8),
+        }, 
+        confirmPassword: {
+            required: helpers.withMessage("The Confirm password field is required.",required),
+            sameAs: helpers.withMessage("The Confirm password must be same as password.",sameAs(computed(() => register.value.password))),
+        },   
+        tac: {
+            sameAs: helpers.withMessage("The Terms of use and Privacy policy is required.",sameAs(computed(() => true))),
+        }, 
+    }
+}
+const v$ = useVuelidate(rules, {register})
+
+const handleOnError = () => {
+  console.error("Login failed");
+};
+
+const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
+    console.log("onSuccess--",response)
+    const responseData = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${response.access_token}`,
+      },
+    });
+    if (responseData.ok) {
+      const userInfo = await responseData.json();
+      console.log('User Information:', userInfo);
+      signupData.value.email = userInfo.email
+      signupData.value.name = userInfo.name
+      signupData.value.google_id = userInfo.sub
+      signupData.value.social_type = 'google';
+      if(userInfo){
+        userSignup()
+      }
+    } else {
+      console.error('Failed to fetch user information');
+    }
+}
+
+const { login : googleRegister } = useTokenClient({
+  onSuccess: handleOnSuccess,
+  onError: handleOnError,
+});
+
+
+const userSignup = () => {
+    auth.signup(signupData.value).then((resp:any) => {
+        if(resp.success) {   
+            $toast('success', 'Register Successfully', { duration: 10000 })
+            router.push(`login`);
+        }
+    }).catch((error) => {
+        console.log("Error:", error);                         
+    })
+}
+
+const facebookRegister = (facebookData:any) => {
+    // console.log("data: --asa--" + facebookData.social_id)
+    signupData.value.email = facebookData.email
+    signupData.value.name = facebookData.name
+    signupData.value.facebook_id = facebookData.social_id
+    signupData.value.social_type = 'facebook';
+    console.log("data: ----" + signupData.value)
+    userSignup()
+}
+
+const signup = async() =>{
+    const result = await v$.value.$validate()
+    if (result) { 
+        signupData.value.name = `${register.value.firstName} ${register.value.lastName}`,
+        signupData.value.email = register.value.email,
+        signupData.value.password = register.value.password,
+        userSignup() 
+    }
+}
+</script>
 <template>
     <div class="flex flex-col min-h-screen">
       <section class="flex-grow bg-white dark:bg-gray-900">
@@ -56,10 +181,10 @@
                     <h3 class="text-md flex justify-center font-semibold text-gray-600">Sign Up to Get Started</h3>
                 <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
                     <div>
-                    <Button :text="'Sign Up with Google'" class="w-full flex justify-center" frontIcon="fa-brands fa-google" outline/>
+                    <Button :text="'Sign Up with Google'" class="w-full flex justify-center" @click="googleRegister()" frontIcon="fa-brands fa-google" outline/>
                     </div>
                     <div>
-                    <Button :text="'Sign Up with Facebook'" class="w-full flex justify-center" frontIcon="fa-brands fa-facebook" />
+                        <FacebookBtn @facebookData="facebookRegister" />
                     </div>
                 </div>
                 <div class="flex items-center my-5">
@@ -104,75 +229,3 @@
       </section>
     </div>
   </template>
-  
-
-<script setup lang="ts">
-import AuthHeader from '@/layouts/AuthHeader'
-import AppFooter from '@/layouts/AppFooter'
-import { useAuth } from "@/stores/auth";
-const auth = useAuth()
-const { $toast } = useNuxtApp()
-const router = useRouter()
-import { useVuelidate } from "@vuelidate/core";
-import { required, email, minLength, maxLength, sameAs ,helpers } from "@vuelidate/validators";
-definePageMeta({
-    layout: 'loginLayout',
-});
-
-const register = ref({
-    firstName: null,
-    lastName: null,
-    email: null,
-    password: null,
-    confirmPassword: null,
-    tac: false,
-});
-
-const rules = {
-    register: {
-        firstName: {
-              required: helpers.withMessage("The First Name field is required", required),
-        },
-        lastName: {
-              required: helpers.withMessage("The Last Name field is required", required),
-        },
-        email: {
-            required: helpers.withMessage("The Email field is required", required),
-            email: helpers.withMessage("Please Enter a valid Email Address", email),
-        },
-        password: {
-            required: helpers.withMessage("The Password field is required", required),
-            minLength:minLength(6),
-            maxLength:maxLength(8),
-        }, 
-        confirmPassword: {
-            required: helpers.withMessage("The Confirm password field is required.",required),
-            sameAs: helpers.withMessage("The Confirm password must be same as password.",sameAs(computed(() => register.value.password))),
-        },   
-        tac: {
-            sameAs: helpers.withMessage("The Terms of use and Privacy policy is required.",sameAs(computed(() => true))),
-        }, 
-    }
-}
-const v$ = useVuelidate(rules, {register})
-
-const signup = async() =>{
-    const result = await v$.value.$validate()
-    if (result) {    
-        let data = {
-            name: `${register.value.firstName} ${register.value.lastName}`,
-            email: register.value.email,
-            password : register.value.password,
-        }
-
-        auth.signup(data).then((resp:any) => {
-            if(resp.success) {   
-                $toast('success', 'Register Successfully', { duration: 10000 })
-                router.push(`login`);
-            }
-        }).catch((error) => {
-            console.log("Error:", error);                  
-        })
-    }
-}
-</script>
