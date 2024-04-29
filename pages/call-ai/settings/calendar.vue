@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { useCalendar } from "@/stores/user/calendar";
+const route = useRoute();
+const router = useRouter()
+const calendar = useCalendar()
+const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
+const recordingOption = ref([
+    { text: 'Record All Meetings', value: true },
+    { text: 'Record meetings where I am the host', value: true },
+    { text: 'Record meetings where I am not the host', value: true },
+    { text: 'Record external meetings', value: true },
+    { text: 'Record internal meetings', value: true },
+    { text: 'Record confirmed-only meetings', value: true }
+]);
+
+
+const googleCalendar = async () =>{
+    const params = {
+        client_id: google_client_id,
+        redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
+        response_type: "code",
+        scope: [
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+            "https://www.googleapis.com/auth/userinfo.email",
+            ].join(" "),
+        access_type: "offline",
+        prompt: "consent",
+        state: "user-Id1",
+    };
+    const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+    url.search = new URLSearchParams(params).toString();   
+    let redirectUrl = url.toString();    
+    window.location.href = redirectUrl;
+}
+
+const refreshToken = () => {
+    calendar.create({code:route.query.code}).then((resp:any) => {
+        if(resp?.success) {   
+            router.push('/call-ai/settings/calendar'); 
+        }
+    }).catch((error) => {
+        console.log("Error:", error);                  
+    })
+}
+onMounted(async () => {
+   if(route.query.code){
+        refreshToken();
+   }
+})
+</script>
 <template>
     <div class="mt-5">
         <div>
@@ -10,7 +60,7 @@
                     <img class="w-6 mr-2" src="@/assets/image/google-calendar.png" alt="Google Calendar"/>
                     <span class="font-medium text-gray-500 text-sm">Google Calendar</span>
                 </div>
-                <Button :text="'Connect'" outline class="mt-2" />
+                <Button :text="'Connect'" outline class="mt-2" @click="googleCalendar()" />
             </div>
             <div class="lg:border-l border-gray-300 lg:flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">
@@ -37,20 +87,3 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {
- data() {
-   return {
-        recordingOption: [
-            { text: 'Record All Meetings', value: true },
-            { text: 'Record meetings where I am the host', value: true },
-            { text: 'Record meetings where I am not the host', value: true },
-            { text: 'Record external meetings', value: true },
-            { text: 'Record internal meetings', value: true },
-            { text: 'Record confirmed-only meetings', value: true }
-        ]
-   };
- },
-}
-</script>

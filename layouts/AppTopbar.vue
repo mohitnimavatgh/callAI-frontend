@@ -50,7 +50,7 @@ const mainMenuItems = ref([
   { label: 'Settings', active: false, link: '/call-ai/settings'
     // submenu: [
     //   { label: 'Bot', link: '/call-ai/settings' },
-    //   { label: 'Calender', link: '/call-ai/settings/calender' },
+    //   { label: 'Calendar', link: '/call-ai/settings/calendar' },
     //   { label: 'Folders', link: '/call-ai/settings/folders' },
     //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
     // ]  

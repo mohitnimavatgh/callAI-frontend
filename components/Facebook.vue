@@ -5,8 +5,9 @@
   </template>
   
   <script setup lang="ts">
+    const facebookId = import.meta.env.VITE_FACEBOOK_ID;
     const emits = defineEmits(['facebookData']);
-    var  appId  = '963091131665271';
+    var  appId  = facebookId;
     async function loginWithFacebook() {
         try {
         await loadFacebookSDK();

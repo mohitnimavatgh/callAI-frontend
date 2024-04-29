@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     
   ],
   googleSignIn: {
-    clientId: '517316434555-aho1jts65rmrgmda769hf5mg2ujko5cg.apps.googleusercontent.com',
+    clientId: import.meta.env.GOOGLE_CLIENT_ID,
   },
   devServer: {
       host: ' 192.168.1.18',

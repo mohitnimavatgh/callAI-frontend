@@ -19,7 +19,7 @@
             <img src="@/assets/image/folder.svg" alt="Folder" class="w-full h-auto">            
             <div class="absolute top-10 right-4 flex">
               <i class="text-sm text-gray-400 fas fa-lock mr-2"></i>
-              <i class="text-sm text-gray-400 fas fa-pen cursor-pointer"></i>
+              <i class="text-sm text-gray-400 fas fa-pen cursor-pointer" @click="edit(folderItem)"></i>
             </div>            
             <div class="absolute bottom-4 left-4">
               <p class="font-medium text-gray-500 text-sm">{{ folderItem.name }}</p>
@@ -56,18 +56,21 @@
           </div>
       </div>
        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Add Folder'" @click="createFolder" frontIcon="fas fa-plus"/>
-                <Button :text="'Cancel'" @click="ShowAddModal = false" outline/>
+                <Button class="mr-2" :text="'Add Folder'" v-if="!folderUpdate" @click="createFolder" frontIcon="fas fa-plus"/>
+                <Button class="mr-2" :text="'Update Folder'" v-else @click="updateFolder" frontIcon="fas fa-plus"/>
+                <Button :text="'Cancel'" @click="ShowAddModal = false" outline/>              
             </div>
         </Modal>
     </div>
   </template>
   
 <script setup lang="ts">
+  import { debounce } from 'lodash-es';
   import { useFolders } from "@/stores/user/folders";
   import { useVuelidate } from "@vuelidate/core";
   import { required, helpers } from "@vuelidate/validators";
   const ShowAddModal = ref(false);
+  const folderUpdate = ref(false);
   const { $toast } = useNuxtApp()
   const folders = useFolders()
   const search = ref('')
@@ -118,16 +121,37 @@
       }
   }
 
-  const handleSearch = () => {
+  const updateFolder = async () =>{  
+    const result = await v$.value.$validate()
+    if (result) {     
+      folders.update(folder.value).then((resp:any) => {
+        if(resp.success) {
+          ShowAddModal.value = false
+          folderUpdate.value = false;
+          getFolder();               
+          fromRest();
+        }
+      })
+    }
+  }
+
+  const handleSearch = debounce(() => {
     folderParams.page = 1
     folderParams.search = search.value  
     getFolder();   
-  };
+  }, 700);
 
   const folderPageChange = (page: any) => {
     folderParams.page = page
     getFolder()
   };
   
+  const edit = (data: any) => {
+    folderUpdate.value = true;
+    folder.value.name = data.name
+    folder.value.access_type = data.access_type
+    folder.value.id = data.id
+    ShowAddModal.value = true
+  }
 </script>
   
