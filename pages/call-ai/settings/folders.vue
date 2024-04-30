@@ -1,69 +1,3 @@
-<template>
-    <div class="mt-5">
-      <div class="flex justify-between">
-        <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Folders</h4>        
-            <p class="text-xs font-normal text-gray-500 mt-0.5">Organize and customize your folders</p>
-        </div>
-        <div>
-            <Button @click="ShowAddModal = true"  frontIcon="fas fa-plus" :text="'Folder'" />
-        </div>
-      </div>
-  
-      <div class="mt-3 flex justify-end">
-        <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch" class="w-56 "/>
-      </div>
-      <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">        
-        <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative col-span-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1">
-          <div class="relative w-full mt-2">            
-            <img src="@/assets/image/folder.svg" alt="Folder" class="w-full h-auto">            
-            <div class="absolute top-10 right-4 flex">
-              <i class="text-sm text-gray-400 fas fa-lock mr-2"></i>
-              <i class="text-sm text-gray-400 fas fa-pen cursor-pointer" @click="edit(folderItem)"></i>
-            </div>            
-            <div class="absolute bottom-4 left-4">
-              <p class="font-medium text-gray-500 text-sm">{{ folderItem.name }}</p>
-              <p class="font-medium text-gray-400 text-xs">Meetings: 20</p>
-            </div>
-          </div>
-        </div>   
-      </div>
-      <div class="flex justify-center">
-        <Pagination v-if="foldersLists && foldersLists.total && foldersLists.per_page && foldersLists.total > foldersLists.per_page" class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page" :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange"/>
-      </div>
-      <Modal :title="'Add Folder'" :show="ShowAddModal" @close="ShowAddModal = false">
-        <div class="modal-content  p-4 md:p-5">
-          <div class="col-span-2 mb-3">
-            <FormInput                
-                id="Name"
-                label="Folder Name"
-                name="Folder Name"
-                type="text"
-                placeholder="Add Folder Name"
-                rules="required"
-                v-model="v$.folder.name.$model"
-                :errors="v$.folder.name.$errors"                
-            />
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-500 ">Folder Access</label>
-            <ul class="w-full">
-                <li v-for="(item, index) in items" :key="index" class="mt-2">
-                    <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="v$.folder.access_type.$model" :errors="v$.folder.access_type.$errors" />
-                    <FormRadioLabel :icon="item.icon" :id="`radio-${index}`" :labelText="item.labelText" :description="item.description" />
-                </li>
-            </ul>
-          </div>
-      </div>
-       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Add Folder'" v-if="!folderUpdate" @click="createFolder" frontIcon="fas fa-plus"/>
-                <Button class="mr-2" :text="'Update Folder'" v-else @click="updateFolder" frontIcon="fas fa-plus"/>
-                <Button :text="'Cancel'" @click="ShowAddModal = false" outline/>              
-            </div>
-        </Modal>
-    </div>
-  </template>
-  
 <script setup lang="ts">
   import { debounce } from 'lodash-es';
   import { useFolders } from "@/stores/user/folders";
@@ -154,4 +88,68 @@
     ShowAddModal.value = true
   }
 </script>
+<template>
+    <div class="mt-5">
+      <div class="flex justify-between">
+        <div>
+            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Folders</h4>        
+            <p class="text-xs font-normal text-gray-500 mt-0.5">Organize and customize your folders</p>
+        </div>
+        <div>
+            <Button @click="ShowAddModal = true"  frontIcon="fas fa-plus" :text="'Folder'" />
+        </div>
+      </div>
   
+      <div class="mt-3 flex justify-end">
+        <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch" class="w-56 "/>
+      </div>
+      <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">        
+        <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative col-span-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1">
+          <div class="relative w-full mt-2">            
+            <img src="@/assets/image/folder.svg" alt="Folder" class="w-full h-auto">            
+            <div class="absolute top-10 right-4 flex">
+              <i class="text-sm text-gray-400 mr-2" :class="`fas fa-lock${folderItem.access_type == 'public'?'-open':''}`"></i>
+              <i class="text-sm text-gray-400 fas fa-pen cursor-pointer" @click="edit(folderItem)"></i>
+            </div>            
+            <div class="absolute bottom-4 left-4">
+              <p class="font-medium text-gray-500 text-sm">{{ folderItem.name }}</p>
+              <p class="font-medium text-gray-400 text-xs">Meetings: {{ folderItem.meeting_count }}</p>
+            </div>
+          </div>
+        </div>   
+      </div>
+      <div class="flex justify-center">
+        <Pagination v-if="foldersLists && foldersLists.total && foldersLists.per_page && foldersLists.total > foldersLists.per_page" class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page" :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange"/>
+      </div>
+      <Modal :title="'Add Folder'" :show="ShowAddModal" @close="ShowAddModal = false">
+        <div class="modal-content  p-4 md:p-5">
+          <div class="col-span-2 mb-3">
+            <FormInput                
+                id="Name"
+                label="Folder Name"
+                name="Folder Name"
+                type="text"
+                placeholder="Add Folder Name"
+                rules="required"
+                v-model="v$.folder.name.$model"
+                :errors="v$.folder.name.$errors"                
+            />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-500 ">Folder Access</label>
+            <ul class="w-full">
+                <li v-for="(item, index) in items" :key="index" class="mt-2">
+                    <FormRadio :id="`radio-${index}`" name="access" :value="item.value" v-model="v$.folder.access_type.$model" :errors="v$.folder.access_type.$errors" />
+                    <FormRadioLabel :icon="item.icon" :id="`radio-${index}`" :labelText="item.labelText" :description="item.description" />
+                </li>
+            </ul>
+          </div>
+      </div>
+       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <Button class="mr-2" :text="'Add Folder'" v-if="!folderUpdate" @click="createFolder" frontIcon="fas fa-plus"/>
+                <Button class="mr-2" :text="'Update Folder'" v-else @click="updateFolder" frontIcon="fas fa-plus"/>
+                <Button :text="'Cancel'" @click="ShowAddModal = false" outline/>              
+            </div>
+        </Modal>
+    </div>
+</template>  
