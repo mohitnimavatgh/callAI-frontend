@@ -1,8 +1,16 @@
 <template>
   <div>
-    <label v-if="label" :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">{{ label }}</label>
+    <label
+      v-if="label"
+      :for="id"
+      class="block mb-2 text-sm font-medium text-gray-500 dark:text-white"
+      >{{ label }}</label
+    >
     <div class="relative">
-      <div v-if="icon" class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+      <div
+        v-if="icon"
+        class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+      >
         <i :class="icon" class="w-4 h-4 text-gray-500"></i>
       </div>
       <input
@@ -12,20 +20,30 @@
         v-model="valueUpdate"
         :class="inputClasses"
         :placeholder="placeholder"
-        @input="updateModelValue($event.target.value)"
       />
-      <Button v-if="size === 'large'" class="absolute end-2.5 bottom-0 px-4 py-2 margin-10-px" outline frontIcon="fas fa-paper-plane"/>
+      <Button
+        v-if="size === 'large'"
+        class="absolute end-2.5 bottom-0 px-4 py-2 margin-10-px"
+        outline
+        frontIcon="fas fa-paper-plane"
+      />
     </div>
-    <p v-if="hasError" v-for="error of errors" :key="error.$uid" class="mt-2 text-xs text-red-600 dark:text-red-500">{{ error.$message }}</p>
+    <p
+      v-if="hasError"
+      v-for="error of errors"
+      :key="error.$uid"
+      class="mt-2 text-xs text-red-600 dark:text-red-500"
+    >
+      {{ error.$message }}
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   label: { type: String, default: "" },
-  modelValue: { type: String, default: "" },
+  modelValue: String,
   id: { type: String, default: "" },
   name: { type: String, default: "" },
   placeholder: { type: String, default: "" },
@@ -36,7 +54,7 @@ const props = defineProps({
   errors: { type: Array, default: [] },
 });
 
-const valueUpdate = ref(props.modelValue);
+// const valueUpdate = ref(props.modelValue);
 
 const hasError = computed(() => props.errors.length);
 
@@ -57,14 +75,26 @@ const inputClasses = computed(() => [
   "dark:text-white",
   "dark:focus:ring-primary-500",
   "dark:focus:border-primary-500",
-  { "p-2.5": props.size === 'medium', "p-4": props.size === 'large' ,"ps-10": props.icon },
-  { "border-red-500": hasError.value},
+  {
+    "p-2.5": props.size === "medium",
+    "p-4": props.size === "large",
+    "ps-10": props.icon,
+  },
+  { "border-red-500": hasError.value },
 ]);
 
-const updateModelValue = (val) => {
-  valueUpdate.value = val;
-  emit("update:modelValue", val);
-};
+const valueUpdate = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emit("update:modelValue", newValue);
+  },
+});
+// const updateModelValue = (val) => {
+//   valueUpdate.value = val;
+//   emit("update:modelValue", val);
+// };
 </script>
 
 <style>
