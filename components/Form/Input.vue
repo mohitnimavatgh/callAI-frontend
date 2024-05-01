@@ -20,6 +20,7 @@
         v-model="valueUpdate"
         :class="inputClasses"
         :placeholder="placeholder"
+        autocomplete="off"
       />
       <Button
         v-if="size === 'large'"

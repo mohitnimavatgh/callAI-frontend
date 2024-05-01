@@ -10,14 +10,14 @@ const folders = useFolders()
 const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
 const joinModal = ref(false);
 const calendarSettings = ref({
-    is_saved: false,
-    record_all:false,
-    record_confirmed:false,
-    record_external:false,
-    record_im_host:false,
-    record_im_not_host:false,
-    record_internal:false,
-    record_recurring:false
+    is_saved: true,
+    record_all:true,
+    record_confirmed:true,
+    record_external:true,
+    record_im_host:true,
+    record_im_not_host:true,
+    record_internal:true,
+    record_recurring:true
 })
 
 const folder = ref({
@@ -36,7 +36,11 @@ const getCalendarSetting = () => {
     if(calendar.calendarSettingData == null) {
         calendar.calendarSetting().then((resp:any) => {
             if(resp.success){
-                setCalendarOption();    
+                if(resp.data == null) {
+                    saveCalendarSetting();
+                }else{
+                    setCalendarOption();    
+                }
             }  
         })
     }else{
