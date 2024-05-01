@@ -5,7 +5,8 @@
   const QuickQuestionUpdate = ref(false);
   const quickQuestions = useQuickQuestions()
   const { $toast } = useNuxtApp()
-  const quickQuestionParams = { page: 1,search:'' }
+  const { $api } = useNuxtApp()
+  const quickQuestionParams = ref({ page: 1,search:'' })
   const items = [
     { value: "private", icon: 'fas fa-lock',labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
     { value: "public", icon: 'fas fa-user-group',labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
@@ -46,6 +47,10 @@
   })
 
   const createQuickQuestion = async () =>{ 
+    // await $api('/quick-question', {
+    //   method: 'post',
+    //   body: quickQuestion.value,
+    // });
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
