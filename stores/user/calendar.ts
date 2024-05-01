@@ -8,7 +8,7 @@ export const useCalendar = defineStore('calendar', {
     async create(data: any) {
       try {
         console.log("data--",data)
-        // const response = await useAPI('/settings', {
+        // const response = await useAPI('/calendar/connect/google', {
         //   method: 'post',
         //   body: data,
         // });
