@@ -64,12 +64,12 @@ const tabItems = ref([
 const tableHeadings = ref([
   { title: "ID", value: "id" },
   { title: "Name", value: "name" },
-  { title: "Type", value: "type" },
+  { title: "Type", value: "access_type" },
   { title: "Record", value: "record" },
-  { title: "Calendar Platform", value: "platform" },
+  { title: "Calendar Platform", value: "is_type" },
   { title: "Date", value: "date" },
   { title: "Time", value: "time" },
-  { title: "Meeting Platform", value: "meeting_platform" },
+  { title: "Meeting Platform", value: "platform" },
   { title: "Folder", value: "folder" },
   { title: "Action", value: "action" }
 ]);
