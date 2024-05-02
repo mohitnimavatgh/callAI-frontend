@@ -1,3 +1,103 @@
+<script setup lang="ts">
+import AuthHeader from '@/layouts/AuthHeader'
+import AppFooter from '@/layouts/AppFooter'
+import FacebookBtn from '@/components/Facebook'
+import { useAuth } from "@/stores/auth";
+import { useVuelidate } from "@vuelidate/core";
+import type { useTokenClient, AuthCodeFlowSuccessResponse } from "vue3-google-signin";
+// import { decodeCredential} from "vue3-google-signin";
+import { required, email, helpers } from "@vuelidate/validators";
+const router = useRouter()
+definePageMeta({
+    layout: 'loginLayout',
+    // middleware: ["is-authenticate"]
+})
+const loading = ref(false)
+const login = ref({
+    email: '',
+    password: ''
+})
+
+const loginData = ref({
+    email: login.value.email,
+    password: login.value.password,
+    login_type: null,
+    social_login_type: null,
+    google_id: null,
+    facebook_id: null
+});
+
+const rules = {
+    login: {
+        email: {
+            required: helpers.withMessage("The Email field is required", required),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        password: { required: helpers.withMessage("The Password field is required", required) }
+    }
+}
+const v$ = useVuelidate(rules, { login })
+const auth = useAuth()
+const { $toast } = useNuxtApp()
+
+const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
+    const responseData = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: {
+            Authorization: `Bearer ${response.access_token}`,
+        },
+    });
+    if (responseData.ok) {
+        const userInfo = await responseData.json();
+        console.log('User Information:', userInfo);
+        loginData.value.email = userInfo.email
+        loginData.value.google_id = userInfo.sub
+        loginData.value.social_type = 'google';
+        loginAction()
+    } else {
+        console.error('Failed to fetch user information');
+    }
+}
+
+const handleOnError = () => {
+    console.error("Login failed");
+};
+
+const { login: googleLogin } = useTokenClient({
+    onSuccess: handleOnSuccess,
+    onError: handleOnError,
+});
+
+const facebookLogin = (data: any) => {
+    loginData.value.email = data.email
+    loginData.value.facebook_id = data.social_id
+    loginData.value.social_type = 'facebook';
+    loginAction()
+}
+
+const loginAction = () => {
+    console.log("loginData.value", loginData.value)
+    auth.login(loginData.value).then((resp: any) => {
+        if (resp?.success) {
+            loading.value = false
+            $toast('success', 'Login Successfully', { duration: 10000 })
+            router.push(`call-ai`);
+        }
+    }).catch(error => {
+        console.log("error: " + error)
+    });
+}
+
+const loginBtn = async () => {
+    const result = await v$.value.$validate()
+    if (result) {
+        loginData.value.email = login.value.email,
+            loginData.value.password = login.value.password,
+            loading.value = true
+        loginAction();
+    }
+}
+</script>
+
 <template>
     <div class="flex flex-col min-h-screen">
         <AuthHeader />
@@ -75,6 +175,15 @@
                             <h3 class="text-md flex justify-center font-semibold text-gray-600">Log In to Your Account</h3>
                             <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
                                 <div>
+                                    <Button :text="'Sign Up with Google'" id="googleAction" @click="googleLogin()"
+                                        class="w-full flex justify-center" frontIcon="fa-brands fa-google" outline />
+                                </div>
+                                <div>
+                                    <FacebookBtn @facebookData="facebookLogin" />
+                                </div>
+                            </div>
+                            <!-- <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
+                                <div>
                                     <Button :text="'Sign Up with Google'" class="w-full flex justify-center"
                                         frontIcon="fa-brands fa-google" outline />
                                 </div>
@@ -82,7 +191,7 @@
                                     <Button :text="'Sign Up with Facebook'" class="w-full flex justify-center"
                                         frontIcon="fa-brands fa-facebook" />
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="flex items-center my-5">
                                 <div class="flex-grow border-b border-gray-300"></div>
                                 <h2 class="px-3 text-xs text-gray-400">Or</h2>
@@ -114,51 +223,3 @@
         <AppFooter />
     </div>
 </template>
-  
-
-<script setup lang="ts">
-import AuthHeader from '@/layouts/AuthHeader'
-import AppFooter from '@/layouts/AppFooter'
-import { useAuth } from "@/stores/auth";
-import { useVuelidate } from "@vuelidate/core";
-import { required, email, helpers } from "@vuelidate/validators";
-const router = useRouter()
-definePageMeta({
-    layout: 'loginLayout',
-    // middleware: ["is-authenticate"]
-})
-const loading = ref(false)
-const login = ref({
-    email: '',
-    password: ''
-})
-const rules = {
-    login: {
-        email: {
-            required: helpers.withMessage("The Email field is required", required),
-            email: helpers.withMessage("Please Enter a valid Email Address", email),
-        },
-        password: { required: helpers.withMessage("The Password field is required", required) }
-    }
-}
-const v$ = useVuelidate(rules, { login })
-const auth = useAuth()
-const { $toast } = useNuxtApp()
-
-
-async function loginBtn() {
-    const result = await v$.value.$validate()
-    if (result) {
-        loading.value = true
-        auth.login(login.value).then((resp: any) => {
-            if (resp?.success) {
-                loading.value = false
-                $toast('success', 'Login Successfully', { duration: 10000 })
-                router.push(`call-ai`);
-            }
-        }).catch(error => {
-            console.log("error: " + error)
-        });
-    }
-}
-</script>

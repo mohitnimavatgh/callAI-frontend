@@ -47,7 +47,7 @@
                 <label :for="'checkbox-table-search-' + index" class="sr-only">checkbox</label>
               </div>
             </td>
-            <td v-for="(value, key) in item" :key="key" class="px-6 py-4">
+            <td v-for="(value, key) in item" :key="key" class="px-6 text-nowrap py-4">
               <slot :item="item" :value="value" :key="key" :name="key">{{ value }}</slot>
             </td>
           </tr>

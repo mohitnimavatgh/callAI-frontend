@@ -33,10 +33,10 @@ const meetingDateTime = (type) => {
     }       
 }
 
-const getStatusColor = (status) =>{
+const getStatusColor = (status: string) =>{
     if(status == 'pending'){
         return 'orange'
-    }else if(status == 'in progress'){
+    }else if(status == 'in_progress'){
         return 'yellow'
     }else if(status == 'complete'){
         return 'green'
@@ -154,7 +154,7 @@ const getDuration = () =>{
                             <li class="ms-4" v-for="getStatus in detail?.meeting_status">
                                 <div :class="`absolute w-3 h-3 bg-${getStatusColor(getStatus?.status)}-400 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700`"></div>
                                 <time class="mb-1 text-xs font-normal leading-none text-gray-600 dark:text-gray-500">{{ formatTimestamp(getStatus?.created_at) }}</time>
-                                <p class="pb-8 mt-2 dark:text-white" :class="`text-${getStatusColor(getStatus?.status)}-500`"><span  class="text-xs font-medium px-2.5 py-0.5 rounded" :class="`text-${getStatusColor(getStatus?.status)}-500 bg-${getStatusColor(getStatus?.status)}-100 dark:bg-${getStatusColor(getStatus?.status)}-900 dark:text-${getStatusColor(getStatus?.status)}-300`">{{ getStatus?.status }}</span></p>
+                                <p class="pb-8 mt-2 dark:text-white" :class="`text-${getStatusColor(getStatus?.status)}-500`"><span class="text-xs capitalize font-medium px-2.5 py-0.5 rounded" :class="`text-${getStatusColor(getStatus?.status)}-500 bg-${getStatusColor(getStatus?.status)}-100 dark:bg-${getStatusColor(getStatus?.status)}-900 dark:text-${getStatusColor(getStatus?.status)}-300`">{{ getStatus?.status.replace(/_/g, ' ') }}</span></p>
                             </li>
                         </ol>
                     </div>

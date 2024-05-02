@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useQuickQuestions = defineStore('quickQuestions', {
   state: () => ({
     quickQuestions: null,
+    allQuickQuestions:null
   }),
   actions: {
     async create(quickQuestion: any) {
@@ -23,8 +24,12 @@ export const useQuickQuestions = defineStore('quickQuestions', {
             method: 'get',
             params : quickQuestion
         });
-        const responseData = response.data.value;       
-        this.quickQuestions = responseData.data           
+        const responseData = response.data.value; 
+        if(quickQuestion?.page){
+          this.quickQuestions = responseData.data
+        }else{
+          this.allQuickQuestions = responseData.data
+        }                  
         return responseData;
       } catch (error) {
         throw error;

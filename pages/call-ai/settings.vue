@@ -12,7 +12,7 @@
         selectedTab: '',
         tabItems: [
           { label: 'Bot', icon: 'fas fa-robot', url: 'call-ai-settings' },
-          { label: 'Calander', icon: 'fas fa-calendar', url: 'call-ai-settings-calender' },
+          { label: 'Calander', icon: 'fas fa-calendar', url: 'call-ai-settings-calendar' },
           { label: 'Folders', icon: 'fas fa-folder-open', url: 'call-ai-settings-folders' },
           { label: 'Quick Questions', icon: 'fas fa-question', url: 'call-ai-settings-quick-questions' }
         ]

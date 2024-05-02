@@ -1,3 +1,48 @@
+<script setup lang="ts">
+import AuthHeader from '@/layouts/AuthHeader'
+import AppFooter from '@/layouts/AppFooter'
+import { useAuth } from "@/stores/auth";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email,helpers } from "@vuelidate/validators";
+const router = useRouter()
+definePageMeta({
+    layout: 'loginLayout',
+    // middleware: ["is-authenticate"]
+})
+const loading = ref(false)
+const login = ref({
+    email: '',
+    password: ''
+})
+const rules = {
+    login: {
+        email: { 
+            required: helpers.withMessage("The Email field is required", required),
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
+        },
+        password: { required: helpers.withMessage("The Password field is required", required) }
+    }
+}
+const v$ = useVuelidate(rules, {login})
+const auth = useAuth()
+const { $toast } = useNuxtApp()
+
+
+async function loginBtn() {
+    $toast('success', 'Login Successfully', { duration: 10000 })
+    const result = await v$.value.$validate()
+        if (result) {
+            loading.value = true
+            auth.login(login.value).then((resp:any) => {
+                if(resp.success) {
+                    loading.value = false
+                    $toast('success', 'Login Successfully', { duration: 10000 })
+                    router.push(`call-ai`);
+                }
+            })
+        }
+}
+</script>
 <template>
     <div class="flex flex-col min-h-screen">
         <AuthHeader />
@@ -113,51 +158,4 @@
         </section>
         <AppFooter />
     </div>
-</template>
-  
-
-<script setup lang="ts">
-import AuthHeader from '@/layouts/AuthHeader'
-import AppFooter from '@/layouts/AppFooter'
-import { useAuth } from "@/stores/auth";
-import { useVuelidate } from "@vuelidate/core";
-import { required, email, helpers } from "@vuelidate/validators";
-const router = useRouter()
-definePageMeta({
-    layout: 'loginLayout',
-    // middleware: ["is-authenticate"]
-})
-const loading = ref(false)
-const login = ref({
-    email: '',
-    password: ''
-})
-const rules = {
-    login: {
-        email: {
-            required: helpers.withMessage("The Email field is required", required),
-            email: helpers.withMessage("Please Enter a valid Email Address", email),
-        },
-        password: { required: helpers.withMessage("The Password field is required", required) }
-    }
-}
-const v$ = useVuelidate(rules, { login })
-const auth = useAuth()
-const { $toast } = useNuxtApp()
-
-
-async function loginBtn() {
-    $toast('success', 'Login Successfully', { duration: 10000 })
-    const result = await v$.value.$validate()
-    if (result) {
-        loading.value = true
-        auth.login(login.value).then((resp: any) => {
-            if (resp.success) {
-                loading.value = false
-                $toast('success', 'Login Successfully', { duration: 10000 })
-                router.push(`call-ai`);
-            }
-        })
-    }
-}
-</script>
+  </template>

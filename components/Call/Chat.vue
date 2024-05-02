@@ -26,7 +26,7 @@ const faqsList = computed(() => {
     return  [];
 });
    
-const quickQuestionParams = { page: 1,search:'' }
+const quickQuestionParams = { page: null,search:'' }
 const chatToCallParams = { meeting_id: meetingId.value }
 
 onMounted(async () => {
@@ -46,7 +46,7 @@ const quickQuestionPageChange = (page: any) => {
     getQuickQuestions()
 };
 
-const quickQuestionLists = computed(() => quickQuestions.quickQuestions);
+const quickQuestionLists = computed(() => quickQuestions.allQuickQuestions);
 const chatToCallLists = computed(() => chatToCall.getChatList);
 
 const handleKeyEvent = () => {
@@ -85,12 +85,13 @@ const quickQuestionCall = (item) => {
             <div class="mt-5">
                 <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Quick Questions</label>
                 <div class="bg-white rounded-lg p-5 text-gray-600 text-sm leading-7">
-                    <button type="button" v-for="quickQuestion in quickQuestionLists.data" @click="quickQuestionCall(quickQuestion)" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2">
-                        {{ quickQuestion.name }}
-                    </button>
-                    <div class="flex justify-end">
-                        <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
-                    </div>
+                    <ul>
+                        <li v-for="quickQuestion in quickQuestionLists" :key="index">
+                            <button type="button"  @click="quickQuestionCall(quickQuestion)" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2">
+                                {{ quickQuestion.name }}
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -34,6 +34,18 @@ export const useFolders = defineStore('folders', {
         } catch (error) {
         throw error;
         }
+    },
+    async update(data:any) {
+      try {      
+        const response = await useAPI(`/folders/update/?id=${data.id}`, {
+          method: 'PATCH',
+          body: data,
+        });
+        const responseData = response.data.value;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
     }
   },
   persist: {

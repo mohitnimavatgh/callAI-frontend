@@ -15,18 +15,20 @@ export const useAuth = defineStore('auth', {
         });
         const responseData = response.data.value;
     
-        if(responseData.success) {
-          console.log('response.data', responseData.data);
-          this.userInfo = responseData.data;
-          this.authenticated = true;
-          this.role = this.userInfo?.role;
-          localStorage.setItem("access_token", this.userInfo.access_token);
-          localStorage.setItem("isAuthenticated", true);
+        if(responseData.success) {   
+          this.userInfoAction(responseData.data);
         }
         return responseData;
       } catch (error) {
         throw error;
       }
+    },
+    async userInfoAction(response: any) {
+      this.userInfo = response;
+      this.authenticated = true;
+      this.role = this.userInfo?.role;      
+      localStorage.setItem("access_token", this.userInfo.access_token);
+      localStorage.setItem("isAuthenticated", true);
     },
     async signup(data: any) {
       try {
@@ -35,6 +37,12 @@ export const useAuth = defineStore('auth', {
           body: data,
         });
         const responseData = response.data.value;
+        if(responseData.success) {
+          if(responseData.data.social_type){
+            console.log("responseData.data-",responseData.data)
+            this.userInfoAction(responseData.data);
+          }
+        }
         return responseData;
       } catch (error) {
         throw error;

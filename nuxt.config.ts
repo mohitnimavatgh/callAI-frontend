@@ -5,12 +5,16 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/css/global.css', '@fortawesome/fontawesome-free/css/all.css'],
   modules: [
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt'
+    '@pinia-plugin-persistedstate/nuxt',
+    'nuxt-vue3-google-signin'
   ],
   plugins: [
     '~/plugins/api',
     
   ],
+  googleSignIn: {
+    clientId: import.meta.env.GOOGLE_CLIENT_ID,
+  },
   devServer: {
       host: ' 192.168.1.18',
       port: '3000'

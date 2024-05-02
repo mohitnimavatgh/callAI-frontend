@@ -45,9 +45,14 @@ const actionList = ref([
     { value: 'action', name: 'Send Email'}
 ])
 
+const emailArray = ref([]);
+
 const botSave = async() => {
     const result = await v$.value.$validate()
     if (result) { 
+        if(bot.value.after_complete_run_actions == 'Send Email') {
+            bot.value.multiple_emails = emailArray.value
+        }
         bots.create(bot.value).then((resp:any) => {
             if(resp?.success) {   
                 $toast('success', 'bot create Successfully', { duration: 10000 })
@@ -56,6 +61,21 @@ const botSave = async() => {
             console.log("Error:", error);                  
         })
     }
+}
+
+const handleKeys = (event) => {
+    // console.log("v$.value.$errors.length--",v$.value.$errors.length)
+    if (event.key === 'Enter' && v$.value.$errors.length == 0) {
+        event.preventDefault();
+        if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
+            emailArray.value.push(bot.value.multiple_emails.trim());
+            bot.value.multiple_emails = null;
+        }
+    }
+}
+
+const deleteField =(index) => {
+    emailArray.value.splice(index, 1);
 }
 
 </script>
@@ -104,7 +124,18 @@ const botSave = async() => {
                     rules="required|email"
                     v-model="v$.bot.multiple_emails.$model" 
                     :errors="v$.bot.multiple_emails.$errors"
+                    @keydown="handleKeys"
                 />
+                <ul>
+                    <li v-for="(item, index) in emailArray" :key="index">
+                        <p class="mt-2 dark:text-white text-ref-500 w-fit">
+                            <span  class="text-lg font-medium flex items-center px-2.5 py-0.5 rounded text-black-500 bg-gray-100 dark:bg-gray-900 dark:text-gray-300`">
+                                {{ item }} <i class="text-sm text-black-400 fas fa-close ml-1" @click="deleteField(index)"></i>
+                            </span>
+                            
+                        </p>
+                    </li>
+                </ul>
             </div>
             <div class="mt-4 flex justify-end">
                 <Button :text="'Save'" class="m-0" @click="botSave()" />
