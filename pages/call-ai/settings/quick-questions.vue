@@ -38,7 +38,7 @@
   const v$ = useVuelidate(rules, {quickQuestion})
 
   const getQuickQuestion = () => {
-    quickQuestions.list(quickQuestionParams)
+    quickQuestions.list(quickQuestionParams.value)
   }
 
   onMounted(async () => {
@@ -47,10 +47,6 @@
   })
 
   const createQuickQuestion = async () =>{ 
-    // await $api('/quick-question', {
-    //   method: 'post',
-    //   body: quickQuestion.value,
-    // });
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
