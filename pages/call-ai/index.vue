@@ -1,6 +1,6 @@
 <template>
     <div class=""> 
-        <div class="p-5 bg-white dark:bg-gray-800 rounded-[20px]">
+        <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
             <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
               <template v-slot:action="{ item, value }">
                   <div class="">
@@ -10,7 +10,7 @@
             </Table>
             <Pagination v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page" class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total" :currentPage="upcomingParams.page" :recordsPerPage="upcomingMeeting.per_page" @pageChange="upcomingPageChange"/>
         </div>  
-        <div class="p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
+        <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
             <Table
                 :headings="tableHeadings"
                 :data="recordedMeeting?.data"
@@ -24,10 +24,10 @@
                 @select="onSelect"
             >
                 <template v-slot:action="{ item, value }">
-                  <div class="flex justify-around">                        
-                    <i @click="shareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
-                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400"></i>
-                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400"></i>
+                  <div class="flex justify-around space-x-2">                        
+                    <i @click="shareCall(item)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                     </div>
                 </template>
             </Table>

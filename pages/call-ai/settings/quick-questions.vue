@@ -41,6 +41,14 @@
     quickQuestions.list(quickQuestionParams.value)
   }
 
+  const scrollToTop = () => {
+    //@ts-ignore
+      document.getElementById('mainBody').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+  }
+
   onMounted(async () => {
     await nextTick();
     await getQuickQuestion();
@@ -65,14 +73,15 @@
     v$.value.$reset();
   }
 
-  const edit = (data) =>{
+  const edit = (data : any) =>{
     QuickQuestionUpdate.value = true;
     quickQuestion.value.name = data.name;
     quickQuestion.value.access_type = data.access_type
     quickQuestion.value.id = data.id
+    scrollToTop()
   }
 
-  const deleteQuickQuestion = (data) =>{
+  const deleteQuickQuestion = (data : any) =>{
     quickQuestions.delete(data.id).then((resp:any) => {
       if(resp.success) {        
         getQuickQuestion();               
@@ -148,8 +157,8 @@
            >
             <template v-slot:action="{ item, value }">
                     <div class="flex justify-start">
-                        <i @click="edit(item)" class="fas fa-pen text-blue-400 mr-3"></i>
-                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash text-red-400"></i>
+                        <i @click="edit(item)" class="fas fa-pen cursor-pointer text-blue-400 mr-3"></i>
+                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash cursor-pointer text-red-400"></i>
                     </div>
                     
                 </template>

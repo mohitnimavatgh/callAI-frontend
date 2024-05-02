@@ -1,5 +1,5 @@
 <template>  
-    <footer class="absolute bottom-0 w-full bg-white rounded-lg shadow dark:bg-gray-800 border-t border-gray-200 py-1">
+    <footer class="h-full w-full bg-white rounded-lg shadow dark:bg-gray-800 border-t border-gray-200 py-1">
       <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span class="text-xs text-gray-500 xs:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">Confra</a>. All Rights Reserved.</span>
         <ul class="flex flex-wrap items-center text-xs font-medium text-primary-400 dark:text-gray-400 xs:mt-0">

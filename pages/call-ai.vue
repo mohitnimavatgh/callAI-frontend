@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div class="flex justify-between align-items-center">
-      <div>
+  <div class="px-4">
+    <div class="flex flex-wrap justify-between align-items-center">
+      <div class="pr-6">
         <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Confra</h4>
-        <p class="mb-6 text-sm font-normal text-gray-500 mt-1 dark:text-gray-400">AI-Powered Meeting Recording Simplified</p>
+        <p class="mb-3 sm:mb-6 text-sm text-nowrap font-normal text-gray-500 mt-1 dark:text-gray-400">AI-Powered Meeting Recording Simplified</p>
       </div>
       <Button :text="'Meeting Bot'" frontIcon="fas fa-video" @click="joinModal = !joinModal" class="h-full"/>
       <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal" @close="joinModal = false">
@@ -41,7 +41,7 @@
       </Modal>
     </div>  
     <!-- <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" /> -->
-    <div class="mt-5">
+    <div class="mt-5 mb-5">
       <NuxtPage />
     </div>
   </div>
