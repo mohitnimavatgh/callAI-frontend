@@ -127,10 +127,10 @@ const recordedMeeting = computed(() => meetings.recorded);
             @select="onSelect"
         >
             <template v-slot:action="{ item, value }">
-            <div class="flex justify-around">
-                    <i @click="shareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
-                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400"></i>
-                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400"></i>
+            <div class="flex space-x-2 justify-around">
+                    <i @click="shareCall(item)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                 </div>
             </template>
         </Table>

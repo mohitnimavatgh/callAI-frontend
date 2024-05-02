@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-primary-50 dark:bg-gray-800">
+  <div id="mainBody" class="bg-primary-50 main-body dark:bg-gray-800">
         <app-topbar></app-topbar>
         <div class="mt-16 container mx-auto"><Router-view></Router-view></div>            
   </div>
@@ -29,8 +29,12 @@ import { RouterView } from 'vue-router';
   </script>
   <style>
   .main-body {
-    width: 100vw;
-    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
     overflow-x: hidden;
     z-index: -1;
   }

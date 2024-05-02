@@ -13,7 +13,7 @@
                 type="text"
                 placeholder="Enter Title"
                 v-model="v$.quickQuestion.name.$model"
-                :errors="v$.quickQuestion.name.$errors" 
+                :errors="v$.quickQuestion.name.$errors"
             />
             <div class="mt-3">
                 <label class="text-sm font-medium text-gray-500 ">Quick Question Access</label>
@@ -40,10 +40,9 @@
            >
             <template v-slot:action="{ item, value }">
                     <div class="flex justify-start">
-                        <i @click="edit(item)" class="fas fa-pen text-blue-400 mr-3"></i>
-                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash text-red-400"></i>
+                        <i @click="edit(item)" class="fas fa-pen cursor-pointer text-blue-400 mr-3"></i>
+                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash cursor-pointer text-red-400"></i>
                     </div>
-                    
                 </template>
             </Table>                
             <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
@@ -94,6 +93,14 @@
     quickQuestions.list(quickQuestionParams)
   }
 
+  const scrollToTop = () => {
+    //@ts-ignore
+      document.getElementById('mainBody').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+  }
+
   onMounted(async () => {
     await nextTick();
     await getQuickQuestion();
@@ -122,14 +129,15 @@
     v$.value.$reset();
   }
 
-  const edit = (data) =>{
+  const edit = (data : any) =>{
     QuickQuestionUpdate.value = true;
     quickQuestion.value.name = data.name;
     quickQuestion.value.access_type = data.access_type
     quickQuestion.value.id = data.id
+    scrollToTop()
   }
 
-  const deleteQuickQuestion = (data) =>{
+  const deleteQuickQuestion = (data : any) =>{
     quickQuestions.delete(data.id).then((resp:any) => {
       if(resp.success) {        
         getQuickQuestion();               

@@ -1,9 +1,9 @@
 <template>
     <div class="mt-5">
-      <div class="flex justify-between">
-        <div>
+      <div class="flex flex-wrap justify-between">
+        <div class="mr-3">
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Folders</h4>        
-            <p class="text-xs font-normal text-gray-500 mt-0.5">Organize and customize your folders</p>
+            <p class="text-xs mb-3 text-nowrap font-normal text-gray-500 mt-0.5">Organize and customize your folders</p>
         </div>
         <div>
             <Button @click="ShowAddModal = true"  frontIcon="fas fa-plus" :text="'Folder'" />

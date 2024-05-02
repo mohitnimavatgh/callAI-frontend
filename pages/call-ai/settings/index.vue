@@ -75,7 +75,7 @@ const botSave = async() => {
                 type="text"
                 placeholder="Enter Bot Name"
                 rules="required"
-                v-model="v$.bot.bot_name.$model" 
+                v-model="v$.bot.bot_name.$model"
                 :errors="v$.bot.bot_name.$errors"
             />
 
