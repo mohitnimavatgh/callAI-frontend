@@ -60,7 +60,7 @@ const folders = useFolders()
 const bot = ref({
     name: '',
     folder_id: '',
-    meeting_link: 'https://goggle.com'
+    meeting_link: ''
 
 })
 const rules = {
