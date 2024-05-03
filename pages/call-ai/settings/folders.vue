@@ -103,9 +103,9 @@
       <div class="mt-3 flex justify-end">
         <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch" class="w-56 "/>
       </div>
-      <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 bg-white dark:bg-gray-800 p-5 py-10 rounded-[20px]">        
-        <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative col-span-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1 bg-white dark:bg-gray-700">
-          <div class="flex justify-between border border-gray-100 px-3 py-1 rounded-lg items-center dark:border-none">
+      <div class="mt-5 flex flex-wrap items-center bg-white dark:bg-gray-800 p-5 py-5 rounded-[20px]">        
+        <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative px-2 py-3 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-700">
+          <div class="flex justify-between border border-gray-100 px-3 py-2 rounded-lg items-center dark:border-none">
             <div class="flex items-center">
               <div class="bg-primary-50 dark:bg-gray-800 w-12 h-12 rounded-md">
                 <div class="flex w-full h-full items-center text-center justify-center">                
