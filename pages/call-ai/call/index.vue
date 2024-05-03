@@ -7,8 +7,8 @@ const meetings = useMeetings()
 const router = useRouter()
 const folders = useFolders()
 const shareModal = ref(false)
-const meeting_id = ref(null)
-
+const confirmationPopUP = ref(false)
+const call_meeting_id = ref(null);
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -68,19 +68,26 @@ const shareFolder = async () => {
     }
 }
 
-const viewCall = (item) => {
+const viewCall = (item: any) => {
     router.push(`call/${item.id}`);
 }
 
-const deleteMeet = (item) => {
-  // meetings.delete(item.id).then((resp:any) => {
-  //   if(resp.success) {               
-  //    getRecorded();
-  //   }
-  // })
+const deleteMeet = (item: any) => {
+  confirmationPopUP.value = true
+  call_meeting_id.value = item.id
+  return; 
 }
 
-const actionList = ref(["Reward", "Promote", "Activate account", "Delete User"]);
+const confirmation = (data: Boolean) => {
+  confirmationPopUP.value = false
+  if(data){
+    meetings.delete(call_meeting_id.value).then((resp:any) => {
+      if(resp.success) {               
+        getRecorded();
+      }
+    })
+  }
+}
 
 const getRecorded = () => {
   meetings.recordedMeeting(recordedParams)
@@ -147,7 +154,7 @@ const recordedMeeting = computed(() => meetings.recorded);
             </div>
         </Modal>
      <NuxtPage />
-
+     <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/> 
        </div>
 </template>
 

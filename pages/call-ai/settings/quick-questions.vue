@@ -17,9 +17,9 @@
     { title: 'Access', value: 'access_type' },
     { title: 'Action', value: 'action' },
  ];
-
+  const confirmationPopUP = ref(false)
   const quickQuestionLists = computed(() => quickQuestions.quickQuestions);
-
+  const quick_questions_id = ref(null)
   const quickQuestion = ref({
     name: '',
     access_type: 'private',   
@@ -82,11 +82,9 @@
   }
 
   const deleteQuickQuestion = (data : any) =>{
-    quickQuestions.delete(data.id).then((resp:any) => {
-      if(resp.success) {        
-        getQuickQuestion();               
-      }
-    })
+    confirmationPopUP.value = true
+    quick_questions_id.value = data.id
+    return;  
   }
 
   const updateQuickQuestion = async () =>{  
@@ -102,17 +100,26 @@
     }
   }
 
-  const handleSearch = (value) => {
-    quickQuestionParams.page = 1
-    quickQuestionParams.search = value    
+  const handleSearch = (data:any) => {
+    quickQuestionParams.value.page = 1
+    quickQuestionParams.value.search = data    
     getQuickQuestion();
   };
 
   const quickQuestionPageChange = (page: any) => {
-    quickQuestionParams.page = page
+    quickQuestionParams.value.page = page
     getQuickQuestion()
   };
-
+  const confirmation = (data: Boolean) => {
+    confirmationPopUP.value = false
+    if(data){
+       quickQuestions.delete(quick_questions_id.value).then((resp:any) => {
+        if(resp.success) {        
+          getQuickQuestion();               
+        }
+      })
+    }
+  }
 </script>
 <template>
     <div class="mt-5">
@@ -165,5 +172,6 @@
             </Table>                
             <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
         </div>
+        <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/> 
     </div>
 </template>

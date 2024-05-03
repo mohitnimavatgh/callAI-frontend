@@ -44,6 +44,7 @@
                 <Button :text="'Cancel'" @click="shareModal = false" outline/>
             </div>
         </Modal>
+        <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/>
     </div>
 </template>
 <script setup lang="ts">
@@ -55,6 +56,8 @@ const meetings = useMeetings()
 const folders = useFolders()
 const router = useRouter()
 const shareModal = ref(false)
+const confirmationPopUP = ref(false)
+const call_meeting_id = ref(null)
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -154,21 +157,30 @@ const shareFolder = async () => {
     }
 }
 
-const shareCall = (item) => {    
+const shareCall = (item:any) => {    
     folder.value.meeting_id = item.id
     shareModal.value = true
 }
 
-const viewCall = (item) => {
+const viewCall = (item:any) => {
     router.push(`call-ai/call/${item.id}`);
 }
 
-const deleteMeet = (item) => {
-  // meetings.delete(item.id).then((resp:any) => {
-  //   if(resp.success) {               
-  //    getRecorded();
-  //   }
-  // })
+const deleteMeet = (item: any) => {
+  confirmationPopUP.value = true
+  call_meeting_id.value = item.id
+  return; 
+}
+
+const confirmation = (data: Boolean) => {
+  confirmationPopUP.value = false
+  if(data){
+    meetings.delete(call_meeting_id.value).then((resp:any) => {
+      if(resp.success) {               
+       getRecorded();
+      }
+    })
+  }
 }
 
 const upcomingMeeting = computed(() => meetings.upcoming);
