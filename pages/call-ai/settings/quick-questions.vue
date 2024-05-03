@@ -17,7 +17,7 @@
     { title: 'Access', value: 'access_type' },
     { title: 'Action', value: 'action' },
  ];
-
+  const confirmationPopUP = ref(false)
   const quickQuestionLists = computed(() => quickQuestions.quickQuestions);
 
   const quickQuestion = ref({
@@ -77,6 +77,8 @@
   }
 
   const deleteQuickQuestion = (data) =>{
+    confirmationPopUP.value = true
+    return 
     quickQuestions.delete(data.id).then((resp:any) => {
       if(resp.success) {        
         getQuickQuestion();               
@@ -107,7 +109,9 @@
     quickQuestionParams.page = page
     getQuickQuestion()
   };
-
+  const confirmation = (value: Boolean) => {
+    confirmationPopUP.value = value
+  }
 </script>
 <template>
     <div class="mt-5">
@@ -160,5 +164,6 @@
             </Table>                
             <Pagination v-if="quickQuestionLists && quickQuestionLists.total && quickQuestionLists.per_page && quickQuestionLists.total > quickQuestionLists.per_page" class="mt-4 flex justify-end" :totalRecords="quickQuestionLists.total" :currentPage="quickQuestionParams.page" :recordsPerPage="quickQuestionLists.per_page" @pageChange="quickQuestionPageChange"/>
         </div>
+        <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/> 
     </div>
 </template>
