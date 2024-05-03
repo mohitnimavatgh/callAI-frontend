@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   ],
   plugins: [
     '~/plugins/api',
-    
   ],
   googleSignIn: {
     clientId: import.meta.env.GOOGLE_CLIENT_ID,
