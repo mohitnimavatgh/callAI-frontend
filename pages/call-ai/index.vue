@@ -2,9 +2,10 @@
     <div class=""> 
         <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
             <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
-              <template v-slot:action="{ item, value }">
-                  <div class="">
-                        <i class="fas fa-pencil text-primary-400"></i>
+              <template v-slot:action="{ item, value, index }">
+                  <div class="flex space-x-2">
+                        <i class="fas fa-pencil text-primary-400" @click="edit(index)"></i>
+                        <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                     </div>
                 </template>
             </Table>
@@ -23,11 +24,11 @@
                 @tab-click="handleTabClick"
                 @select="onSelect"
             >
-                <template v-slot:action="{ item, value }">
+                <template v-slot:action="{ item, value, index }">
                   <div class="flex justify-around space-x-2">                        
-                    <i @click="shareCall(item)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
-                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+                    <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+                    <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+                    <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                     </div>
                 </template>
             </Table>
@@ -44,6 +45,39 @@
                 <Button :text="'Cancel'" @click="shareModal = false" outline/>
             </div>
         </Modal>
+        <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal" @close="joinModal = false">
+          <div class="modal-content  p-4 md:p-5">
+            <div class="col-span-2 mb-3">
+              <FormInput 
+                  id="Name"
+                  label="Meeting Name"
+                  name="Name"
+                  type="text"
+                  placeholder="Name"
+                  v-model="vv$.bot.name.$model"
+                  :errors="vv$.bot.name.$errors"
+              />
+            </div>
+            <div class="col-span-2 mb-3">
+              <FormSelect label="Folder" placeholder="Folders" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model" :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
+            </div>
+            <div class="col-span-2">
+              <FormInput 
+                  id="Meeting URL"
+                  label="Meeting URL"
+                  name="Meeting URL"
+                  type="text"
+                  placeholder="Meeting URL"
+                  v-model="vv$.bot.meeting_link.$model"
+                  :errors="vv$.bot.meeting_link.$errors"
+              />
+            </div>
+          </div>
+          <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <Button class="mr-2" :text="'Update Meeting'" frontIcon="fas fa-plus" @click="updateBot"/>
+            <Button :text="'Cancel'" @click="joinModal = false" outline/>
+          </div>
+        </Modal>
         <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/>
     </div>
 </template>
@@ -51,13 +85,17 @@
 import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required,url,helpers } from "@vuelidate/validators";
 const meetings = useMeetings()
 const folders = useFolders()
 const router = useRouter()
 const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null)
+const recordedData = ref([])
+const upcomingData = ref([])
+const deleteAction = ref('')
+const joinModal = ref(false);
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -65,7 +103,6 @@ const tabItems = ref([
 ]);
 
 const tableHeadings = ref([
-  { title: "ID", value: "id" },
   { title: "Name", value: "name" },
   { title: "Type", value: "access_type" },
   { title: "Record", value: "record" },
@@ -76,6 +113,51 @@ const tableHeadings = ref([
   { title: "Folder", value: "folder" },
   { title: "Action", value: "action" }
 ]);
+
+const bot = ref({
+    name: '',
+    folder_id: '',
+    meeting_link: ''
+
+})
+const botRules = {
+    bot: {
+        name: {
+          required: helpers.withMessage("The Name field is required", required),
+        },
+        folder_id: {
+          required: helpers.withMessage("The Folder field is required", required),
+        },
+        meeting_link: { 
+            required: helpers.withMessage("The Meeting field is required", required),
+            url: helpers.withMessage("Please Enter a valid Meeting URL", url),
+        }
+    }
+}
+const vv$ = useVuelidate(botRules, {bot})
+
+const edit = (index:any) => {
+    let data = upcomingData.value[index]
+    console.log("datr",data)
+    bot.value.id = data.id
+    bot.value.name = data.name
+    bot.value.folder_id = data.folder_id
+    bot.value.meeting_link = data.meeting_link
+    joinModal.value = true
+}
+
+const updateBot = async () => {
+  const result = await vv$.value.$validate()
+    if (result) {
+      meetings.update(bot.value).then((resp:any) => {
+          if(resp.success) {
+            getUpcoming()
+            joinModal.value = false
+          }
+      })
+    }
+}
+
 const upcomingParams = {
   page: 1,
   meeting: 'upcoming',
@@ -157,18 +239,27 @@ const shareFolder = async () => {
     }
 }
 
-const shareCall = (item:any) => {    
-    folder.value.meeting_id = item.id
+const shareCall = (index:any) => {    
+    folder.value.meeting_id = recordedData.value[index]?.id
     shareModal.value = true
 }
 
-const viewCall = (item:any) => {
-    router.push(`call-ai/call/${item.id}`);
+const viewCall = (index:any) => {
+    // console.log("recordedData--",recordedData.value[index])
+    router.push(`call-ai/call/${recordedData.value[index]?.id}`);
 }
 
-const deleteMeet = (item: any) => {
+const deleteMeet = (index: any) => {
   confirmationPopUP.value = true
-  call_meeting_id.value = item.id
+  deleteAction.value = 'recorded'
+  call_meeting_id.value = recordedData.value[index]?.id
+  return; 
+}
+
+const deleteUpcomingMeet = (index: any) => {
+  confirmationPopUP.value = true
+  deleteAction.value = 'upcoming'
+  call_meeting_id.value = upcomingData.value[index]?.id
   return; 
 }
 
@@ -176,13 +267,25 @@ const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
   if(data){
     meetings.delete(call_meeting_id.value).then((resp:any) => {
-      if(resp.success) {               
-       getRecorded();
+      if(resp.success) {  
+        if(deleteAction.value = 'upcoming'){
+          getUpcoming();             
+        }else{
+          getRecorded();
+        }
       }
     })
   }
 }
 
-const upcomingMeeting = computed(() => meetings.upcoming);
-const recordedMeeting = computed(() => meetings.recorded);
+const upcomingMeeting = computed(() =>{
+ let upcomingAll = meetings.upcoming
+ upcomingData.value = upcomingAll?.data
+ return upcomingAll
+});
+const recordedMeeting = computed(() => {
+  let recordedAll = meetings.recorded
+  recordedData.value = recordedAll?.data
+  return recordedAll
+});
 </script>

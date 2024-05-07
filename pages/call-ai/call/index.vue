@@ -9,6 +9,7 @@ const folders = useFolders()
 const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null);
+const recordedData = ref([]);
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -17,7 +18,6 @@ const tabItems = ref([
 ]);
 
 const tableHeadings = ref([
-  { title: "Id", value: "id" },
   { title: "Name", value: "name" },
   { title: "Type", value: "access_type" },
   { title: "Record", value: "record" },
@@ -51,8 +51,8 @@ const rules = {
 }
 const v$ = useVuelidate(rules, {folder})
 
-const shareCall = (item) => {    
-    folder.value.meeting_id = item.id
+const shareCall = (index) => {    
+    folder.value.meeting_id = recordedData.value[index]?.id
     shareModal.value = true
 }
 
@@ -68,13 +68,13 @@ const shareFolder = async () => {
     }
 }
 
-const viewCall = (item: any) => {
-    router.push(`call/${item.id}`);
+const viewCall = (index: any) => {
+    router.push(`call/${recordedData.value[index]?.id}`);
 }
 
-const deleteMeet = (item: any) => {
+const deleteMeet = (index: any) => {
   confirmationPopUP.value = true
-  call_meeting_id.value = item.id
+  call_meeting_id.value = recordedData.value[index]?.id
   return; 
 }
 
@@ -116,7 +116,11 @@ const onSelect = (item: any) => {
   recordedParams.action = item.id
   getRecorded()
 };
-const recordedMeeting = computed(() => meetings.recorded);
+const recordedMeeting = computed(() => {
+  let recordedAll = meetings.recorded
+  recordedData.value = recordedAll?.data
+ return recordedAll
+});
 </script>
 
 <template>
@@ -133,11 +137,11 @@ const recordedMeeting = computed(() => meetings.recorded);
             @tab-click="handleTabClick"
             @select="onSelect"
         >
-            <template v-slot:action="{ item, value }">
+            <template v-slot:action="{ item, value, index }">
             <div class="flex space-x-2 justify-around">
-                    <i @click="shareCall(item)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-                    <i @click="viewCall(item)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
-                    <i @click="deleteMeet(item)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+                    <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+                    <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+                    <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                 </div>
             </template>
         </Table>

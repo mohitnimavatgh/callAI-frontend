@@ -9,6 +9,7 @@ const calendar = useCalendar()
 const folders = useFolders()
 const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
 const joinModal = ref(false);
+const microsoftTeamsCode = ref('')
 const calendarSettings = ref({
     is_saved: true,
     record_all:true,
@@ -62,7 +63,7 @@ const setCalendarOption = () => {
 
 const googleCalendar = async () =>{
     const result = await v$.value.$validate()
-    if (result) {
+    if (result) {  
         const params = {
             client_id: google_client_id,
             redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
@@ -84,7 +85,30 @@ const googleCalendar = async () =>{
 
 const refreshToken = () => {
     folder.value.code = route.query.code;
-    calendar.create(folder.value).then((resp:any) => {
+    calendar.google(folder.value).then((resp:any) => {
+        if(resp?.success) {   
+            router.push('/call-ai/settings/calendar'); 
+        }
+    }).catch((error) => {
+        console.log("Error:", error);                  
+    })
+}
+
+const microsoftTeamsCalendar = () => {
+    const params = {
+        client_id: 'b547715d-e50f-4ca6-9184-cd206d549cdd',
+        redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
+        response_type: 'code',
+        scope: 'offline_access openid email calendars.ReadWrite'       
+    };
+    const url = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?");
+    url.search = new URLSearchParams(params).toString();   
+    let redirectUrl = url.toString();    
+    window.location.href = redirectUrl;
+}
+
+const getMicrosoftToken = () =>{
+    calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
         if(resp?.success) {   
             router.push('/call-ai/settings/calendar'); 
         }
@@ -110,6 +134,9 @@ onMounted(async () => {
     await folders.list()
     if(route.query.code){
         refreshToken();
+    }else if(route.query.code && Object.keys(route.query).length == 1){
+        microsoftTeamsCode.value = route.query.code
+        getMicrosoftToken();
     }
 })
 
@@ -134,7 +161,7 @@ onMounted(async () => {
                     <img class="w-6 mr-2" src="@/assets/image/teams-calendar.png" alt="Microsoft Teams Calendar"/>
                     <span class="font-medium text-gray-500 text-sm">Microsoft Teams Calendar</span>
                 </div>
-                <Button :text="'Disconnect'" class="mt-2" />
+                <Button :text="'Disconnect'" @click="microsoftTeamsCalendar()" class="mt-2" />
             </div>
         </div>
         <div>

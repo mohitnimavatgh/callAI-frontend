@@ -48,7 +48,7 @@
               </div>
             </td>
             <td v-for="(value, key) in item" :key="key" class="px-6 text-nowrap py-4">
-              <slot :item="item" :value="value" :key="key" :name="key">{{ value }}</slot>
+              <slot :item="item" :value="value" :index="index" :key="key" :name="key">{{ value }}</slot>
             </td>
           </tr>
           
