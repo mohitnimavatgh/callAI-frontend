@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-
+import { initFlowbite } from 'flowbite'
 interface Accordion {
   isOpen: boolean;
   // Add other properties if needed
@@ -25,6 +25,7 @@ watch(() => props.accordions, (newQuestion, oldQuestion) => {
 },{ deep: true, immediate: true });
 
 onMounted(() => {
+  initFlowbite();
   props.accordions.forEach(accordion => {
     accordion.isOpen = true;
   });
