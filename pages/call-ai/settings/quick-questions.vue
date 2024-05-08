@@ -3,6 +3,7 @@
   import { useVuelidate } from "@vuelidate/core";
   import { required, helpers } from "@vuelidate/validators";
   const QuickQuestionUpdate = ref(false);
+  const quickQuestionsData = ref([]);
   const quickQuestions = useQuickQuestions()
   const { $toast } = useNuxtApp()
   const { $api } = useNuxtApp()
@@ -12,13 +13,16 @@
     { value: "public", icon: 'fas fa-user-group',labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
   ];
  const tableHeadings = [
-    { title: 'Id', value: 'id' },
     { title: 'Name', value: 'name' },
     { title: 'Access', value: 'access_type' },
     { title: 'Action', value: 'action' },
  ];
   const confirmationPopUP = ref(false)
-  const quickQuestionLists = computed(() => quickQuestions.quickQuestions);
+  const quickQuestionLists = computed(() => {    
+    let quickQuestionsAll = quickQuestions.quickQuestions
+    quickQuestionsData.value = quickQuestionsAll?.data
+    return quickQuestionsAll
+  });
   const quick_questions_id = ref(null)
   const quickQuestion = ref({
     name: '',
@@ -73,17 +77,18 @@
     v$.value.$reset();
   }
 
-  const edit = (data : any) =>{
+  const edit = (index : any) =>{
     QuickQuestionUpdate.value = true;
+    let data = quickQuestionsData.value[index];
+    quickQuestion.value.id = data.id
     quickQuestion.value.name = data.name;
     quickQuestion.value.access_type = data.access_type
-    quickQuestion.value.id = data.id
     scrollToTop()
   }
 
-  const deleteQuickQuestion = (data : any) =>{
+  const deleteQuickQuestion = (index : any) =>{
     confirmationPopUP.value = true
-    quick_questions_id.value = data.id
+    quick_questions_id.value = quickQuestionsData.value[index]?.id
     return;  
   }
 
@@ -162,10 +167,10 @@
                title="Quick Questions"
                @search="handleSearch"
            >
-            <template v-slot:action="{ item, value }">
+            <template v-slot:action="{ item, value, index }">
                     <div class="flex justify-start">
-                        <i @click="edit(item)" class="fas fa-pen cursor-pointer text-blue-400 mr-3"></i>
-                        <i @click="deleteQuickQuestion(item)" class="fas fa-trash cursor-pointer text-red-400"></i>
+                        <i @click="edit(index)" class="fas fa-pen cursor-pointer text-blue-400 mr-3"></i>
+                        <i @click="deleteQuickQuestion(index)" class="fas fa-trash cursor-pointer text-red-400"></i>
                     </div>
                     
                 </template>

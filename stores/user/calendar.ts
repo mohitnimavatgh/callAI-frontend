@@ -5,7 +5,7 @@ export const useCalendar = defineStore('calendar', {
     calendarSettingData : null
   }),
   actions: {
-    async create(data: any) {
+    async google(data: any) {
       try {
         console.log("data--",data)
         // const response = await useAPI('/calendar/connect/google', {
@@ -17,6 +17,18 @@ export const useCalendar = defineStore('calendar', {
         }
         // const responseData = response.data.value;
         const responseData = data_;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async microsoftTeams(data: any) {
+      try {
+        const response = await useAPI('/microsoft/token/callback', {
+          method: 'post',
+          body: data,
+        });
+        const responseData = response.data.value;
         return responseData;
       } catch (error) {
         throw error;

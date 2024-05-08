@@ -20,6 +20,18 @@ export const useMeetings = defineStore('meetings', {
         throw error;
       }
     },
+    async update(bot) {
+      try {
+        const response = await useAPI('/meeting/update', {
+          method: 'PUT',
+          body: bot,
+        });
+        const responseData = response.data.value;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
     async upcomingMeeting(search) {
       try {
         const response = await useAPI('/meeting', {
