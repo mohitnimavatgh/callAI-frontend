@@ -24,7 +24,8 @@ const loginData = ref({
     login_type: null,
     social_login_type: null,
     google_id: null,
-    facebook_id: null
+    facebook_id: null,
+    role_id: 3
 });
 
 const rules = {

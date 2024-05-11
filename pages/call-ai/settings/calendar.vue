@@ -22,7 +22,7 @@ const calendarSettings = ref({
 })
 
 const folder = ref({
-    folder_id: '',
+    folder_id: null,
 })
 const rules = {
     folder: {       
@@ -63,6 +63,7 @@ const setCalendarOption = () => {
 
 const googleCalendar = async () =>{
     const result = await v$.value.$validate()
+    localStorage.setItem('folder_id',folder.value.folder_id)
     if (result) {  
         const params = {
             client_id: google_client_id,
@@ -84,7 +85,8 @@ const googleCalendar = async () =>{
 }
 
 const refreshToken = () => {
-    folder.value.code = route.query.code;
+    folder.value.code = route.query.code
+    folder.value.folder_id = localStorage.getItem('folder_id')
     calendar.google(folder.value).then((resp:any) => {
         if(resp?.success) {   
             router.push('/call-ai/settings/calendar'); 
@@ -99,7 +101,7 @@ const microsoftTeamsCalendar = () => {
         client_id: 'b547715d-e50f-4ca6-9184-cd206d549cdd',
         redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
         response_type: 'code',
-        scope: 'offline_access openid email calendars.ReadWrite'       
+        scope: 'offline_access openid email Calendars.ReadWrite'       
     };
     const url = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?");
     url.search = new URLSearchParams(params).toString();   
@@ -132,7 +134,8 @@ onMounted(async () => {
     await nextTick();
     await getCalendarSetting();
     await folders.list()
-    if(route.query.code){
+    console.log("route.query",route.query)
+    if(route.query.code && Object.keys(route.query).length > 1){
         refreshToken();
     }else if(route.query.code && Object.keys(route.query).length == 1){
         microsoftTeamsCode.value = route.query.code
