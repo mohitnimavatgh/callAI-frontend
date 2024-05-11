@@ -6,7 +6,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email,helpers } from "@vuelidate/validators";
 const router = useRouter()
 definePageMeta({
-    layout: 'loginLayout',
+    layout: 'login-layout',
     // middleware: ["is-authenticate"]
 })
 const loading = ref(false)

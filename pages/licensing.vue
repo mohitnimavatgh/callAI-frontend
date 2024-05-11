@@ -21,6 +21,6 @@
   import AuthHeader from '@/layouts/AuthHeader'
   import AppFooter from '@/layouts/AppFooter'
   definePageMeta({
-      layout: 'loginLayout',
+      layout: 'login-layout',
   });
   </script>

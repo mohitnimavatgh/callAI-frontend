@@ -7,15 +7,18 @@ import { useVuelidate } from "@vuelidate/core";
 import type { useTokenClient, AuthCodeFlowSuccessResponse } from "vue3-google-signin";
 // import { decodeCredential} from "vue3-google-signin";
 import { required, email, helpers } from "@vuelidate/validators";
-const router = useRouter()
+const router = useRouter();
+
 definePageMeta({
-    layout: 'loginLayout',
-    // middleware: ["is-authenticate"]
+    layout: 'login-layout',
+    middleware: ['auth'],
 })
+
 const loading = ref(false)
 const login = ref({
     email: '',
-    password: ''
+    password: '',
+    role_id: 3
 })
 
 const loginData = ref({
@@ -34,7 +37,8 @@ const rules = {
             required: helpers.withMessage("The Email field is required", required),
             email: helpers.withMessage("Please Enter a valid Email Address", email),
         },
-        password: { required: helpers.withMessage("The Password field is required", required) }
+        password: { required: helpers.withMessage("The Password field is required", required) },
+        role_id: {}
     }
 }
 const v$ = useVuelidate(rules, { login })

@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   ],
   plugins: [
     '~/plugins/api',
-    
   ],
   googleSignIn: {
     clientId: import.meta.env.GOOGLE_CLIENT_ID,
@@ -26,7 +25,7 @@ export default defineNuxtConfig({
     },
   },
   router: {
-    extendRoutes(routes) {
+    extendRoutes(routes : any) {
       routes.push({
         path: '/',
         redirect: '/call-ai'
