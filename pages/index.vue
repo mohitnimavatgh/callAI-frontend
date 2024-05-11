@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { useDashboard } from "@/stores/user/dashboard";
+
+definePageMeta({
+    layout: 'app-layout'
+    // middleware: "is-authenticate",
+})
+
 const dashboardStore = useDashboard()
 
 const getDashboard = () => {
@@ -11,7 +17,7 @@ onMounted(async () => {
     await getDashboard();
 })
 
-const dashboard = computed(() => dashboardStore.dashboard);
+const dashboard = <any>computed(() => dashboardStore.dashboard);
 
 </script>
 <template>

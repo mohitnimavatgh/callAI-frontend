@@ -15,10 +15,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       return response?._data.data;
     },
 
-    onResponseError({ response }) {
+    onResponseError({response , options }) {
       if (response.status === 401) {
-        console.error('Unauthorized request:', response);
-        router.push('/login');
+        //@ts-ignore
+        const requestObject = JSON.parse(options?.body)
+        if(requestObject.role_id){
+          router.push('/admin/login');
+        }else{
+          router.push('/login');
+        }
       } else if (response.status >= 400) {
         console.error('API error:', response);
       }

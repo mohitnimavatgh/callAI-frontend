@@ -2,19 +2,18 @@ import { defineStore } from 'pinia'
 
 export const useAuth = defineStore('auth', {
   state: () => ({
-    userInfo: null,
-    authenticated: false,
-    role: ''
+    userInfo: null as any,
+    authenticated: false as boolean,
+    role: '' as string,
   }),
   actions: {
-    async login(login) {
+    async login(login : any) {
       try {
         const response = await useAPI('../login', {
           method: 'post',
           body: login,
         });
-        const responseData = response.data.value;
-    
+        const responseData = response.data.value as any;
         if(responseData.success) {   
           this.userInfoAction(responseData.data);
         }
@@ -28,6 +27,7 @@ export const useAuth = defineStore('auth', {
       this.authenticated = true;
       this.role = this.userInfo?.role;      
       localStorage.setItem("access_token", this.userInfo.access_token);
+      //@ts-ignore
       localStorage.setItem("isAuthenticated", true);
     },
     async signup(data: any) {
@@ -36,7 +36,7 @@ export const useAuth = defineStore('auth', {
           method: 'post',
           body: data,
         });
-        const responseData = response.data.value;
+        const responseData = response.data.value as any;
         if(responseData.success) {
           if(responseData.data.social_type){
             console.log("responseData.data-",responseData.data)

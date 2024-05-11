@@ -1,10 +1,10 @@
 <template>
-  <nav class="bg-primary-50 border-gray-300 dark:bg-gray-900">
-    <div class="flex items-center justify-between mx-auto px-4 py-5 md:py-1.5">
+  <nav :class="route.name.includes('admin') ? 'bg-primary-500' : 'bg-primary-50'" class="border-gray-300 dark:bg-gray-900">
+    <div class="flex items-center justify-between mx-auto px-8 py-5 md:py-1.5">
       <div class="flex items-center">
-        <AppLogo />
+        <AppLogo v-if="!route.name.includes('admin')" />
         <div class="hidden w-full md:flex md:w-auto ml-10">
-          <ul
+          <ul v-if="!route.name.includes('admin')"
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative">
               <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
@@ -26,14 +26,14 @@
       </div>
       <div class="hidden md:flex items-center">
         <button @click="changeTheme" type="button"
-          class="relative text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
-          <i class="fa-regular fa-bell text-gray-400 text-xl"></i>
+          class="relative  dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
+          <i class="fa-regular fa-bell text-xl" :class="route.name.includes('admin') ? 'text-white' : 'text-gray-400'"></i>
           <div
             class="absolute inline-flex items-center justify-center w-2.5 h-2.5 text-xs font-bold text-white bg-primary-500 border-2 border-white rounded-full top-0 end-0.5 dark:border-gray-900">
           </div>
         </button>
-        <button @click="changeTheme" id="theme-toggle" type="button"
-          class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
+        <button @click="changeTheme" id="theme-toggle" type="button" :class="route.name.includes('admin') ? 'text-white' : 'text-gray-400'"
+          class="dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
           <svg v-if="currentTheme == 'light'" id="theme-toggle-dark-icon" class="w-5 h-5" fill="currentColor"
             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const userMenuItems = ref(['Dashboard', 'Settings', 'Earnings', 'Sign out']);
 
@@ -128,6 +128,7 @@ const mainMenuItems = ref([
 ]);
 
 const router = useRouter();
+const route = useRoute();
 const currentTheme = ref(null);
 
 const setTheme = (theme) => {

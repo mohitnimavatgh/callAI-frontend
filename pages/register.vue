@@ -10,7 +10,7 @@ const router = useRouter()
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength, sameAs, helpers } from "@vuelidate/validators";
 definePageMeta({
-    layout: 'loginLayout',
+    layout: 'login-layout',
 });
 
 const register = ref({
@@ -247,14 +247,14 @@ const signup = async () => {
                                 </div>
                                 <div class="mb-6">
                                     <FormInput id="Password" class="mt-3" v-model="v$.register.password.$model"
-                                        :errors="v$.register.password.$errors" label="Password" name="Password" type="text"
+                                        :errors="v$.register.password.$errors" label="Password" name="Password" type="password"
                                         placeholder="Enter Password" />
                                 </div>
                                 <div class="mb-6">
                                     <FormInput id="Confirm Password" class="mt-3"
                                         v-model="v$.register.confirmPassword.$model"
                                         :errors="v$.register.confirmPassword.$errors" label="Confirm Password"
-                                        name="Confirm Password" type="text" placeholder="Enter Confirm Password" />
+                                        name="Confirm Password" type="password" placeholder="Enter Confirm Password" />
                                 </div>
                                 <div class="items-start mb-6">
                                     <div class="flex items-center h-5">

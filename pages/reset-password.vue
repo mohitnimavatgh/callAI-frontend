@@ -6,7 +6,7 @@ const { $toast } = useNuxtApp()
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 definePageMeta({
-  layout: 'loginLayout',
+  layout: 'login-layout',
 });
 const reset = ref({
   email: null,
