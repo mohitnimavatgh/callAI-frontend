@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
+import { useVuelidate } from '@vuelidate/core';
+import { required, helpers } from '@vuelidate/validators';
 const meetings = useMeetings()
 const { $toast } = useNuxtApp()
 const props = defineProps({
@@ -7,7 +9,15 @@ const props = defineProps({
 });
 
 const detail = ref(null)
-const notes = ref('')
+const notes = ref(null);
+
+const rules = {
+    notes: {
+        required: helpers.withMessage("The Notes field is required", required),
+    }
+};
+
+const v$ = useVuelidate(rules, { notes });
 
 const faqsList = computed(() => {
     detail.value = props.meetingDetail       
@@ -47,18 +57,21 @@ const getStatusColor = (status: string) =>{
     }
 }
 
-const saveNote = () =>{
-    let data = {
-        id:  detail.value.details_id,
-        note: notes.value
-    }
-    console.log("data: ",data)
-    meetings.notes(data).then((resp:any) => {
-        if(resp.success) {               
-            detail.value.notes = notes.value   
-            $toast('success', 'Note Save Successfully', { duration: 10000 })
+const saveNote = async () =>{
+    const result = await v$.value.$validate()
+    if(result){
+        let data = {
+            id:  detail.value.details_id,
+            note: notes.value
         }
-    })
+        console.log("data: ",data)
+        meetings.notes(data).then((resp:any) => {
+            if(resp.success) {               
+                detail.value.notes = notes.value   
+                $toast('success', 'Note Save Successfully', { duration: 10000 })
+            }
+        })
+    }
 }
 
 const formatTimestamp = (timestamp) =>{
@@ -110,10 +123,12 @@ const getDuration = () =>{
                 <FormTextArea
                     label="Notes"
                     id="meeting notes"
-                    v-model="notes"
+                    v-model="v$.notes.$model"
+                    :error-messages="v$.notes.$errors"
                     :rows="4"
                     placeholder="Write your thoughts here..."
                     />
+                    <p class="text-red-600" v-if="v$.notes?.$errors">{{ v$.notes?.$errors?.[0]?.$message }}</p>
                     <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" @click="saveNote()" /></div>
                         
             </div>

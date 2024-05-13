@@ -21,6 +21,7 @@
         :class="inputClasses"
         :placeholder="placeholder"
         autocomplete="off"
+        :disabled="disabled"
       />
       <Button
         v-if="size === 'large'"
@@ -52,6 +53,7 @@ const props = defineProps({
   icon: { type: String, default: "" },
   rules: { type: String, default: "" },
   size: { type: String, default: "medium" },
+  disabled: { type: Boolean, default: false },
   errors: { type: Array, default: [] },
 });
 

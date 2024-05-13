@@ -22,7 +22,7 @@ const calendarSettings = ref({
 })
 
 const folder = ref({
-    folder_id: null as any,
+    folder_id: null,
 })
 const rules = {
     folder: {       

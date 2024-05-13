@@ -117,14 +117,15 @@ const handleSearch = (value) => {
   console.log('Search value:', value);
 };
  const createBot = async() => {
-    const result = await v$.value.$validate()
-    if (result) {
-      meetings.create(bot.value).then((resp:any) => {
-            if(resp.success) {
-              joinModal.value = false
-            }
-        })
-    }
+  const v$ = useVuelidate(rules, {bot})
+  const result = await v$.value.$validate()
+  if (result) {
+    meetings.create(bot.value).then((resp:any) => {
+          if(resp.success) {
+            joinModal.value = false
+          }
+      })
+  }
 }
 </script>
 

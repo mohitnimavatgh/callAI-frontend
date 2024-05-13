@@ -68,6 +68,7 @@
                   name="Meeting URL"
                   type="text"
                   placeholder="Meeting URL"
+                  :disabled="true"
                   v-model="vv$.bot.meeting_link.$model"
                   :errors="vv$.bot.meeting_link.$errors"
               />

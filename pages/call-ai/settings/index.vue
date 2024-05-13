@@ -14,6 +14,8 @@ const bot = ref({
     recording_type:null,
     multiple_emails: null,
 })
+const emailArray = ref([]);
+
 
 const rules = {
     bot:{
@@ -30,7 +32,11 @@ const rules = {
         },
         multiple_emails:{
             required: requiredIf(function (nestedModel) {
-                return bot.value.after_complete_run_actions == action_type
+                if(bot.value.after_complete_run_actions == action_type){
+                    if(emailArray.value.length == 0){
+                        return true
+                    }
+                }
             }),
             email: helpers.withMessage("Please Enter a valid Email Address", email),
         },
@@ -45,7 +51,6 @@ const actionList = ref([
     { value: 'action', name: 'Send Email'}
 ])
 
-const emailArray = ref([]);
 
 const botSave = async() => {
     const result = await v$.value.$validate()
@@ -55,6 +60,7 @@ const botSave = async() => {
         }
         bots.create(bot.value).then((resp:any) => {
             if(resp?.success) {   
+                resetValue();
                 $toast('success', 'bot create Successfully', { duration: 10000 })
             }
         }).catch((error) => {
@@ -63,9 +69,18 @@ const botSave = async() => {
     }
 }
 
+const resetValue = () => {
+    bot.value.bot_name = null;
+    bot.value.action = null;
+    bot.value.after_complete_run_actions = 'Nothing'
+    emailArray.value = [];
+    v$.value.$reset();
+}
+
 const handleKeys = (event) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
-    if (event.key === 'Enter' && v$.value.$errors.length == 0) {
+    if (event.key === 'Enter') {
+        alert(event.key);
         event.preventDefault();
         if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
             emailArray.value.push(bot.value.multiple_emails.trim());
@@ -117,7 +132,7 @@ const deleteField =(index) => {
                     
                     id="Email"
                     class="mt-4"
-                    label="Enter Email"
+                    label="Allow Multiple Emails"
                     name="Email"
                     type="text"
                     placeholder="Enter Email"

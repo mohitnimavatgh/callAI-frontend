@@ -2,21 +2,22 @@ import { defineStore } from 'pinia'
 
 export const useCalendar = defineStore('calendar', {
   state: () => ({
-    calendarSettingData : null
+    calendarSettingData : null,
+    google_calendar_connection: false
   }),
   actions: {
     async google(data: any) {
       try {
-        console.log("data--",data)
-        // const response = await useAPI('/calendar/connect/google', {
-        //   method: 'post',
-        //   body: data,
-        // });
-        const data_ = {
-          success:true
-        }
-        // const responseData = response.data.value;
-        const responseData = data_;
+        // console.log("data--",data)
+        const response = await useAPI('/calendar/connect/google', {
+          method: 'post',
+          body: data,
+        });
+        // const data_ = {
+        //   success:true
+        // }
+        const responseData = response.data.value;
+        // const responseData = data_;
         return responseData;
       } catch (error) {
         throw error;
