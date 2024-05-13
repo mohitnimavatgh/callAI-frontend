@@ -12,6 +12,11 @@ definePageMeta({
             Users
         </div>
         <div class="mt-10">
+            <div class="flex justify-end">
+                <nuxt-link class="w-fit" to="/users/add">
+                    <Button :text="'Add User'" class="font-semibold w-fit mt-5" />
+                </nuxt-link>
+            </div>
             <!-- <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
               <template v-slot:action="{ item, value, index }">
                   <div class="flex space-x-2">

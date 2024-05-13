@@ -13,7 +13,7 @@
       </button>
       <div v-show="dropdownOpen" class="absolute right-0 h-fit max-h-60 overflow-y-auto z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-          <li v-for="(action, index) in actions" :key="index" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" @click="$emit('select', action);">
+          <li v-for="(action, index) in actions" :key="index" class="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" @click="$emit('select', action);">
             <a class="text-black">{{ action.name }}</a>
           </li>
         </ul>

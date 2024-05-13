@@ -16,8 +16,8 @@ definePageMeta({
 
 const loading = ref(false)
 const login = ref({
-    email: '',
-    password: '',
+    email: 'test@gmail.com',
+    password: '123456',
     role_id: 3
 })
 

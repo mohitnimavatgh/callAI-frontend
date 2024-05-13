@@ -9,7 +9,6 @@ const auth = adminAuth();
 const router = useRouter();
 
 definePageMeta({
-    layout: 'login-layout',
     middleware: "admin-auth"
 })
 

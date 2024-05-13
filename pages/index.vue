@@ -2,8 +2,8 @@
 import { useDashboard } from "@/stores/user/dashboard";
 
 definePageMeta({
-    layout: 'app-layout'
-    // middleware: "is-authenticate",
+    layout: 'app-layout',
+    middleware: "is-authenticate",
 })
 
 const dashboardStore = useDashboard()

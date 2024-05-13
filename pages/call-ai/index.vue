@@ -113,7 +113,6 @@ const tableHeadings = ref([
   { title: "Folder", value: "folder" },
   { title: "Action", value: "action" }
 ]);
-
 const bot = ref({
     name: '',
     folder_id: '',
