@@ -104,7 +104,7 @@
         <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch" class="w-56 "/>
       </div>
       <div class="mt-5 flex flex-wrap items-center bg-white dark:bg-gray-800 p-5 py-5 rounded-[20px]">        
-        <div v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative px-2 py-3 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-700">
+        <div v-if="foldersLists?.data.length" v-for="folderItem in foldersLists?.data" :key="folderItem" class="relative px-2 py-3 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-700">
           <div class="flex justify-between border border-gray-100 px-3 py-2 rounded-lg items-center dark:border-none">
             <div class="flex items-center">
               <div class="bg-primary-50 dark:bg-gray-800 w-12 h-12 rounded-md">
@@ -118,7 +118,7 @@
               </div>
             </div>
             <div class="flex items-center ">
-              <i class="text-xs text-gray-300 mr-2" :class="`fas fa-lock${folderItem.access_type == 'public'?'-open':''}`"></i> 
+              <i class="text-xs text-gray-300 mr-2" :class="`fas ${folderItem.access_type == 'public'?'fa-user-group':'fa-lock'}`"></i> 
               <div  @mouseleave="folderItem.active = false" class="cursor-pointer">
                 <i class="fas fa-ellipsis text-gray-300" @mouseover="folderItem.active = true" @click="folderItem.active = true" ></i>
                 <div v-if="folderItem.active" class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-20 dark:bg-gray-700 dark:divide-gray-600">
@@ -131,7 +131,15 @@
               </div>
             </div>
           </div>  
-        </div>       
+        </div>
+        <div v-else class="w-full">
+          <div class="mx-auto text-xl w-full py-5 px-8 flex items-center justify-center border border-gray-100 text-gray-500 rounded-lg">
+            <i class="fa fa-folder-open"></i>
+            <div class="ml-5">
+              No folders found.
+            </div>
+          </div>
+        </div>      
       </div>
       <div class="flex justify-center">
         <Pagination v-if="foldersLists && foldersLists.total && foldersLists.per_page && foldersLists.total > foldersLists.per_page" class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page" :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange"/>

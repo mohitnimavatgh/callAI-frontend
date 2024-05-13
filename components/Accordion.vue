@@ -24,9 +24,9 @@ watch(() => props.accordions, (newQuestion, oldQuestion) => {
   });
 },{ deep: true, immediate: true });
 
-onMounted(() => {
+onMounted(async () => {
   initFlowbite();
-  props.accordions.forEach(accordion => {
+  await props.accordions.forEach(accordion => {
     accordion.isOpen = true;
   });
 });
@@ -65,7 +65,7 @@ onMounted(() => {
         </h2>
         <div :id="`accordion-collapse-body-${index}`" class="hidden" :aria-labelledby="`accordion-collapse-heading-${index}`">
           <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-            <p class="mb-2 text-gray-500 dark:text-gray-400">{{ accordion.description }}</p>
+            <p class="mb-2 text-gray-500 dark:text-gray-400">{{ <any>accordion.description }}</p>
           </div>
         </div>
       </div>

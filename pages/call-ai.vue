@@ -116,7 +116,8 @@ const handleMenuChange = (menuItem) => {
 const handleSearch = (value) => {
   console.log('Search value:', value);
 };
- const createBot = async() => {
+
+const createBot = async() => {
   const v$ = useVuelidate(rules, {bot})
   const result = await v$.value.$validate()
   if (result) {

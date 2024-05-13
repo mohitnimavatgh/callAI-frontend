@@ -8,7 +8,7 @@
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative">
               <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                <div :class="{ 'rounded-full border-b-4 border-primary-500': menu.active }" class="w-full"></div>
+                <div :class="route.path == menu.link ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
                 menu.label }}</nuxt-link>
@@ -108,7 +108,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 
-const userMenuItems = ref(['Dashboard', 'Settings', 'Earnings', 'Sign out']);
+const userMenuItems = ref([{name:'Sign out'}]);
 
 const collapsed = ref<boolean>(true)
 
@@ -127,11 +127,11 @@ const mainMenuItems = ref([
   }
 ]);
 
-const router = useRouter();
-const route = useRoute();
-const currentTheme = ref(null);
+const router = useRouter() as any;
+const route = useRoute() as any;
+const currentTheme = ref<any>(null);
 
-const setTheme = (theme) => {
+const setTheme = (theme:any) => {
   if (theme === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
   } else {
@@ -156,7 +156,7 @@ onMounted(() => {
   //   }
   // });
 });
-const handleMenuChange = (menuItem) => {
+const handleMenuChange = (menuItem:any) => {
   mainMenuItems.value.forEach(item => {
     item.active = false;
   });
@@ -170,13 +170,13 @@ const changeTheme = () => {
   setTheme(newTheme);
 };
 
-const onSelect = (item) => {
+const onSelect = (item:any) => {
   // Your selection handling logic here
 };
 
 const currentMenuItem = ref('Home');
 
-const getMenuClass = (active) => {
+const getMenuClass = (active:any) => {
   return active
     ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
     : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium ';

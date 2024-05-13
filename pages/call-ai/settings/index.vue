@@ -1,9 +1,14 @@
 <script setup lang="ts">
   import { useBots } from "@/stores/user/bots";
+  import { initFlowbite } from 'flowbite'
   import { useVuelidate } from "@vuelidate/core";
   import { required, helpers,email,requiredIf } from "@vuelidate/validators";   
   const bots = useBots()
   const { $toast } = useNuxtApp()
+
+  onMounted(() => {
+    initFlowbite();
+  })
 
 var action_type = 'Send Email';
 const bot = ref({
@@ -28,7 +33,7 @@ const rules = {
         action:{
             required: requiredIf(function (nestedModel) {
                 return bot.value.after_complete_run_actions == action_type
-            }),          
+            }),
         },
         multiple_emails:{
             required: requiredIf(function (nestedModel) {
@@ -147,7 +152,6 @@ const deleteField =(index) => {
                             <span  class="text-lg font-medium flex items-center px-2.5 py-0.5 rounded text-black-500 bg-gray-100 dark:bg-gray-900 dark:text-gray-300`">
                                 {{ item }} <i class="text-sm text-black-400 fas fa-close ml-1" @click="deleteField(index)"></i>
                             </span>
-                            
                         </p>
                     </li>
                 </ul>
