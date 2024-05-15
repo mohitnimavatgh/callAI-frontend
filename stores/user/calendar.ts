@@ -3,21 +3,33 @@ import { defineStore } from 'pinia'
 export const useCalendar = defineStore('calendar', {
   state: () => ({
     calendarSettingData : null,
-    google_calendar_connection: false
+    google_calendar_connection: false,
+    microsoft_calendar_connection: false
   }),
   actions: {
+    async calendarStatus() {
+      try {
+        const response = await useAPI('/calendar/connect/status', {
+          method: 'get',
+        }); 
+        const responseData = response.data.value;
+        if(responseData.success){
+          this.google_calendar_connection = responseData.data?.google_calendar == "connecting"? true : false;
+          this.microsoft_calendar_connection = responseData.data?.microsoft_outlook == "connecting"? true : false;
+        }        
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
     async google(data: any) {
       try {
-        // console.log("data--",data)
         const response = await useAPI('/calendar/connect/google', {
           method: 'post',
           body: data,
-        });
-        // const data_ = {
-        //   success:true
-        // }
+        }); 
         const responseData = response.data.value;
-        // const responseData = data_;
+        
         return responseData;
       } catch (error) {
         throw error;

@@ -85,7 +85,6 @@ const resetValue = () => {
 const handleKeys = (event) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
     if (event.key === 'Enter') {
-        alert(event.key);
         event.preventDefault();
         if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
             emailArray.value.push(bot.value.multiple_emails.trim());

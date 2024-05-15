@@ -6,7 +6,7 @@
         <p class="mb-3 sm:mb-6 text-sm text-nowrap font-normal text-gray-500 mt-1 dark:text-gray-400">AI-Powered Meeting Recording Simplified</p>
       </div>
       <Button :text="'Meeting Bot'" frontIcon="fas fa-video" @click="joinModal = !joinModal" class="h-full"/>
-      <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal" @close="joinModal = false">
+      <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal" @close="closeModal()">
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2 mb-3">
             <FormInput 
@@ -36,7 +36,7 @@
         </div>
         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
           <Button class="mr-2" :text="'Add Meeting'" frontIcon="fas fa-plus" @click="createBot"/>
-          <Button :text="'Cancel'" @click="joinModal = false" outline/>
+          <Button :text="'Cancel'" @click="closeModal()" outline/>
         </div>
       </Modal>
     </div>  
@@ -90,8 +90,14 @@ const router = useRouter();
 
 onMounted(async () => {
   await nextTick();
-  await folders.list()
+  await folders.list({search:''})
 })
+
+const closeModal = () => {
+  v$.value.$reset();
+  joinModal.value = false
+}
+
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
   menuItems.value.forEach(item => {
