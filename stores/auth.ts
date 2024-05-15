@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia'
+import { 
+  apiUserLogin, 
+  apiUserSignUp,
+  apiUserResetSendLink,
+  apiUserForgetPassword, } from '@/API/utils'
 
 export const useAuth = defineStore('auth', {
   state: () => ({
@@ -9,13 +14,10 @@ export const useAuth = defineStore('auth', {
   actions: {
     async login(login : any) {
       try {
-        const response = await useAPI('../login', {
-          method: 'post',
-          body: login,
-        });
-        const responseData = response.data.value as any;
-        if(responseData.success) {   
-          this.userInfoAction(responseData.data);
+        const response = await apiUserLogin(login)
+        const responseData = response.data as any;
+        if(response.success) {
+          this.userInfoAction(responseData);
         }
         return responseData;
       } catch (error) {
@@ -32,15 +34,11 @@ export const useAuth = defineStore('auth', {
     },
     async signup(data: any) {
       try {
-        const response = await useAPI('/signup', {
-          method: 'post',
-          body: data,
-        });
-        const responseData = response.data.value as any;
-        if(responseData.success) {
-          if(responseData.data.social_type){
-            console.log("responseData.data-",responseData.data)
-            this.userInfoAction(responseData.data);
+        const response = await apiUserSignUp(data)
+        const responseData = response.data as any;
+        if(response.success) {
+          if(responseData.social_type){
+            this.userInfoAction(responseData);
           }
         }
         return responseData;
@@ -50,11 +48,8 @@ export const useAuth = defineStore('auth', {
     },
     async resetSendLink(data: any) {
       try {
-        const response = await useAPI('/reset-link-email', {
-          method: 'get',
-          params: data,
-        });
-        const responseData = response.data.value; 
+        const response = await apiUserResetSendLink(data);
+        const responseData = response.data; 
         return responseData;
       } catch (error) {
         throw error;
@@ -62,11 +57,8 @@ export const useAuth = defineStore('auth', {
     },
     async forgotPassword(data: any) {
       try {
-        const response = await useAPI('/forgot-password', {
-          method: 'post',
-          body: data,
-        });
-        const responseData = response.data.value; 
+        const response = await apiUserForgetPassword(data);
+        const responseData = response.data; 
         return responseData;
       } catch (error) {
         throw error;

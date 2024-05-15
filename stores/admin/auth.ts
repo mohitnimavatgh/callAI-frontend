@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { apiAdminLogin } from '@/API/utils'
 
 export const adminAuth = defineStore('adminAuth', {
   state: () => ({
@@ -9,13 +10,10 @@ export const adminAuth = defineStore('adminAuth', {
   actions: {
     async login(login: any) {
       try {
-        const response = await useAPI('../login', {
-          method: 'post',
-          body: login,
-        });
-        const responseData = response.data.value as any;
-        if(responseData.success) {
-          this.adminInfoAction(responseData.data);
+        const response = await apiAdminLogin(login)
+        const responseData = response.data as any;
+        if(response.success) {
+          this.adminInfoAction(responseData);
         }
         return responseData;
       } catch (error) {

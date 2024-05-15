@@ -14,11 +14,11 @@ definePageMeta({
 });
 
 const register = ref({
-    firstName: null,
-    lastName: null,
-    email: null,
-    password: null,
-    confirmPassword: null,
+    firstName: 'Mihir',
+    lastName: 'Agravat',
+    email: 'mihiragravat3@gmail.com',
+    password: '123456',
+    confirmPassword: '123456',
     tac: false,
 });
 
@@ -94,12 +94,10 @@ const { login: googleRegister } = useTokenClient({
 
 const userSignup = () => {
     auth.signup(signupData.value).then((resp: any) => {
-        if (resp.success) {
-            $toast('success', 'Register Successfully', { duration: 10000 })
-            router.push(`login`);
-        }
+        $toast('success', 'Register Successfully', { duration: 10000 })
+        router.push('/login');
     }).catch((error) => {
-        console.log("Error:", error);
+        $toast('danger', error.response.data.data.email[0], { duration: 10000 })
     })
 }
 
@@ -247,8 +245,8 @@ const signup = async () => {
                                 </div>
                                 <div class="mb-6">
                                     <FormInput id="Password" class="mt-3" v-model="v$.register.password.$model"
-                                        :errors="v$.register.password.$errors" label="Password" name="Password" type="password"
-                                        placeholder="Enter Password" />
+                                        :errors="v$.register.password.$errors" label="Password" name="Password"
+                                        type="password" placeholder="Enter Password" />
                                 </div>
                                 <div class="mb-6">
                                     <FormInput id="Confirm Password" class="mt-3"

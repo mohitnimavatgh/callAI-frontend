@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { apiGetDashboardData } from '@/API/utils'
 
 export const useDashboard = defineStore('dashboard', {
   state: () => ({
@@ -7,11 +8,9 @@ export const useDashboard = defineStore('dashboard', {
   actions: {
     async list() {
       try {
-        const response = await useAPI('/dashboard', {
-          method: 'get',
-        });
-        const responseData = response.data.value;
-        this.dashboard = responseData.data
+        const response = await apiGetDashboardData()
+        const responseData = response.data;
+        this.dashboard = responseData
         return responseData;
       } catch (error) {
         throw error;

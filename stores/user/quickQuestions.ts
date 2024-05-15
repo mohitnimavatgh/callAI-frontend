@@ -1,47 +1,46 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import {
+  apiCreateQuickQuestion,
+  apiGetQuickQuestion,
+  apiUpdateQuickQuestion,
+  apiDeleteQuickQuestion
+} from '@/API/utils'
 
 export const useQuickQuestions = defineStore('quickQuestions', {
   state: () => ({
     quickQuestions: null,
-    allQuickQuestions:null
+    allQuickQuestions: null
   }),
   actions: {
     async create(quickQuestion: any) {
-      try {        
-        const response = await useAPI('/quick-question', {
-          method: 'post',
-          body: quickQuestion,
-        });
-        const responseData = response.data.value;
+      try {
+        const response = await apiCreateQuickQuestion(quickQuestion);
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;
       }
     },
-    async list(quickQuestion) {
-      try {      
-        const response = await useAPI('/quick-question', {
-            method: 'get',
-            params : quickQuestion
-        });
-        const responseData = response.data.value; 
-        if(quickQuestion?.page){
-          this.quickQuestions = responseData.data
-        }else{
-          this.allQuickQuestions = responseData.data
-        }                  
+    async list(quickQuestion: any) {
+      try {
+        const response = await apiGetQuickQuestion(quickQuestion)
+        const responseData = response.data;
+        if (response.success) {
+          if (quickQuestion?.page) {
+            this.quickQuestions = responseData
+          } else {
+            this.allQuickQuestions = responseData
+          }
+        }
         return responseData;
       } catch (error) {
         throw error;
       }
     },
     async update(quickQuestion: any) {
-      try {      
-        const response = await useAPI(`/quick-question/update/?id=${quickQuestion.id}`, {
-          method: 'PATCH',
-          body: quickQuestion,
-        });
-        const responseData = response.data.value;
+      try {
+        const response = await apiUpdateQuickQuestion(quickQuestion.id, quickQuestion)
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;
@@ -49,12 +48,12 @@ export const useQuickQuestions = defineStore('quickQuestions', {
     },
 
     async delete(quickQuestion_id: any) {
-      try {      
-        const response = await useAPI(`/quick-question/${quickQuestion_id}`, {
-          method: 'DELETE'    
-        });
-        const responseData = response.data.value
-        return responseData;
+      try {
+        const response = await apiDeleteQuickQuestion(quickQuestion_id);
+        if (response.success) {
+          const responseData = response.data
+          return responseData;
+        }
       } catch (error) {
         throw error;
       }
