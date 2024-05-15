@@ -14,7 +14,7 @@
               v-model="v$.bot.name.$model" :errors="v$.bot.name.$errors" />
           </div>
           <div class="col-span-2 mb-3">
-            <FormSelect label="Folder" placeholder="Folders" id="Folder" name="folder" v-model="v$.bot.folder_id.$model"
+            <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.bot.folder_id.$model"
               :errors="v$.bot.folder_id.$errors" :options="folders.folders" />
           </div>
           <div class="col-span-2">
