@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
-      <Table title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data"
+      <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings" :data="upcomingMeeting?.data"
         :actions="actionList" @search="upcomingSearch">
         <template v-slot:action="{ item, value, index }">
           <div class="flex space-x-2">
@@ -84,6 +84,11 @@ const recordedData = ref([])
 const upcomingData = ref([])
 const deleteAction = ref('')
 const joinModal = ref(false);
+const UpcomingTabItems = ref([
+  { value: 'all', label: "All Calls", icon: "fa-regular fa-clock" },
+  { value: 'calendar', label: "Calendar Calls", icon: "fas fa-calendar" },
+  { value: 'manual', label: "Manual Call", icon: "fas fa-pen-fancy" }
+]); 
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -260,13 +265,11 @@ const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
   if (data) {
     meetings.delete(call_meeting_id.value).then((resp: any) => {
-      if (resp.success) {
         if (deleteAction.value = 'upcoming') {
           getUpcoming();
         } else {
           getRecorded();
         }
-      }
     })
   }
 }

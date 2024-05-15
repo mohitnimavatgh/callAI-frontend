@@ -94,11 +94,9 @@
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.update(quickQuestion.value).then((resp:any) => {
-        if(resp.success) {
           QuickQuestionUpdate.value = false;
           fromRest();
           getQuickQuestion();               
-        }
       })
     }
   }

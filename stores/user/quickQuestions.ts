@@ -40,8 +40,10 @@ export const useQuickQuestions = defineStore('quickQuestions', {
     async update(quickQuestion: any) {
       try {
         const response = await apiUpdateQuickQuestion(quickQuestion.id, quickQuestion)
-        const responseData = response.data;
-        return responseData;
+        if (response.success) {
+          const responseData = response.data;
+          return responseData;
+        }
       } catch (error) {
         throw error;
       }

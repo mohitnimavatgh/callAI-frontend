@@ -14,6 +14,12 @@ const items = [
   { value: "public", icon: 'fas fa-user-group', labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
 ]
 
+const actions = [
+  { value: 'asc', name: 'Ascending' }, 
+  { value: 'desc', name : 'Descending'},
+  { value: 'public', name : 'Public'},
+  { value: 'private', name : 'Private'}, ]
+
 const foldersLists = computed(() => folders.folderPagination);
 
 const folder = ref({
@@ -105,9 +111,12 @@ const edit = (data: any) => {
       </div>
     </div>
 
-    <div class="mt-3 flex justify-end">
+    <div class="mt-3 sm:flex items-center flex-wrap justify-end">
+      <div class="flex sm:w-fit w-full justify-end">
+        <DropDown class="mb-2 sm:mb-0 sm:mr-2" :buttonText="'Filter'" :actions="actions" @select="onSelect"/>
+      </div>
       <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch"
-        class="w-56 " />
+        class="sm:w-56 w-full" />
     </div>
     <div class="mt-5 flex flex-wrap items-center bg-white dark:bg-gray-800 p-5 py-5 rounded-[20px]">
       <div v-if="foldersLists?.data.length" v-for="folderItem in foldersLists?.data" :key="folderItem"
