@@ -1,8 +1,10 @@
 import { adminAuth } from "@/stores/admin/auth";
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const adminState = adminAuth();
-    if(adminState.authenticated === true) {
-        return ;
+    if (process.client) {
+        const adminState = adminAuth();
+        if (adminState.authenticated === false) {
+            return navigateTo('/admin/login');
+        }
+        return;
     }
-    return navigateTo('/admin/login');
 });

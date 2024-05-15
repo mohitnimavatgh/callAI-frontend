@@ -1,22 +1,36 @@
 import { defineStore } from 'pinia'
+import { 
+  apiGetCalanderStatus,
+  apiGoogleCalanderConnection,
+  apiMicrosoftTeamsConnection,
+  apiGetCalanderSetting,
+  apiUpdateCalanderSetting
+ } from '@/API/utils'
 
 export const useCalendar = defineStore('calendar', {
   state: () => ({
-    calendarSettingData : null
+    calendarSettingData : null,
+    google_calendar_connection: false,
+    microsoft_calendar_connection: false
   }),
   actions: {
+    async calendarStatus() {
+      try {
+        const response = await apiGetCalanderStatus(); 
+        const responseData = response.data;
+        if(responseData.success){
+          this.google_calendar_connection = responseData.data?.google_calendar == "connecting"? true : false;
+          this.microsoft_calendar_connection = responseData.data?.microsoft_outlook == "connecting"? true : false;
+        }        
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
     async google(data: any) {
       try {
-        console.log("data--",data)
-        // const response = await useAPI('/calendar/connect/google', {
-        //   method: 'post',
-        //   body: data,
-        // });
-        const data_ = {
-          success:true
-        }
-        // const responseData = response.data.value;
-        const responseData = data_;
+        const response = await apiGoogleCalanderConnection(data) 
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;
@@ -24,10 +38,7 @@ export const useCalendar = defineStore('calendar', {
     },
     async microsoftTeams(data: any) {
       try {
-        const response = await useAPI('/microsoft/token/callback', {
-          method: 'post',
-          body: data,
-        });
+        const response = await apiMicrosoftTeamsConnection(data)
         const responseData = response.data.value;
         return responseData;
       } catch (error) {
@@ -35,11 +46,8 @@ export const useCalendar = defineStore('calendar', {
       }
     },
     async calendarSetting() {
-      console.log('getCalendarSetting')
       try {
-        const response = await useAPI('/calendar-setting', {
-          method: 'get',
-        });     
+        const response = await apiGetCalanderSetting()     
         const responseData = response.data.value;    
         this.calendarSettingData = responseData.data
         return responseData;
@@ -49,12 +57,9 @@ export const useCalendar = defineStore('calendar', {
     },
     async update(data: any) {
       try {
-        const response = await useAPI('/calendar-setting/update', {
-          method: 'PATCH',
-          body: data,
-        });     
-        const responseData = response.data.value;
-        this.calendarSettingData = responseData.data
+        const response = await apiUpdateCalanderSetting(data)     
+        const responseData = response.data;
+        this.calendarSettingData = responseData
         return responseData;
       } catch (error) {
         throw error;

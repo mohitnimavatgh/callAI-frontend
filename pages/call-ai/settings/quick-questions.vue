@@ -62,11 +62,9 @@
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
-        if(resp.success) {
           $toast('success', 'Quick Question Create Successfully', { duration: 10000 })
-          fromRest();
           getQuickQuestion();               
-        }
+          fromRest();
       })
     }
   }
@@ -118,10 +116,8 @@
   const confirmation = (data: Boolean) => {
     confirmationPopUP.value = false
     if(data){
-       quickQuestions.delete(quick_questions_id.value).then((resp:any) => {
-        if(resp.success) {        
-          getQuickQuestion();               
-        }
+       quickQuestions.delete(quick_questions_id.value).then((resp:any) => {        
+          getQuickQuestion();
       })
     }
   }

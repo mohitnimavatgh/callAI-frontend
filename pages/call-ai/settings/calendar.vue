@@ -133,7 +133,7 @@ const saveCalendarSetting = () => {
 onMounted(async () => {
     await nextTick();
     await getCalendarSetting();
-    await folders.list()
+    await folders.list({search : ''})
     console.log("route.query",route.query)
     if(route.query.code && Object.keys(route.query).length > 1){
         refreshToken();

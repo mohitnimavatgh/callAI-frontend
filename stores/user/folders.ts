@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { apiCreateFolder, apiGetFolders, apiUpdateFolder } from '@/API/utils'
 
 export const useFolders = defineStore('folders', {
   state: () => ({
@@ -8,27 +9,21 @@ export const useFolders = defineStore('folders', {
   actions: {
     async create(bot: any) {
       try {
-        const response = await useAPI('/folders', {
-          method: 'post',
-          body: bot,
-        });
-        const responseData = response.data.value;
+        const response = await apiCreateFolder(bot)
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;
       }
     },
-    async list(folder) {
+    async list(folder: any) {
       try {      
-        const response = await useAPI('/folders', {
-            method: 'get',
-            params : folder
-        });
-        const responseData = response.data.value;
+        const response = await apiGetFolders(folder)
+        const responseData = response.data;
         if(folder?.page){
-          this.folderPagination = responseData.data
+          this.folderPagination = responseData
         }else{
-          this.folders = responseData.data
+          this.folders = responseData
         }       
         return responseData;
         } catch (error) {
@@ -37,11 +32,8 @@ export const useFolders = defineStore('folders', {
     },
     async update(data:any) {
       try {      
-        const response = await useAPI(`/folders/update/?id=${data.id}`, {
-          method: 'PATCH',
-          body: data,
-        });
-        const responseData = response.data.value;
+        const response = await apiUpdateFolder(data.id, data);
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;

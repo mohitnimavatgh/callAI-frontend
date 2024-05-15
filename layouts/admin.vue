@@ -10,14 +10,14 @@ const route = useRoute();
 
 <template>
     <div class="fixed top-0 left-0 right-0 bottom-0 flex">
-        <div v-if="route.name != 'admin-login'" class="h-full w-[250px] text-white">
+        <div v-if="route.name != 'admin-login'" class="h-fit sm:h-full sm:w-[250px] text-white">
             <AppSidebar />
         </div>
         <div class="h-full flex flex-col w-full dark:bg-gray-800 overflow-y-auto">
             <div v-if="route.name != 'admin-login'" class="h-fit w-full">
                 <AppTopbar />
             </div>
-            <div :class="route.name != 'admin-login' ? 'py-16 px-24' : 'bg-gray-300 dark:bg-primary-800'" class="h-full w-full">
+            <div :class="route.name != 'admin-login' ? '' : 'bg-gray-300 dark:bg-primary-800'" class="h-full px-4 py-5 sm:px-6 sm:py-8 xl:py-16 xl:px-24 w-full">
                 <slot ></slot>
             </div>
         </div>

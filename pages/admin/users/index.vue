@@ -1,8 +1,14 @@
 <script setup lang="ts">
+
 definePageMeta({
     layout: 'admin',
     middleware: 'is-admin-authenticate',
 })
+
+const getUserParams = {
+  page: 1
+}
+
 
 </script>
 
@@ -11,9 +17,9 @@ definePageMeta({
         <div class="text-gray-700 text-3xl">
             Users
         </div>
-        <div class="mt-10">
+        <div class="mt-4 sm:mt-10">
             <div class="flex justify-end">
-                <nuxt-link class="w-fit" to="/users/add">
+                <nuxt-link class="w-fit" to="/admin/users/add">
                     <Button :text="'Add User'" class="font-semibold w-fit mt-5" />
                 </nuxt-link>
             </div>
