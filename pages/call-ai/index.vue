@@ -36,8 +36,8 @@
       @close="shareModal = false">
       <div class="modal-content  p-4 md:p-5">
         <div class="col-span-2">
-          <FormSelect label="Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
-            :errors="v$.folder.folder_id.$errors" :options="folders?.folders" rules="required" />
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
+            :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
         </div>
       </div>
       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -53,12 +53,12 @@
             v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" />
         </div>
         <div class="col-span-2 mb-3">
-          <FormSelect label="Folder" placeholder="Folders" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model"
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model"
             :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
         </div>
         <div class="col-span-2">
           <FormInput id="Meeting URL" label="Meeting URL" name="Meeting URL" type="text" placeholder="Meeting URL"
-            v-model="vv$.bot.meeting_link.$model" :errors="vv$.bot.meeting_link.$errors" />
+            v-model="vv$.bot.meeting_link.$model" :errors="vv$.bot.meeting_link.$errors" :disabled="true" />
         </div>
       </div>
       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

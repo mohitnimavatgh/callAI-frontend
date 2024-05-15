@@ -1,7 +1,7 @@
 <template>
   <div>
     <video id="videoRef" class="w-full h-auto max-w-full" controls :poster="posterUrl" @loadedmetadata="setPosterDimensions">
-      <source :src="videoUrl" type="video/mp4">
+      <source :src="base_Url+videoUrl" type="video/mp4">
       Your browser does not support the video tag.
     </video>    
   </div>
@@ -9,6 +9,7 @@
 
 <script setup lang="ts">
 import { defineProps, ref, onMounted } from 'vue';
+const base_Url = import.meta.env.VITE_BASE_URL;
 
 const props = defineProps({
   videoUrl: String,

@@ -19,6 +19,8 @@ const bot = ref({
     recording_type: null,
     multiple_emails: null,
 })
+const emailArray = ref([]);
+
 
 const rules = {
     bot: {
@@ -35,7 +37,11 @@ const rules = {
         },
         multiple_emails: {
             required: requiredIf(function (nestedModel) {
-                return bot.value.after_complete_run_actions == action_type
+                if(bot.value.after_complete_run_actions == action_type){
+                    if(emailArray.value.length == 0){
+                        return true
+                    }
+                }
             }),
             email: helpers.withMessage("Please Enter a valid Email Address", email),
         },
@@ -50,7 +56,6 @@ const actionList = ref([
     { id: 'action', name: 'Send Email' }
 ])
 
-const emailArray = ref([]);
 
 const botSave = async () => {
     const result = await v$.value.$validate()
@@ -81,7 +86,7 @@ const resetBotValidation = () => {
 
 const handleKeys = (event) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
-    if (event.key === 'Enter' && v$.value.$errors.length == 0) {
+    if (event.key === 'Enter') {
         event.preventDefault();
         if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
             emailArray.value.push(bot.value.multiple_emails.trim());

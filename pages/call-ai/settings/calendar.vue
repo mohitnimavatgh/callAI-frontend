@@ -10,6 +10,7 @@ const folders = useFolders()
 const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
 const joinModal = ref(false);
 const microsoftTeamsCode = ref('')
+const modalType = ref('')
 const calendarSettings = ref({
     is_saved: true,
     record_all:true,
@@ -22,7 +23,7 @@ const calendarSettings = ref({
 })
 
 const folder = ref({
-    folder_id: null as any,
+    folder_id: null,
 })
 const rules = {
     folder: {       
@@ -59,6 +60,21 @@ const setCalendarOption = () => {
     calendarSettings.value.record_im_not_host = data.record_im_not_host ? true : false
     calendarSettings.value.record_internal = data.record_internal ? true : false
     calendarSettings.value.record_recurring = data.record_recurring ? true : false
+}
+
+const openModal = (type) => {
+    modalType.value = type;
+    joinModal.value = !joinModal.value
+}
+
+const closeModal = () => {
+    folder.value.folder_id = null
+    v$.value.$reset();
+    joinModal.value = false
+}
+
+const getCalendarStatus = () => {
+    calendar.calendarStatus()
 }
 
 const googleCalendar = async () =>{
@@ -133,7 +149,8 @@ const saveCalendarSetting = () => {
 onMounted(async () => {
     await nextTick();
     await getCalendarSetting();
-    await folders.list({search : ''})
+    await folders.list({search:''})
+    await getCalendarStatus()
     console.log("route.query",route.query)
     if(route.query.code && Object.keys(route.query).length > 1){
         refreshToken();
@@ -157,28 +174,31 @@ onMounted(async () => {
                     <img class="w-6 mr-2" src="@/assets/image/google-calendar.png" alt="Google Calendar"/>
                     <span class="font-medium text-gray-500 text-sm">Google Calendar</span>
                 </div>
-                <Button :text="'Connect'" outline class="mt-2" @click="joinModal = !joinModal" />
+                <Button :text="'Connect'" outline class="mt-2" v-if="!calendar.google_calendar_connection" @click="openModal('google')" />
+                <Button :text="'Disconnect'"  v-if="calendar.google_calendar_connection" class="mt-2" />
             </div>
             <div class="lg:border-l border-gray-300 lg:flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">
                     <img class="w-6 mr-2" src="@/assets/image/teams-calendar.png" alt="Microsoft Teams Calendar"/>
                     <span class="font-medium text-gray-500 text-sm">Microsoft Teams Calendar</span>
                 </div>
-                <Button :text="'Disconnect'" @click="microsoftTeamsCalendar()" class="mt-2" />
+                <Button :text="'Connect'" outline class="mt-2" v-if="!calendar.microsoft_calendar_connection"  @click="openModal('microsoft')" />
+                <Button :text="'Disconnect'"  v-else class="mt-2" />
             </div>
         </div>
         <div>
             <p class="text-sm font-normal text-gray-500 mt-3">Change Your Calendar Meeting Settings</p>
         </div>        
-        <Modal :title="'Select Folder'" :show="joinModal" @close="joinModal = false">
+        <Modal :title="'Select Folder'" :show="joinModal" @close="closeModal()">
             <div class="modal-content  p-4 md:p-5">           
                 <div class="col-span-2 mb-3">
                     <FormSelect label="Folder" placeholder="Folders" id="Folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Select Folder'" frontIcon="fas fa-plus" @click="googleCalendar()" />
-                <Button :text="'Cancel'" @click="joinModal = false" outline/>
+                <Button class="mr-2" :text="'Select Folder'" frontIcon="fas fa-plus" v-if="modalType == 'google'" @click="googleCalendar()" />
+                <Button class="mr-2" :text="'Select Folder'" frontIcon="fas fa-plus" v-if="modalType == 'microsoft'"@click="microsoftTeamsCalendar()" />
+                <Button :text="'Cancel'" @click="closeModal()" outline/>
             </div>
         </Modal>
         <div class="box w-full mt-2 bg-white dark:bg-gray-800">
