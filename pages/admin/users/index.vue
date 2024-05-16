@@ -88,7 +88,7 @@ const searchUser = (search: any) => {
 
 const view = (index: any) => {
     let id = userList.value.data[index].id
-    router.push(`users/${id}`);
+    router.push(`/admin/users/${id}`);
 }
 
 const edit = (index: any) => {

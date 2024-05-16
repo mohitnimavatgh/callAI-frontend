@@ -59,3 +59,5 @@ export const apiAdminGetUsers = (params: any): Promise<any> => { return get('adm
 export const apiAdminCreateUser = (params: any): Promise<any> => { return post('admin/user', params) };
 export const apiAdminUpdateUser = (params: any): Promise<any> => { return put('admin/user/update', params) };
 export const apiAdminDeleteUsers = (id: any): Promise<any> => { return del(`admin/user/${id}`) };
+
+export const apiAdminGetFolders = (params: any): Promise<any> => { return get('admin/folders',params) };
