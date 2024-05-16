@@ -2,6 +2,7 @@
 import { usersStore } from '@/stores/admin/users'
 
 const route = useRoute();
+const router = useRouter();
 const users = usersStore() 
 definePageMeta({
     layout: 'admin',
@@ -9,8 +10,26 @@ definePageMeta({
 })
 
 onMounted(() => {
-
+    getUserData();
 })
+
+const getFolderParams = ref<any>({
+    page: 1,
+    search: '',
+    user_id: route.params.id
+})
+const selectedTab = ref('');
+const tabItems = ref([
+  { label: 'Meeting', icon: 'fas fa-video' },
+  { label: 'Upcoming Meeting', icon: 'fas fa-calendar'},
+  { label: 'Recorded Meeting', icon: 'fas fa-file'},
+  { label: 'Folders', icon: 'fas fa-folder-open'},
+]);
+
+const tabChanged = (item: any) => {
+  selectedTab.value = item.label;
+  router.push({ name: item.url });
+};
 
 const getUserData = () => {
     
@@ -24,6 +43,7 @@ const getUserData = () => {
             User Detail
         </div>
         <div class="mt-10">
+            <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab" />
             <!-- <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
               <template v-slot:action="{ item, value, index }">
                   <div class="flex space-x-2">
