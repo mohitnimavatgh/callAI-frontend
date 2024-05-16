@@ -19,7 +19,7 @@ const route = useRoute();
 const router = useRouter();
 
 onMounted(() => {
-  const matchedTab = tabItems.value.find(item => item.url === route.value.name);
+  const matchedTab = tabItems.value.find(item => item.url === route.name);
   selectedTab.value = matchedTab ? matchedTab.label : 'Bot';
 });
 
