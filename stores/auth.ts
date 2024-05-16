@@ -3,7 +3,8 @@ import {
   apiUserLogin, 
   apiUserSignUp,
   apiUserResetSendLink,
-  apiUserForgetPassword, } from '@/API/utils'
+  apiUserForgetPassword,
+  apiUserLogout } from '@/API/utils'
 
 export const useAuth = defineStore('auth', {
   state: () => ({
@@ -27,7 +28,7 @@ export const useAuth = defineStore('auth', {
     async userInfoAction(response: any) {
       this.userInfo = response;
       this.authenticated = true;
-      this.role = this.userInfo?.role;      
+      this.role = this.userInfo?.role_name;      
       localStorage.setItem("access_token", this.userInfo.access_token);
       //@ts-ignore
       localStorage.setItem("isAuthenticated", true);
@@ -59,6 +60,23 @@ export const useAuth = defineStore('auth', {
       try {
         const response = await apiUserForgetPassword(data);
         const responseData = response.data; 
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async logout() {
+      try {
+        const response = await apiUserLogout();
+        const responseData = response.data as any;
+        if(response.success) {
+          this.userInfo = null;
+          this.authenticated = false;
+          this.role = '';      
+          localStorage.setItem("access_token", null);
+          //@ts-ignore
+          localStorage.setItem("isAuthenticated", false);
+        }
         return responseData;
       } catch (error) {
         throw error;

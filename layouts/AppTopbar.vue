@@ -107,7 +107,11 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
-
+import { useAuth } from "@/stores/auth";
+import { adminAuth } from "@/stores/admin/auth";
+const auth = useAuth()
+const adminState = adminAuth()
+const { $toast } = useNuxtApp()
 const userMenuItems = ref([{name:'Sign out'}]);
 
 const collapsed = ref<boolean>(true)
@@ -170,8 +174,36 @@ const changeTheme = () => {
   setTheme(newTheme);
 };
 
+const catchResponse = (err) => {
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  }else{
+      $toast('danger', 'something went wrong...!', { duration: 5000 })
+  }  
+}
+
 const onSelect = (item:any) => {
-  // Your selection handling logic here
+  if(item.name == 'Sign out'){
+    let role = auth.role;
+    let user = role == 'Company' ? auth.logout() : adminState.logout();
+    user.then(() => {
+        $toast('success', 'Logout Successfully', { duration: 10000 })
+        if(role == 'Company'){
+          router.push('/login');
+        }else{
+          router.push('/admin/login');
+        }
+    }).catch(error => {
+      catchResponse(error)
+    });
+  }
 };
 
 const currentMenuItem = ref('Home');
