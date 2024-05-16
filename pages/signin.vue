@@ -27,6 +27,20 @@ const v$ = useVuelidate(rules, {login})
 const auth = useAuth()
 const { $toast } = useNuxtApp()
 
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
+}
 
 async function loginBtn() {
     $toast('success', 'Login Successfully', { duration: 10000 })
@@ -34,11 +48,11 @@ async function loginBtn() {
         if (result) {
             loading.value = true
             auth.login(login.value).then((resp:any) => {
-                if(resp.success) {
-                    loading.value = false
-                    $toast('success', 'Login Successfully', { duration: 10000 })
-                    router.push(`call-ai`);
-                }
+                loading.value = false
+                $toast('success', 'Login Successfully', { duration: 10000 })
+                router.push(`call-ai`);
+            }).catch((error) => {
+                catchResponse(error)       
             })
         }
 }

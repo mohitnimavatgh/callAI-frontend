@@ -4,6 +4,7 @@ import { get, post, put, del, patch } from './https';
 
 //Auth Api
 export const apiUserLogin = (params: any): Promise<any> => { return post('/login', params) };
+export const apiUserLogout = (): Promise<any> => { return get('/logout') };
 export const apiUserSignUp = (params: any): Promise<any> => { return post('/signup', params) };
 export const apiUserForgetPassword = (params: any): Promise<any> => { return post('/forgot-password', params) };
 export const apiUserResetSendLink = (params: any): Promise<any> => { return get('/reset-link-email', params) };
@@ -51,6 +52,7 @@ export const apiDeleteQuickQuestion = (id: any): Promise<any> => { return del(`/
 
 //Auth Api
 export const apiAdminLogin = (params: any): Promise<any> => { return post('/login', params) };
+export const apiAdminLogout = (): Promise<any> => { return get('/logout') };
 
 //Users Api
 export const apiAdminGetUsers = (params: any): Promise<any> => { return get('admin/user',params) };
