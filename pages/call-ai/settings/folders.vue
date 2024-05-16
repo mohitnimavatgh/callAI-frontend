@@ -3,22 +3,29 @@ import { debounce } from 'lodash-es';
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
+definePageMeta({
+       middleware: "is-authenticate",
+})
 const ShowAddModal = ref(false);
 const folderUpdate = ref(false);
 const { $toast } = useNuxtApp()
 const folders = useFolders()
 const search = ref('')
-const folderParams = { page: 1, search: '' }
+const filterText = ref('Filter')
+const folderParams = ref({ page: 1, search: '', action:'' })
 const items = [
   { value: "private", icon: 'fas fa-lock', labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
   { value: "public", icon: 'fas fa-user-group', labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
 ]
 
 const actions = [
-  { value: 'asc', name: 'Ascending' }, 
-  { value: 'desc', name : 'Descending'},
-  { value: 'public', name : 'Public'},
-  { value: 'private', name : 'Private'}, ]
+  { value: '', name: 'select Filter' }, 
+  { value: 'no_of_meeting', name : 'Number of meetings'},
+  { value: 'public', name : 'Team Access'},
+  { value: 'private', name : 'Private Access'}, 
+  { value: 'last_updated', name : 'Last Updated'}, 
+  { value: 'alpha_order', name: 'Alphabatical Order' }, 
+]
 
 const foldersLists = computed(() => folders.folderPagination);
 
@@ -40,7 +47,7 @@ const rules = {
 const v$ = useVuelidate(rules, { folder })
 
 const getFolder = () => {
-  folders.list(folderParams)
+  folders.list(folderParams.value)
 }
 
 onMounted(async () => {
@@ -56,6 +63,8 @@ async function createFolder() {
         ShowAddModal.value = false;
         resetFolderData()
         getFolder();
+    }).catch((err: any) => {
+      catchResponse(err)
     })
   }
 }
@@ -64,12 +73,35 @@ const updateFolder = async () => {
   const result = await v$.value.$validate()
   if (result) {
     folders.update(folder.value).then((resp: any) => {
-        ShowAddModal.value = false
-        folderUpdate.value = false;
-        resetFolderData()
-        getFolder();
+      ShowAddModal.value = false
+      folderUpdate.value = false;
+      $toast('success', 'Folder Updated Successfully', { duration: 10000 })
+      getFolder();
+    }).catch((err: any) => {
+      catchResponse(err)
     })
   }
+}
+
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
+}
+
+const closeModal = () => {
+  resetFolderData()
+  v$.value.$reset();
+  ShowAddModal.value = false
 }
 
 const resetFolderData = () => {
@@ -81,15 +113,21 @@ const resetFolderData = () => {
 }
 
 const handleSearch = debounce(() => {
-  folderParams.page = 1
-  folderParams.search = search.value
+  folderParams.value.page = 1
+  folderParams.value.search = search.value
   getFolder();
 }, 700);
 
 const folderPageChange = (page: any) => {
-  folderParams.page = page
+  folderParams.value.page = page
   getFolder()
 };
+
+const onSelect = (item) => {
+  folderParams.value.action = item.value;
+  filterText.value = item.name
+    getFolder()
+}
 
 const edit = (data: any) => {
   folderUpdate.value = true;
@@ -113,7 +151,7 @@ const edit = (data: any) => {
 
     <div class="mt-3 sm:flex items-center flex-wrap justify-end">
       <div class="flex sm:w-fit w-full justify-end">
-        <DropDown class="mb-2 sm:mb-0 sm:mr-2" :buttonText="'Filter'" :actions="actions" @select="onSelect"/>
+        <DropDown class="mb-2 sm:mb-0 sm:mr-2" :buttonText="filterText" :actions="actions" @select="onSelect"/>
       </div>
       <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch"
         class="sm:w-56 w-full" />
@@ -169,7 +207,7 @@ const edit = (data: any) => {
         class="mt-4 flex justify-end" :totalRecords="foldersLists.total" :currentPage="folderParams.page"
         :recordsPerPage="foldersLists.per_page" @pageChange="folderPageChange" />
     </div>
-    <Modal :title="'Add Folder'" :show="ShowAddModal" @close="ShowAddModal = false">
+    <Modal :title="'Add Folder'" :show="ShowAddModal" @close="closeModal()">
       <div class="modal-content  p-4 md:p-5">
         <div class="col-span-2 mb-3">
           <FormInput id="Name" label="Folder Name" name="Folder Name" type="text" placeholder="Add Folder Name"
@@ -190,7 +228,7 @@ const edit = (data: any) => {
       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
         <Button class="mr-2" :text="'Add Folder'" v-if="!folderUpdate" @click="createFolder" frontIcon="fas fa-plus" />
         <Button class="mr-2" :text="'Update Folder'" v-else @click="updateFolder" frontIcon="fas fa-plus" />
-        <Button :text="'Cancel'" @click="ShowAddModal = false" outline />
+        <Button :text="'Cancel'" @click="closeModal()" outline />
     </div>
   </Modal>
 </div></template>  

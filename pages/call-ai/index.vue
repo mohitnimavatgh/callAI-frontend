@@ -1,74 +1,4 @@
-<template>
-  <div class="">
-    <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
-      <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings" :data="upcomingMeeting?.data"
-        :actions="actionList" @search="upcomingSearch">
-        <template v-slot:action="{ item, value, index }">
-          <div class="flex space-x-2">
-            <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
-            <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
-          </div>
-        </template>
-      </Table>
-      <Pagination
-        v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page"
-        class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total" :currentPage="upcomingParams.page"
-        :recordsPerPage="upcomingMeeting.per_page" @pageChange="upcomingPageChange" />
-    </div>
-    <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
-      <Table :headings="tableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
-        :actions="folders?.folders" title="Recorded Meetings" @search="recordedSearch" :filterTab="tabItems"
-        @tab-click="handleTabClick" @select="onSelect">
-        <template v-slot:action="{ item, value, index }">
-          <div class="flex justify-around space-x-2">
-            <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-            <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
-            <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
-          </div>
-        </template>
-      </Table>
-      <Pagination
-        v-if="recordedMeeting && recordedMeeting.total && recordedMeeting.per_page && recordedMeeting.total > recordedMeeting.per_page"
-        class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page"
-        :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange" />
-    </div>
-    <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal"
-      @close="shareModal = false">
-      <div class="modal-content  p-4 md:p-5">
-        <div class="col-span-2">
-          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
-            :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
-        </div>
-      </div>
-      <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-        <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder" />
-        <Button :text="'Cancel'" @click="shareModal = false" outline />
-      </div>
-    </Modal>
-    <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal"
-      @close="joinModal = false">
-      <div class="modal-content  p-4 md:p-5">
-        <div class="col-span-2 mb-3">
-          <FormInput id="Name" label="Meeting Name" name="Name" type="text" placeholder="Name"
-            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" />
-        </div>
-        <div class="col-span-2 mb-3">
-          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model"
-            :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
-        </div>
-        <div class="col-span-2">
-          <FormInput id="Meeting URL" label="Meeting URL" name="Meeting URL" type="text" placeholder="Meeting URL"
-            v-model="vv$.bot.meeting_link.$model" :errors="vv$.bot.meeting_link.$errors" :disabled="true" />
-        </div>
-      </div>
-      <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-        <Button class="mr-2" :text="'Update Meeting'" frontIcon="fas fa-plus" @click="updateBot" />
-        <Button :text="'Cancel'" @click="joinModal = false" outline />
-      </div>
-    </Modal>
-    <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation" />
-  </div>
-</template>
+
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
@@ -77,6 +7,7 @@ import { required, url, helpers } from "@vuelidate/validators";
 const meetings = useMeetings()
 const folders = useFolders()
 const router = useRouter()
+const { $toast } = useNuxtApp()
 const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null)
@@ -84,6 +15,7 @@ const recordedData = ref([])
 const upcomingData = ref([])
 const deleteAction = ref('')
 const joinModal = ref(false);
+const actionName = ref('Action')
 const UpcomingTabItems = ref([
   { value: 'all', label: "All Calls", icon: "fa-regular fa-clock" },
   { value: 'calendar', label: "Calendar Calls", icon: "fas fa-calendar" },
@@ -144,14 +76,31 @@ const updateBot = async () => {
       joinModal.value = false
       getUpcoming()
     }).catch((error) => {
-      $toast('error', 'Invalid data', { duration: 5000 })
+      catchResponse(error)
+      joinModal.value = false
     })
   }
+}
+
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
 }
 
 const upcomingParams = {
   page: 1,
   meeting: 'upcoming',
+  type: 'all',
   search: null
 }
 const recordedParams = {
@@ -196,6 +145,12 @@ const handleTabClick = (item: any) => {
   recordedParams.type = item.value
   getRecorded()
 };
+
+const upcomingHndleTabClick = (item: any) => {
+  upcomingParams.type = item.value
+  getUpcoming()
+};
+
 const upcomingSearch = (search: any) => {
   upcomingParams.search = search
   getUpcoming()
@@ -213,21 +168,27 @@ const recordedPageChange = (page: any) => {
   getRecorded()
 };
 const onSelect = (item: any) => {
+  actionName.value = item.name
   recordedParams.action = item.id
   getRecorded()
 };
 
 const shareFolder = async () => {
-  console.log('dadjhad')
   const result = await v$.value.$validate();
-  console.log('dadjhad')
   if (result) {
     meetings.shareMeeting(folder.value).then((resp: any) => {
-      console.log('dadjhad')
       resetFolderData()
       shareModal.value = false;
+    }).catch((error) => {
+      catchResponse(error)
+      shareModal.value = false
     })
   }
+}
+
+const closeModal = () => {
+  v$.value.$reset()
+  shareModal.value = false;
 }
 
 const resetFolderData = () => {
@@ -285,3 +246,75 @@ const recordedMeeting = computed(() => {
   return recordedAll
 });
 </script>
+
+<template>
+  <div class="">
+    <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
+      <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings" :data="upcomingMeeting?.data"
+        :actions="actionList" @search="upcomingSearch"  @tab-click="upcomingHndleTabClick">
+        <template v-slot:action="{ item, value, index }">
+          <div class="flex space-x-2">
+            <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
+            <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+          </div>
+        </template>
+      </Table>
+      <Pagination
+        v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page"
+        class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total" :currentPage="upcomingParams.page"
+        :recordsPerPage="upcomingMeeting.per_page" @pageChange="upcomingPageChange" />
+    </div>
+    <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
+      <Table :headings="tableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
+        :actions="folders?.folders" title="Recorded Meetings" @search="recordedSearch" :filterTab="tabItems"
+        @tab-click="handleTabClick" @select="onSelect" :actionName="actionName">
+        <template v-slot:action="{ item, value, index }">
+          <div class="flex justify-around space-x-2">
+            <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+            <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+            <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+          </div>
+        </template>
+      </Table>
+      <Pagination
+        v-if="recordedMeeting && recordedMeeting.total && recordedMeeting.per_page && recordedMeeting.total > recordedMeeting.per_page"
+        class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page"
+        :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange" />
+    </div>
+    <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal"
+      @close="closeModal">
+      <div class="modal-content  p-4 md:p-5">
+        <div class="col-span-2">
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
+            :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
+        </div>
+      </div>
+      <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder" />
+        <Button :text="'Cancel'" @click="closeModal" outline />
+      </div>
+    </Modal>
+    <Modal :title="'Meeting Bot'" :subTitle="'Confra will join and record the meeting'" :show="joinModal"
+      @close="joinModal = false">
+      <div class="modal-content  p-4 md:p-5">
+        <div class="col-span-2 mb-3">
+          <FormInput id="Name" label="Meeting Name" name="Name" type="text" placeholder="Name"
+            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" />
+        </div>
+        <div class="col-span-2 mb-3">
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model"
+            :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
+        </div>
+        <div class="col-span-2">
+          <FormInput id="Meeting URL" label="Meeting URL" name="Meeting URL" type="text" placeholder="Meeting URL"
+            v-model="vv$.bot.meeting_link.$model" :errors="vv$.bot.meeting_link.$errors" :disabled="true" />
+        </div>
+      </div>
+      <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <Button class="mr-2" :text="'Update Meeting'" frontIcon="fas fa-plus" @click="updateBot" />
+        <Button :text="'Cancel'" @click="joinModal = false" outline />
+      </div>
+    </Modal>
+    <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation" />
+  </div>
+</template>

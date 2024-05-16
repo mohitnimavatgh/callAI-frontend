@@ -3,8 +3,12 @@ import { useCalendar } from "@/stores/user/calendar";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required,helpers } from "@vuelidate/validators";
+definePageMeta({
+       middleware: "is-authenticate",
+})
 const route = useRoute();
 const router = useRouter()
+const { $toast } = useNuxtApp()
 const calendar = useCalendar()
 const folders = useFolders()
 const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
@@ -108,7 +112,7 @@ const refreshToken = () => {
             router.push('/call-ai/settings/calendar'); 
         }
     }).catch((error) => {
-        console.log("Error:", error);                  
+        catchResponse(error)               
     })
 }
 
@@ -125,24 +129,38 @@ const microsoftTeamsCalendar = () => {
     window.location.href = redirectUrl;
 }
 
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
+}
+
 const getMicrosoftToken = () =>{
     calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
         if(resp?.success) {   
             router.push('/call-ai/settings/calendar'); 
         }
     }).catch((error) => {
-        console.log("Error:", error);                  
+        catchResponse(error)       
     })
 }
 
 const saveCalendarSetting = () => {
    console.log("Calendar",calendarSettings.value);
-    calendar.update(calendarSettings.value).then((resp:any) => {
-        if(resp?.success) {   
-            setCalendarOption(); 
-        }
+    calendar.update(calendarSettings.value).then((resp:any) => {        
+        setCalendarOption(); 
+        $toast('success', 'Calendar Meeting Settings Updated', { duration: 10000 })       
     }).catch((error) => {
-        console.log("Error:", error);                  
+        catchResponse(error)             
     })
 }
 
@@ -159,7 +177,6 @@ onMounted(async () => {
         getMicrosoftToken();
     }
 })
-
 
 </script>
 <template>

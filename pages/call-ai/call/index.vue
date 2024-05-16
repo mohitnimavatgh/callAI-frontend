@@ -3,6 +3,9 @@ import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
+definePageMeta({
+       middleware: "is-authenticate",
+})
 const meetings = useMeetings()
 const router = useRouter()
 const folders = useFolders()
@@ -10,11 +13,13 @@ const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null);
 const recordedData = ref([]);
+const actionName = ref('Action')
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
   { value: 'teams', label: "Teams Call", icon: "fas fa-user-plus" },
   { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' },
+  { value: 'clear', label: "Clear Filter", icon: "fas fa-filter-circle-xmark" }
 ]);
 
 const tableHeadings = ref([
@@ -104,7 +109,16 @@ onMounted(async () => {
 })
 
 const handleTabClick = (item: any) => {
-  recordedParams.type = item.value
+  if(item.value == 'clear'){
+    recordedParams.page = 1
+    recordedParams.meeting = 'recorded'
+    recordedParams.search = null
+    recordedParams.type ='all'
+    recordedParams.action = null
+    actionName.value = 'Action'
+  }else{
+    recordedParams.type = item.value
+  }
   getRecorded()
 };
 
@@ -119,6 +133,7 @@ const recordedPageChange = (page: any) => {
 };
 const onSelect = (item: any) => {
   recordedParams.action = item.id
+  actionName.value = item.name
   getRecorded()
 };
 const recordedMeeting = computed(() => {
@@ -139,6 +154,7 @@ const recordedMeeting = computed(() => {
             title="Calls"
             @search="recordedSearch"
             :filterTab="tabItems"
+            :actionName="actionName"
             @tab-click="handleTabClick"
             @select="onSelect"
         >

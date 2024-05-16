@@ -18,9 +18,9 @@ export const useCalendar = defineStore('calendar', {
       try {
         const response = await apiGetCalanderStatus(); 
         const responseData = response.data;
-        if(responseData.success){
-          this.google_calendar_connection = responseData.data?.google_calendar == "connecting"? true : false;
-          this.microsoft_calendar_connection = responseData.data?.microsoft_outlook == "connecting"? true : false;
+        if(response.success){
+          this.google_calendar_connection = responseData?.google_calendar == "connecting"? true : false;
+          this.microsoft_calendar_connection = responseData?.microsoft_outlook == "connecting"? true : false;
         }        
         return responseData;
       } catch (error) {
@@ -48,8 +48,10 @@ export const useCalendar = defineStore('calendar', {
     async calendarSetting() {
       try {
         const response = await apiGetCalanderSetting()     
-        const responseData = response.data.value;    
-        this.calendarSettingData = responseData.data
+        const responseData = response.data.value; 
+        if(response.success){   
+          this.calendarSettingData = responseData.data
+        }
         return responseData;
       } catch (error) {
         throw error;
@@ -59,7 +61,9 @@ export const useCalendar = defineStore('calendar', {
       try {
         const response = await apiUpdateCalanderSetting(data)     
         const responseData = response.data;
-        this.calendarSettingData = responseData
+        if(response.success){  
+          this.calendarSettingData = responseData
+        }
         return responseData;
       } catch (error) {
         throw error;

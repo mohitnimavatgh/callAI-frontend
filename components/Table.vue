@@ -7,7 +7,7 @@
       </div>
       <div class="my-1 mr-2">
         <div v-if="isActionable">
-          <DropDown :buttonText="'Action'" :actions="actions" @select="onSelect"/>
+          <DropDown :buttonText="actionName" :actions="actions" @select="onSelect"/>
         </div>
       </div>
       <div v-if="isSearchable" class="relative my-1">
@@ -94,6 +94,10 @@ const props = defineProps({
     filterTab: {
       type: Array,
       default: () => []
+    },
+    actionName: {
+      type: String,
+      default: null
     }
   });
 

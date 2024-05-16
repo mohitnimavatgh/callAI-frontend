@@ -3,6 +3,9 @@ import { useBots } from "@/stores/user/bots";
 import { initFlowbite } from 'flowbite'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, email, requiredIf } from "@vuelidate/validators";
+definePageMeta({
+       middleware: "is-authenticate",
+})
 const bots = useBots()
 const { $toast } = useNuxtApp()
 
@@ -20,7 +23,6 @@ const bot = ref({
     multiple_emails: null,
 })
 const emailArray = ref([]);
-
 
 const rules = {
     bot: {
@@ -66,10 +68,25 @@ const botSave = async () => {
         bots.create(bot.value).then((resp: any) => {
             resetBotValidation()
             $toast('success', 'bot create Successfully', { duration: 5000 })
-        }).catch((error) => {
-            console.log("Error:", error);
+        }).catch((err) => {
+            catchResponse(err)
         })
     }
+}
+
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
 }
 
 const resetBotValidation = () => {
@@ -89,11 +106,20 @@ const handleKeys = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
         if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
-            emailArray.value.push(bot.value.multiple_emails.trim());
+            if(!emailArray.value.includes(bot.value.multiple_emails.trim())){
+                emailArray.value.push(bot.value.multiple_emails.trim());
+            }
             bot.value.multiple_emails = null;
         }
     }
 }
+
+watch(() => bot.value.after_complete_run_actions, (val) => {  
+  if(val == 'nothing'){
+    emailArray.value = []
+    v$.value.$reset()
+  }
+});
 
 const deleteField = (index) => {
     emailArray.value.splice(index, 1);
@@ -120,7 +146,7 @@ const deleteField = (index) => {
                     :errors="v$.bot.action.$errors" />
                 <FormInput id="Email" class="mt-4" label="Enter Email" name="Email" type="text" placeholder="Enter Email"
                     rules="required|email" v-model="v$.bot.multiple_emails.$model" :errors="v$.bot.multiple_emails.$errors"
-                    @keydown="handleKeys" />
+                    @keydown="handleKeys" @blur="handleKeys" />
                 <ul>
                     <li v-for="(item, index) in emailArray" :key="index">
                         <p class="mt-2 dark:text-white text-ref-500 w-fit">

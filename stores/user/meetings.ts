@@ -53,7 +53,9 @@ export const useMeetings = defineStore('meetings', {
       try {
         const response = await apiGetRecordedMeeting(search)
         const responseData = response.data;
-        this.recorded = responseData;
+        if(response.success){
+          this.recorded = responseData;
+        }
         return responseData;
       } catch (error) {
         throw error;
@@ -63,7 +65,9 @@ export const useMeetings = defineStore('meetings', {
       try {
         const response = await apiGetMeetingDetail(id)
         const responseData = response.data;
-        this.getMeetingDetail = responseData;
+        if(response.success){
+          this.getMeetingDetail = responseData;
+        }
         return responseData;
       } catch (error) {
         throw error;

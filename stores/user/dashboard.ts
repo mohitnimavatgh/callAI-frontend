@@ -10,7 +10,9 @@ export const useDashboard = defineStore('dashboard', {
       try {
         const response = await apiGetDashboardData()
         const responseData = response.data;
-        this.dashboard = responseData
+        if(response.success){
+          this.dashboard = responseData
+        }
         return responseData;
       } catch (error) {
         throw error;

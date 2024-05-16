@@ -23,12 +23,14 @@ export const useChatToCall = defineStore('chatToCall', {
       try {      
         const response = await apiGetChatToCall(meetingId)
         const responseData = response.data;
-        this.getChatList = responseData;  
-        if(this.chatId == null){
-            if(this.getChatList.length > 0){
-                this.chatId = this.getChatList[0]?.chat_to_call_id;
-            }
-        }         
+        if(response.success){
+          this.getChatList = responseData;  
+          if(this.chatId == null){
+              if(this.getChatList.length > 0){
+                  this.chatId = this.getChatList[0]?.chat_to_call_id;
+              }
+          }         
+        }
         return responseData;
         } catch (error) {
         throw error;

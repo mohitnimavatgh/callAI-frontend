@@ -20,11 +20,13 @@ export const useFolders = defineStore('folders', {
       try {      
         const response = await apiGetFolders(folder)
         const responseData = response.data;
-        if(folder?.page){
-          this.folderPagination = responseData
-        }else{
-          this.folders = responseData
-        }       
+        if(response.success) {
+          if(folder?.page){
+            this.folderPagination = responseData
+          }else{
+            this.folders = responseData
+          }       
+        }
         return responseData;
         } catch (error) {
         throw error;
