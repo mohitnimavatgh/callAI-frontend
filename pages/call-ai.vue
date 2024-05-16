@@ -41,7 +41,7 @@ import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
 definePageMeta({
-  // middleware: ["is-authenticate"]
+  middleware: ["is-authenticate"]
 })
 const meetings = useMeetings()
 const folders = useFolders()

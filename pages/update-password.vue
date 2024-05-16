@@ -9,6 +9,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength, sameAs ,helpers } from "@vuelidate/validators";
 definePageMeta({
     layout: 'login-layout',
+    middleware: 'is-authenticate'
 });
 const resetToken = ref(route.query?.token)
 const reset = ref({   

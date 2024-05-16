@@ -27,5 +27,6 @@ import AuthHeader from '@/layouts/AuthHeader'
 import AppFooter from '@/layouts/AppFooter'
 definePageMeta({
   layout: 'login-layout',
+  middleware: 'is-authenticate'
 });
 </script>
