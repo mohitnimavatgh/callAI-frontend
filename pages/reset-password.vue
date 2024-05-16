@@ -7,6 +7,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 definePageMeta({
   layout: 'login-layout',
+  middleware: 'is-authenticate'
 });
 const reset = ref({
   email: null,

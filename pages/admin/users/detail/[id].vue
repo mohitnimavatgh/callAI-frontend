@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { usersStore } from '@/stores/admin/users'
 
-
 const route = useRoute();
 const users = usersStore() 
 definePageMeta({
@@ -14,7 +13,7 @@ onMounted(() => {
 })
 
 const getUserData = () => {
-
+    
 }
 
 </script>

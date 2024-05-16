@@ -4,6 +4,11 @@ import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
+
+definePageMeta({
+  middleware: "is-authenticate",
+})
+
 const meetings = useMeetings()
 const folders = useFolders()
 const router = useRouter()
@@ -20,7 +25,7 @@ const UpcomingTabItems = ref([
   { value: 'all', label: "All Calls", icon: "fa-regular fa-clock" },
   { value: 'calendar', label: "Calendar Calls", icon: "fas fa-calendar" },
   { value: 'manual', label: "Manual Call", icon: "fas fa-pen-fancy" }
-]); 
+]);
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
@@ -83,18 +88,18 @@ const updateBot = async () => {
 }
 
 const catchResponse = (err) => {
-    if(err?.response?.status == 422){
-        let data = err?.response?.data?.data
-        if(data){
-            let keys = Object.keys(data)[0];
-            let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
-        }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
-        }
-    }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
-    }  
+  if (err?.response?.status == 422) {
+    let data = err?.response?.data?.data
+    if (data) {
+      let keys = Object.keys(data)[0];
+      let firstValue = data[keys];
+      $toast('danger', firstValue[0], { duration: 5000 })
+    } else {
+      $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  } else {
+    $toast('danger', 'something went wrong...!', { duration: 5000 })
+  }
 }
 
 const upcomingParams = {
@@ -226,11 +231,11 @@ const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
   if (data) {
     meetings.delete(call_meeting_id.value).then((resp: any) => {
-        if (deleteAction.value = 'upcoming') {
-          getUpcoming();
-        } else {
-          getRecorded();
-        }
+      if (deleteAction.value = 'upcoming') {
+        getUpcoming();
+      } else {
+        getRecorded();
+      }
     })
   }
 }
@@ -250,8 +255,8 @@ const recordedMeeting = computed(() => {
 <template>
   <div class="">
     <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
-      <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings" :data="upcomingMeeting?.data"
-        :actions="actionList" @search="upcomingSearch"  @tab-click="upcomingHndleTabClick">
+      <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
+        :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" @tab-click="upcomingHndleTabClick">
         <template v-slot:action="{ item, value, index }">
           <div class="flex space-x-2">
             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
@@ -281,12 +286,11 @@ const recordedMeeting = computed(() => {
         class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page"
         :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange" />
     </div>
-    <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal"
-      @close="closeModal">
+    <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="closeModal">
       <div class="modal-content  p-4 md:p-5">
         <div class="col-span-2">
-          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
-            :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"
+            v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
         </div>
       </div>
       <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -302,8 +306,8 @@ const recordedMeeting = computed(() => {
             v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" />
         </div>
         <div class="col-span-2 mb-3">
-          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="vv$.bot.folder_id.$model"
-            :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"
+            v-model="vv$.bot.folder_id.$model" :errors="vv$.bot.folder_id.$errors" :options="folders.folders" />
         </div>
         <div class="col-span-2">
           <FormInput id="Meeting URL" label="Meeting URL" name="Meeting URL" type="text" placeholder="Meeting URL"
