@@ -20,8 +20,8 @@
               <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'bg-gray-100 rounded-lg text-primary-500 dark:bg-gray-600': menu.isActive, 'text-gray-700' : !menu.isActive}">
                 <button @click="toggleSubMenu(index, menu)" class="flex justify-between items-center w-full p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <div class="flex items-center text-gray-500">
-                    <i class=" transition duration-75 group-hover:text-gray-500" :class="{ 'rounded-lg text-primary-500': menu.isActive, 'text-gray-600' : !menu.isActive}, menu.icon" ></i>
-                    <span class="ms-3">{{ menu.title }}</span>
+                    <i class=" transition duration-75" :class="{ 'rounded-lg text-primary-500': menu.isActive, 'text-gray-600' : !menu.isActive}, menu.icon" ></i>
+                    <span :class="{ 'rounded-lg font-semibold text-primary-500': menu.isActive, 'text-gray-600' : !menu.isActive}" class="ms-3">{{ menu.title }}</span>
                   </div>
                   <i  v-if="menu.submenu && menu.submenu.length" :class="{ 'transform rotate-180': menu.showSubMenu }" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white fas fa-chevron-down" ></i>
                 </button>
@@ -56,8 +56,6 @@ const router = useRouter();
 const isSidebarOpen = ref(false);
 const menus = ref([
   { title: 'Users', icon: 'fas fa-user', active: true, url: '/admin/users' },
-  { title: 'Folders', icon: 'fas fa-folder', active: false, url: '/admin/folders' },
-  { title: 'Meetings', icon: 'fas fa-video', active: false, url: '/admin/meetings' },
   { title: 'Change Password', icon: 'fas fa-key', active: false, url: '/admin/changePassword' },
 ]);
 

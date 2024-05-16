@@ -24,7 +24,7 @@ export const adminAuth = defineStore('adminAuth', {
       this.adminInfo = response;
       this.authenticated = true;
       this.role = this.adminInfo.role_name;
-      localStorage.setItem("admin_access_token", this.adminInfo.access_token);
+      localStorage.setItem("access_token", this.adminInfo.access_token);
       //@ts-ignore
       localStorage.setItem("admin_isAuthenticated", true);
     },

@@ -1,15 +1,28 @@
 <script setup lang="ts">
+import { usersStore } from '@/stores/admin/users'
+
+
+const route = useRoute();
+const users = usersStore() 
 definePageMeta({
     layout: 'admin',
     middleware: 'is-admin-authenticate',
 })
+
+onMounted(() => {
+
+})
+
+const getUserData = () => {
+
+}
 
 </script>
 
 <template>
     <div class="w-full h-full dark:text-gray-300">
         <div class="text-gray-700 text-3xl">
-            Folders
+            User Detail
         </div>
         <div class="mt-10">
             <!-- <Table  title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" >
