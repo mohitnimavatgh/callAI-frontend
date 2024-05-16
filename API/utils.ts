@@ -51,3 +51,9 @@ export const apiDeleteQuickQuestion = (id: any): Promise<any> => { return del(`/
 
 //Auth Api
 export const apiAdminLogin = (params: any): Promise<any> => { return post('/login', params) };
+
+//Users Api
+export const apiAdminGetUsers = (params: any): Promise<any> => { return get('admin/user',params) };
+export const apiAdminCreateUser = (params: any): Promise<any> => { return post('admin/user', params) };
+export const apiAdminUpdateUser = (params: any): Promise<any> => { return put('admin/user/update', params) };
+export const apiAdminDeleteUsers = (id: any): Promise<any> => { return del(`admin/user/${id}`) };

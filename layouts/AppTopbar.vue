@@ -8,7 +8,7 @@
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative">
               <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                <div :class="route.path == menu.link ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
+                <div :class="route.path.includes(menu.link) ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
                 menu.label }}</nuxt-link>

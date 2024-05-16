@@ -7,7 +7,8 @@ axios.defaults.baseURL = 'http://192.168.1.13:8000/api/v1';
 
 axios.interceptors.request.use(
   (config: any) => {
-    const token = localStorage.getItem("access_token");
+    //@ts-ignore
+    let token = localStorage.getItem("access_token")
     config.headers.Authorization = `Bearer ${token}`
     if (config.url!.startsWith("/") || config.method === 'delete') {
       config.headers['Content-Type'] = 'application/json , multipart/form-data';
