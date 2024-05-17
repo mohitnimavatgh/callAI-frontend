@@ -1,57 +1,104 @@
 <script setup lang="ts">
-import { adminAuth } from '~/stores/admin/auth';
+import { adminAuth } from "~/stores/admin/auth";
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
 
 definePageMeta({
     layout: 'admin',
     middleware: 'is-admin-authenticate'
 })
 
-const adminData = adminAuth();
+const adminState = adminAuth();
+const router  = useRouter();
+const { $toast } = useNuxtApp();
 
-const admin = adminData.adminInfo
-
-onMounted(() => {
-    console.log(admin.email);
+const formData = ref<any>({
+    id: adminState?.adminInfo?.id,
+    name: adminState?.adminInfo?.name,
+    mobile_no: adminState?.adminInfo?.mobile_no,
+    email: adminState?.adminInfo?.email,
+    role: adminState?.adminInfo?.role_name,
 })
 
-const profileData = ref<any>({
-    name: admin.name,
-    email: admin.email,
-    mobile_no: admin.mobile_no,
-    role_name: admin.role_name
-})
+const profileRules = {
+    formData: {
+        name: {
+            required: helpers.withMessage("The Name is required", required),
+        },
+        mobile_no: {
+            required: helpers.withMessage("The Mobile No is required", required),
+        },
+    }
+}
+const v$ = useVuelidate(profileRules, { formData })
+
+const saveProfile = async () => {
+    const result = await v$.value.$validate()
+    if (result) {
+        let data = {
+            id: formData.value.id,
+            name: formData.value.name,
+            mobile_no: formData.value.mobile_no,
+        }
+        adminState.updateProfile(data).then((res: any) => {      
+            $toast('success', 'Updated Profile successfully', { duration: 5000 })
+        }).catch((err) => {
+            catchResponse(err);
+        })
+    }
+}
+
+const catchResponse = (err: any) => {
+    if (err?.response?.status == 422) {
+        let data = err?.response?.data?.data
+        if (data) {
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        } else {
+            if (!err?.response?.data?.success) {
+                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            } else {
+                $toast('danger', 'Something went wrong...!', { duration: 5000 })
+            }
+        }
+    } else {
+        if (!err?.response?.data?.success) {
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        } else {
+            $toast('danger', 'Something went wrong...!', { duration: 5000 })
+        }
+    }
+}
 
 </script>
-
 <template>
-    <div class="w-full h-full pb-8 overflow-y-auto dark:text-gray-300">
-        <div class="text-gray-700 text-3xl">
-            Profile
+    <div class="mt-5">
+        <div>
+            <h4 class="text-gray-700 text-3xl">Profile</h4>
         </div>
-        <div class="">
-            <div class="mt-6 w-4/12 py-2">
-                <div class="">
-                    <FormInput id="name" label="Name" name="name"
-                        :type="'text'" :pointer="true"
-                        placeholder="Enter your Name"
-                        :icon="'fa fa-user'"
-                        v-model="vv$.profileData.name.$model" :errors="vv$.profileData.name.$errors"/>
-                </div>
-                <div class="mt-5">
-                    <FormInput id="email" label="Email" name="email"
-                        :type="'text'" :pointer="true"
-                        placeholder="Enter your Email"
-                        :icon="'fa fa-envelope'"
-                        v-model="vv$.profileData.email.$model" :errors="vv$.profileData.email.$errors"/>
-                </div>
-                <div class="mt-5">
-                    <FormInput id="mobile_no" label="Mobile No." name="mobile_no"
-                        :type="'text'" :pointer="true"
-                        placeholder="Enter your Email"
-                        :icon="'fa fa-envelope'"
-                        v-model="vv$.profileData.email.$model" :errors="vv$.profileData.email.$errors"/>
-                </div>
-                <Button class="mt-6" text="Submit" frontIcon="" />
+        <div class="p-5 mt-6 lg:w-1/2 w-full dark:bg-gray-800 rounded-lg">
+            <div class="">
+                <FormInput id="name" class="mt-3" v-model="v$.formData.name.$model"
+                    :errors="v$.formData.name.$errors" label="Name" name="Name"
+                    type="text" placeholder="Name" />
+            </div>
+            <div class="mt-5">
+                <FormInput id="mobile_no" class="mt-3" v-model="v$.formData.mobile_no.$model"
+                    :errors="v$.formData.mobile_no.$errors" label="Mobile No" name="Mobile No"
+                    type="text" placeholder="Mobile No" />
+            </div>
+            <div class="mt-5">
+                <FormInput id="email" class="mt-3" v-model="formData.email"
+                     label="Email" name="Email" type="text" placeholder="Email" :disabled="true"/>
+            </div> 
+            <div class="mt-5">
+                <FormInput id="role" class="mt-3" v-model="formData.role"
+                     label="Role" name="role" type="text" placeholder="Role" :disabled="true"/>
+            </div>                
+            <div class="mt-4 flex justify-end">
+                <Button class="mt-6" text="Update" frontIcon="" @click="saveProfile()" /> 
             </div>
         </div>
-</div></template>
+    </div>
+</template>
