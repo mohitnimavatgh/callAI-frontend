@@ -96,20 +96,6 @@ const onSelect = (item) => {
           <div class="flex items-center ">
             <i class="text-xs text-gray-300 mr-2"
               :class="`fas ${folderItem.access_type == 'public' ? 'fa-user-group' : 'fa-lock'}`"></i>
-            <div @mouseleave="folderItem.active = false" class="cursor-pointer">
-              <i class="fas fa-ellipsis text-gray-300" @mouseover="folderItem.active = true"
-                @click="folderItem.active = true"></i>
-              <div v-if="folderItem.active"
-                class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-20 dark:bg-gray-700 dark:divide-gray-600">
-                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                  <li>
-                    <a @click="edit(folderItem)"
-                      class="text-gray-400 text-xs block px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><i
-                        class="fas fa-pen text-gray-400 mr-2"></i>Edit</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </div>

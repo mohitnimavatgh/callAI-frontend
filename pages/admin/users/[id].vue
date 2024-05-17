@@ -20,7 +20,6 @@ const router = useRouter();
 const selectedTab = ref('');
 const user_id = ref(route.params.id);
 const tabItems = ref([
-  { label: 'Meeting', icon: 'fas fa-video', url: `/admin/users/${user_id.value}/meetings`},
   { label: 'Upcoming Meeting', icon: 'fas fa-calendar', url: `/admin/users/${user_id.value}/upcoming-meetings`},
   { label: 'Recorded Meeting', icon: 'fas fa-file', url: `/admin/users/${user_id.value}/recorded-meetings`},
   { label: 'Folders', icon: 'fas fa-folder-open', url: `/admin/users/${user_id.value}/folders`}
@@ -30,7 +29,7 @@ const tabItems = ref([
 
 onMounted(() => {
   selectedTab.value = 'Meeting';
-  router.push(`/admin/users/${user_id.value}/meetings`);
+  router.push(`/admin/users/${user_id.value}/upcoming-meetings`);
 });
 
 const tabChanged = (item: any) => {

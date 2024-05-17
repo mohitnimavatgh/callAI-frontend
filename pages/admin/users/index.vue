@@ -195,7 +195,7 @@ const handlePageChange = (page: any) => {
                 <Button @click="joinModal = true" :text="'Add User'" class="font-semibold w-fit mt-5" />
             </div>
             <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
-                <Table title="Upcoming Meetings " :isSearchable="true" :headings="tableHeadings"  @search="searchUser" :data="userList.data">
+                <Table title="Users" :isSearchable="true" :headings="tableHeadings"  @search="searchUser" :data="userList.data">
                     <template v-slot:action="{ item, value, index }">
                         <div class="flex space-x-2">
                             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
