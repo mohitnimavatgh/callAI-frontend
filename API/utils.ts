@@ -60,4 +60,6 @@ export const apiAdminCreateUser = (params: any): Promise<any> => { return post('
 export const apiAdminUpdateUser = (params: any): Promise<any> => { return put('admin/user/update', params) };
 export const apiAdminDeleteUsers = (id: any): Promise<any> => { return del(`admin/user/${id}`) };
 
+export const apiAdminGetUpcomingMeeting = (params: any): Promise<any> => { return get('admin/meeting',params) };
+export const apiAdminGetRecordedMeeting = (params: any): Promise<any> => { return get('admin/meeting',params) };
 export const apiAdminGetFolders = (params: any): Promise<any> => { return get('admin/folders',params) };
