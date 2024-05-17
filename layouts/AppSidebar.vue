@@ -20,8 +20,8 @@
               <li class="text-sm" v-for="(menu, index) in menus" :key="index"  :class="{ 'bg-gray-100 rounded-lg text-primary-500 dark:bg-gray-600': menu.isActive, 'text-gray-700' : !menu.isActive}">
                 <button @click="toggleSubMenu(index, menu)" class="flex justify-between items-center w-full p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <div class="flex items-center text-gray-500">
-                    <i class=" transition duration-75" :class="{ 'rounded-lg text-primary-500': menu.isActive, 'text-gray-600' : !menu.isActive}, menu.icon" ></i>
-                    <span :class="{ 'rounded-lg font-semibold text-primary-500': menu.isActive, 'text-gray-600' : !menu.isActive}" class="ms-3">{{ menu.title }}</span>
+                    <i class=" transition duration-75" :class="route.name.includes(menu.title.toLowerCase()) ? 'rounded-lg font-semibold text-primary-500' : 'text-gray-600',menu.icon" ></i>
+                    <span :class="route.name.includes(menu.title.toLowerCase()) ? 'rounded-lg font-semibold text-primary-500' : 'text-gray-600'" class="ms-3">{{ menu.title }}</span>
                   </div>
                   <i  v-if="menu.submenu && menu.submenu.length" :class="{ 'transform rotate-180': menu.showSubMenu }" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white fas fa-chevron-down" ></i>
                 </button>
@@ -36,7 +36,7 @@
               </li>
             </ul>
           </div>
-          <div class="absolute bottom-0 border-t border-gray-300 w-full">
+          <!-- <div class="absolute bottom-0 border-t border-gray-300 w-full">
             <div class="px-3 py-4">
               <p class="text-sm text-gray-500 font-semibold">Pro (Limited)</p>
               <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mt-3">
@@ -45,7 +45,7 @@
               <p class="text-xs text-gray-500 mt-1">6 of 100 monthly tokens used</p>
               <Button :text="'Get AI Pro'" outline class="mt-4 py-2 px-1"></Button>
             </div>
-          </div>
+          </div> -->
         </div>
       </aside>
     </div>
@@ -53,6 +53,7 @@
   
   <script setup>
 const router = useRouter();
+const route = useRoute();
 const isSidebarOpen = ref(false);
 const menus = ref([
   { title: 'Users', icon: 'fas fa-user', active: true, url: '/admin/users' },
@@ -65,13 +66,13 @@ function toggleSidebar() {
 
 function toggleSubMenu(index, menu) {
   menus.value[index].showSubMenu = !menus.value[index].showSubMenu;
-  setActive(index);
-  this.router.push(menu.url);
+  // setActive(index);
+  router.push(menu.url);
 }
 
-function setActive(index) {
-  menus.value.forEach((menu, i) => {
-    menu.isActive = i === index;
-  });
-}
+// function setActive(index) {
+//   menus.value.forEach((menu, i) => {
+//     menu.isActive = i === index;
+//   });
+// }
 </script>
