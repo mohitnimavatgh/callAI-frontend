@@ -38,7 +38,8 @@ const saveProfile = async () => {
         let data = {
             id: formData.value.id,
             name: formData.value.name,
-            mobile_no: formData.value.mobile_no
+            email: formData.value.email,
+            mobile_no: formData.value.mobile_no,
         }
         userState.updateProfile(data).then((res: any) => {      
             $toast('success', 'Updated Profile successfully', { duration: 5000 })

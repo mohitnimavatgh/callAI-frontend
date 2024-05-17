@@ -41,7 +41,8 @@ const getRecorded = () => {
 
 onMounted(async () => {
   await nextTick();
-  await getRecorded()
+  await getRecorded();
+  await folders.list({ user_id:19, search: '' })
 })
 
 const handleTabClick = (item: any) => {
@@ -60,8 +61,13 @@ const recordedPageChange = (page: any) => {
 };
 
 const onSelect = (item: any) => {
-  actionName.value = item.name
-  recordedParams.value.action = item.id
+  if(item == null){
+    actionName.value = 'Action'
+    recordedParams.value.action  = null
+  }else{
+    actionName.value = item.name
+    recordedParams.value.action = item.id
+  }
   getRecorded()
 };
 
