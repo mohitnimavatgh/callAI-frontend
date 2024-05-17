@@ -8,7 +8,8 @@ export const apiUserLogout = (): Promise<any> => { return get('/logout') };
 export const apiUserSignUp = (params: any): Promise<any> => { return post('/signup', params) };
 export const apiUserForgetPassword = (params: any): Promise<any> => { return post('/forgot-password', params) };
 export const apiUserResetSendLink = (params: any): Promise<any> => { return get('/reset-link-email', params) };
-
+export const apiChangePassword = (params: any): Promise<any> => { return post('/change-password', params) };
+export const apiUserUpdateProfile = (params: any): Promise<any> => { return put('/user/update', params) };
 //Bot Api
 export const apiCreateBot = (params: any): Promise<any> => { return post('/settings', params) };
 

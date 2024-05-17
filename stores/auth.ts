@@ -4,6 +4,8 @@ import {
   apiUserSignUp,
   apiUserResetSendLink,
   apiUserForgetPassword,
+  apiChangePassword,
+  apiUserUpdateProfile,
   apiUserLogout } from '@/API/utils'
 
 export const useAuth = defineStore('auth', {
@@ -59,6 +61,23 @@ export const useAuth = defineStore('auth', {
       try {
         const response = await apiUserForgetPassword(data);
         return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async changePassword(payload: any){
+      const response = await apiChangePassword(payload)
+      return response;
+    },
+    async updateProfile(payload: any){
+      try {
+        const response = await apiUserUpdateProfile(payload)
+        const responseData = response.data as any;
+        if(response.success) {
+          console.log("reponse--",responseData)
+          this.userInfo = responseData;
+        }
+        return responseData;
       } catch (error) {
         throw error;
       }
