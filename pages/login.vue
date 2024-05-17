@@ -93,8 +93,8 @@ const loginBtn = async () => {
     const result = await v$.value.$validate()
     if (result) {
         loginData.value.email = login.value.email,
-            loginData.value.password = login.value.password,
-            loading.value = true
+        loginData.value.password = login.value.password,
+        loading.value = true
         loginAction();
     }
 }
