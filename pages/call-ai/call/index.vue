@@ -18,8 +18,7 @@ const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
   { value: 'teams', label: "Teams Call", icon: "fas fa-user-plus" },
-  { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' },
-  { value: 'clear', label: "Clear Filter", icon: "fas fa-filter-circle-xmark" }
+  { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' }
 ]);
 
 const tableHeadings = ref([
@@ -34,13 +33,13 @@ const tableHeadings = ref([
   { title: "Action", value: "action" }
 ]);
 
-const recordedParams = {
+const recordedParams = ref({
   page: 1,
   meeting: 'recorded',
   search: null,
   type: 'all',
   action: null
-}
+});
 
 const folder = ref({
   folder_id: null,
@@ -100,7 +99,7 @@ const confirmation = (data: Boolean) => {
 }
 
 const getRecorded = () => {
-  meetings.recordedMeeting(recordedParams)
+  meetings.recordedMeeting(recordedParams.value)
 }
 
 onMounted(async () => {
@@ -109,31 +108,27 @@ onMounted(async () => {
 })
 
 const handleTabClick = (item: any) => {
-  if(item.value == 'clear'){
-    recordedParams.page = 1
-    recordedParams.meeting = 'recorded'
-    recordedParams.search = null
-    recordedParams.type ='all'
-    recordedParams.action = null
-    actionName.value = 'Action'
-  }else{
-    recordedParams.type = item.value
-  }
+  recordedParams.value.type = item.value
   getRecorded()
 };
 
 const recordedSearch = (search: any) => {
-  recordedParams.search = search
+  recordedParams.value.search = search
   getRecorded()
 };
 
 const recordedPageChange = (page: any) => {
-  recordedParams.page = page
+  recordedParams.value.page = page
   getRecorded()
 };
 const onSelect = (item: any) => {
-  recordedParams.action = item.id
-  actionName.value = item.name
+  if(item == null){
+    recordedParams.value.action = null;
+    actionName.value = 'Action';
+  }else{
+    recordedParams.value.action = item.id
+    actionName.value = item.name
+  }
   getRecorded()
 };
 const recordedMeeting = computed(() => {

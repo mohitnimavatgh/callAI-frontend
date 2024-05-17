@@ -102,19 +102,20 @@ const catchResponse = (err) => {
   }
 }
 
-const upcomingParams = {
+const upcomingParams = ref({
   page: 1,
   meeting: 'upcoming',
   type: 'all',
   search: null
-}
-const recordedParams = {
+});
+
+const recordedParams = ref({
   page: 1,
   meeting: 'recorded',
   search: null,
   type: 'all',
   action: null
-}
+});
 
 const folder = ref({
   folder_id: null,
@@ -134,10 +135,10 @@ const v$ = useVuelidate(rules, { folder })
 const actionList = ref(["Reward", "Promote", "Activate account", "Delete User"]);
 
 const getUpcoming = () => {
-  meetings.upcomingMeeting(upcomingParams)
+  meetings.upcomingMeeting(upcomingParams.value)
 }
 const getRecorded = () => {
-  meetings.recordedMeeting(recordedParams)
+  meetings.recordedMeeting(recordedParams.value)
 }
 
 onMounted(async () => {
@@ -147,34 +148,39 @@ onMounted(async () => {
 })
 
 const handleTabClick = (item: any) => {
-  recordedParams.type = item.value
+  recordedParams.value.type = item.value
   getRecorded()
 };
 
 const upcomingHndleTabClick = (item: any) => {
-  upcomingParams.type = item.value
+  upcomingParams.value.type = item.value
   getUpcoming()
 };
 
 const upcomingSearch = (search: any) => {
-  upcomingParams.search = search
+  upcomingParams.value.search = search
   getUpcoming()
 };
 const recordedSearch = (search: any) => {
-  recordedParams.search = search
+  recordedParams.value.search = search
   getRecorded()
 };
 const upcomingPageChange = (page: any) => {
-  upcomingParams.page = page
+  upcomingParams.value.page = page
   getUpcoming()
 };
 const recordedPageChange = (page: any) => {
-  recordedParams.page = page
+  recordedParams.value.page = page
   getRecorded()
 };
 const onSelect = (item: any) => {
-  actionName.value = item.name
-  recordedParams.action = item.id
+  if(item == null){
+    recordedParams.value.action = null;
+    actionName.value = 'Action';
+  }else{
+    recordedParams.value.action = item.id
+    actionName.value = item.name
+  }
   getRecorded()
 };
 
