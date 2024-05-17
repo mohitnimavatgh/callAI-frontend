@@ -4,6 +4,7 @@ import { useFolders } from "@/stores/admin/folders";
 const route = useRoute();
 const folders = useFolders()
 const search = ref('')
+const { $toast } = useNuxtApp()
 const filterText = ref('Filter')
 const folderParams = ref({ 
     page: 1, 

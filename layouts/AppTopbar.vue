@@ -112,7 +112,7 @@ import { adminAuth } from "@/stores/admin/auth";
 const auth = useAuth()
 const adminState = adminAuth()
 const { $toast } = useNuxtApp()
-const userMenuItems = ref([{name:'Sign out'}]);
+const userMenuItems = ref([{name:'Sign out'},{name:'Change Password'}]);
 
 const collapsed = ref<boolean>(true)
 
@@ -203,6 +203,10 @@ const onSelect = (item:any) => {
     }).catch(error => {
       catchResponse(error)
     });
+  }
+
+  if(item.name == 'Change Password'){
+    router.push('/change-password');
   }
 };
 
