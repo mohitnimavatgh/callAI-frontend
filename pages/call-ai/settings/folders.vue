@@ -12,7 +12,7 @@ const { $toast } = useNuxtApp()
 const folders = useFolders()
 const search = ref('')
 const filterText = ref('Filter')
-const folderParams = ref({ page: 1, search: '', action:'' })
+const folderParams = ref({ page: 1, search: '', action: null })
 const items = [
   { value: "private", icon: 'fas fa-lock', labelText: "Private Access", description: "Restrict visibility to admins only, hiding it from team members." },
   { value: "public", icon: 'fas fa-user-group', labelText: "Team Access", description: "Grant team members access, making the folder visible to all." },
@@ -124,9 +124,14 @@ const folderPageChange = (page: any) => {
 };
 
 const onSelect = (item) => {
-  folderParams.value.action = item.value;
-  filterText.value = item.name
-    getFolder()
+  if(item == null){
+    folderParams.value.action = null;
+    filterText.value = 'Action'
+  }else{
+    folderParams.value.action = item.value;
+    filterText.value = item.name
+  }
+  getFolder()
 }
 
 const edit = (data: any) => {

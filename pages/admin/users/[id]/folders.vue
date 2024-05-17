@@ -9,7 +9,7 @@ const filterText = ref('Filter')
 const folderParams = ref({ 
     page: 1, 
     search: '', 
-    action:'', 
+    action: null, 
     user_id: route.params.id
 });
 
@@ -63,8 +63,13 @@ const folderPageChange = (page: any) => {
 };
 
 const onSelect = (item) => {
-  folderParams.value.action = item.value;
-  filterText.value = item.name
+  if(item == null){
+    folderParams.value.action = null;
+    filterText.value = 'Action'
+  }else{
+    folderParams.value.action = item.value;
+    filterText.value = item.name
+  }
   getFolder()
 }
 
