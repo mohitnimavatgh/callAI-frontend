@@ -76,7 +76,7 @@ const catchResponse = (err: any) => {
 <template>
     <div class="mt-5">
         <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Change Password</h4>
+            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Profile</h4>
         </div>
         <div class="p-5 mt-3 lg:w-1/2 w-full bg-white dark:bg-gray-800 rounded-lg">
             <div class="">
