@@ -45,7 +45,7 @@ const loginAction = () => {
             router.push('/admin');
     }).catch(error => {
         console.log("error: " + error)
-        $toast('error', 'Invalide Cradential', { duration: 10000 })
+        $toast('danger', 'Invalide Cradential', { duration: 10000 })
     });
 }
 

@@ -71,9 +71,7 @@ export const useAuth = defineStore('auth', {
           this.userInfo = null;
           this.authenticated = false;
           this.role = '';      
-          localStorage.setItem("access_token", null);
-          //@ts-ignore
-          localStorage.setItem("isAuthenticated", false);
+          localStorage.clear();
         }
         return responseData;
       } catch (error) {
