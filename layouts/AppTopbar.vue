@@ -113,8 +113,8 @@ const auth = useAuth()
 const adminState = adminAuth()
 const { $toast } = useNuxtApp()
 const userMenuItems = ref([
-  { url:'profile', name:'Profile' },
-  { url:'change-password', name:'Change Password' },
+  { url:'/profile', name:'Profile' },
+  { url:'/change-password', name:'Change Password' },
   { url:'', name:'Sign out'}
 ]);
 
