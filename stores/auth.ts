@@ -50,8 +50,7 @@ export const useAuth = defineStore('auth', {
     async resetSendLink(data: any) {
       try {
         const response = await apiUserResetSendLink(data);
-        const responseData = response.data; 
-        return responseData;
+        return response;
       } catch (error) {
         throw error;
       }
@@ -59,8 +58,7 @@ export const useAuth = defineStore('auth', {
     async forgotPassword(data: any) {
       try {
         const response = await apiUserForgetPassword(data);
-        const responseData = response.data; 
-        return responseData;
+        return response;
       } catch (error) {
         throw error;
       }
