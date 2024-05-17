@@ -57,7 +57,8 @@ const route = useRoute();
 const isSidebarOpen = ref(false);
 const menus = ref([
   { title: 'Users', icon: 'fas fa-user', active: true, url: '/admin/users' },
-  { title: 'Change Password', icon: 'fas fa-key', active: false, url: '/admin/changePassword' },
+  { title: 'Change Password', icon: 'fas fa-key', active: false, url: '/admin/change-password' },
+  { title: 'Profile', icon: 'fas fa-key', active: false, url: '/admin/profile' },
 ]);
 
 function toggleSidebar() {

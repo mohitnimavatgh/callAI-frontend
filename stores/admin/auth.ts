@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { apiAdminLogin,apiAdminLogout } from '@/API/utils'
+import { apiAdminLogin,apiAdminLogout, apiAdminChangePassword } from '@/API/utils'
 
 export const adminAuth = defineStore('adminAuth', {
   state: () => ({
@@ -28,6 +28,10 @@ export const adminAuth = defineStore('adminAuth', {
       //@ts-ignore
       localStorage.setItem("admin_isAuthenticated", true);
     },
+    async changePassword(payload: any){
+      const response = await apiAdminChangePassword(payload)
+      return response;
+    },
     async logout() {
       try {
         const response = await apiAdminLogout();
@@ -36,9 +40,7 @@ export const adminAuth = defineStore('adminAuth', {
           this.adminInfo = null;
           this.authenticated = false;
           this.role = '';      
-          localStorage.setItem("access_token", null);
-          //@ts-ignore
-          localStorage.setItem("isAuthenticated", false);
+          localStorage.clear();
         }
         return responseData;
       } catch (error) {

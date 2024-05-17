@@ -9,9 +9,10 @@
     <div class="relative">
       <div
         v-if="icon"
-        class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
+        class="absolute inset-y-0 flex items-center"
+        :class="[pointer?'pointer-events-none':'', iconPosition == 'right' ? 'end-0 pe-4' : 'start-0 ps-3.5']"
       >
-        <i :class="icon" class="w-4 h-4 text-gray-500"></i>
+        <i :class="icon" @click="changeInputType" class="w-4 h-4 cursor-pointer text-gray-500"></i>
       </div>
       <input
         :type="type"
@@ -42,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", 'changeType']);
 const props = defineProps({
   label: { type: String, default: "" },
   modelValue: String,
@@ -55,6 +56,8 @@ const props = defineProps({
   size: { type: String, default: "medium" },
   disabled: { type: Boolean, default: false },
   errors: { type: Array, default: [] },
+  iconPosition: { type: String, default: 'left' },
+  pointer: { type: Boolean, default: true },
 });
 
 // const valueUpdate = ref(props.modelValue);
@@ -81,7 +84,8 @@ const inputClasses = computed(() => [
   {
     "p-2.5": props.size === "medium",
     "p-4": props.size === "large",
-    "ps-10": props.icon,
+    "ps-10": props.icon && props.iconPosition == 'left',
+    "pe-10 ps-6": props.icon && props.iconPosition == 'right',
   },
   { "border-red-500": hasError.value },
 ]);
@@ -94,6 +98,11 @@ const valueUpdate = computed({
     emit("update:modelValue", newValue);
   },
 });
+
+const changeInputType = () => {
+  emit('changeType');
+}
+
 // const updateModelValue = (val) => {
 //   valueUpdate.value = val;
 //   emit("update:modelValue", val);
