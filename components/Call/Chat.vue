@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const quickQuestions = useQuickQuestions()
 const chatToCall = useChatToCall()
+const { $toast } = useNuxtApp()
 const props = defineProps({
     meetingDetail: null,
 });
@@ -55,12 +56,35 @@ const handleKeyEvent = () => {
 
 const sendMessage = () => {
     chatToCall.create(chat.value).then((resp:any) => {
-        if(resp.success) {
-            chat.value.question = null;
-            document.getElementById("question").value = null;
-            getChatToCall();
-        }
+        chat.value.question = null;
+        document.getElementById("question").value = null;
+        getChatToCall();
+    }).catch((error)=>{
+        catchResponse(error)
     })
+}
+
+const catchResponse = (err) => {
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }
+  }else{
+    if(!err?.response?.data?.success){
+        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  }  
 }
 
 const quickQuestionCall = (item) => {    

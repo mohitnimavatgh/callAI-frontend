@@ -11,8 +11,7 @@
                 <div :class="route.path.includes(menu.link) ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
-                menu.label }}</nuxt-link>
-                {{getMenuClass(menu.active)}}
+                menu.label }}</nuxt-link>                
               <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
               <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
