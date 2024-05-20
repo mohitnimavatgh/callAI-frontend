@@ -1,4 +1,14 @@
 import { defineStore } from 'pinia'
+import {
+  apiCreateMeeting,
+  apiGetUpcomingMeeting,
+  apiDeleteMeeting,
+  apiGetRecordedMeeting,
+  apiGetMeetingDetail,
+  apiShareMeeting,
+  apiCreateNote,
+  apiUpdateMeeting
+} from '@/API/utils'
 
 export const useMeetings = defineStore('meetings', {
   state: () => ({
@@ -7,65 +17,57 @@ export const useMeetings = defineStore('meetings', {
     getMeetingDetail: null,
   }),
   actions: {
-    async create(bot) {
+    async create(bot: any) {
       try {
-        const response = await useAPI('/meeting', {
-          method: 'post',
-          body: bot,
-        });
-        const responseData = response.data.value;
-        await this.upcomingMeeting(); // Corrected to await the function call
+        const response = await apiCreateMeeting(bot);
+        if (response.success) {
+          const responseData = response.data;
+          return responseData;
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+    async update(bot: any) {
+      try {
+        const response = await apiUpdateMeeting(bot)
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;
       }
     },
-    async update(bot) {
+    async upcomingMeeting(search: any) {
       try {
-        const response = await useAPI('/meeting/update', {
-          method: 'PUT',
-          body: bot,
-        });
-        const responseData = response.data.value;
-        return responseData;
+        const response = await apiGetUpcomingMeeting(search);
+        const responseData = response.data;
+        if (response.success) {
+          this.upcoming = responseData;
+          return responseData;
+        }
       } catch (error) {
         throw error;
       }
     },
-    async upcomingMeeting(search) {
+    async recordedMeeting(search: any) {
       try {
-        const response = await useAPI('/meeting', {
-          method: 'get',
-          params : search
-        });
-        const responseData = response.data.value;
-        this.upcoming = responseData.data;
-        return responseData;
-      } catch (error) {
-        throw error;
-      }
-    },
-    async recordedMeeting(search) {
-      try {
-        const response = await useAPI('/meeting', {
-          method: 'get',
-          params : search
-        });
-        const responseData = response.data.value;
-        this.recorded = responseData.data;
+        const response = await apiGetRecordedMeeting(search)
+        const responseData = response.data;
+        if(response.success){
+          this.recorded = responseData;
+        }
         return responseData;
       } catch (error) {
         throw error;
       }
     },
     async meetingDetail(id: any) {
-      try {   
-        const response = await useAPI('/meeting-detail', {
-          method: 'get',
-          params : id
-        });
-        const responseData = response.data.value;
-        this.getMeetingDetail = responseData.data;
+      try {
+        const response = await apiGetMeetingDetail(id)
+        const responseData = response.data;
+        if(response.success){
+          this.getMeetingDetail = responseData;
+        }
         return responseData;
       } catch (error) {
         throw error;
@@ -73,34 +75,30 @@ export const useMeetings = defineStore('meetings', {
     },
     async delete(meetingId: any) {
       try {
-        const response = await useAPI(`/meeting/${meetingId}`, {
-          method: 'DELETE'
-        });
-        const responseData = response.data.value;
-        return responseData;
+        const response = await apiDeleteMeeting(meetingId);
+        if (response.success) {
+          const responseData = response.data;
+          return responseData;
+        }
       } catch (error) {
         throw error;
       }
     },
     async shareMeeting(shareMeetingData: any) {
       try {
-        const response = await useAPI('/share-folder', {
-          method: 'post',
-          body : shareMeetingData
-        });
-        const responseData = response.data.value;
-        return responseData;
+        const response = await apiShareMeeting(shareMeetingData)
+        if (response.success) {
+          const responseData = response.data;
+          return responseData;
+        }
       } catch (error) {
         throw error;
       }
     },
     async notes(notes: any) {
       try {
-        const response = await useAPI('/notes', {
-          method: 'post',
-          body : notes
-        });
-        const responseData = response.data.value;
+        const response = await apiCreateNote(notes)
+        const responseData = response.data;
         return responseData;
       } catch (error) {
         throw error;

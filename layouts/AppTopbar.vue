@@ -8,10 +8,11 @@
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative">
               <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                <div :class="route.path == menu.link ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
+                <div :class="route.path.includes(menu.link) ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
                 menu.label }}</nuxt-link>
+                {{getMenuClass(menu.active)}}
               <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
               <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
@@ -107,10 +108,19 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
-
-const userMenuItems = ref([{name:'Sign out'}]);
+import { useAuth } from "@/stores/auth";
+import { adminAuth } from "@/stores/admin/auth";
+const auth = useAuth()
+const adminState = adminAuth()
+const { $toast } = useNuxtApp()
+const userMenuItems = ref([
+  { url:'/profile', name:'Profile' },
+  { url:'/change-password', name:'Change Password' },
+  { url:'', name:'Sign out'}
+]);
 
 const collapsed = ref<boolean>(true)
+const active = ref<String>('Dashboard')
 
 const mainMenuItems = ref([
   { label: 'Dashboard', active: false, link: '/' },
@@ -170,8 +180,39 @@ const changeTheme = () => {
   setTheme(newTheme);
 };
 
+const catchResponse = (err: any) => {
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  }else{
+      $toast('danger', 'something went wrong...!', { duration: 5000 })
+  }  
+}
+
 const onSelect = (item:any) => {
-  // Your selection handling logic here
+  if(item.name == 'Sign out'){
+    let role = auth.role;
+    let user = role == 'Company' ? auth.logout() : adminState.logout();
+    user.then(() => {
+        $toast('success', 'Logout Successfully', { duration: 10000 })
+        if(role == 'Company'){
+          router.push('/login');
+        }else{
+          router.push('/admin/login');
+        }
+    }).catch(error => {
+      catchResponse(error)
+    });
+  }else{
+    router.push(`${item.url}`);
+  }
+
 };
 
 const currentMenuItem = ref('Home');

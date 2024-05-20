@@ -1,18 +1,16 @@
 import { defineStore } from 'pinia'
+import { apiCreateChatToCall, apiGetChatToCall } from '@/API/utils'
 
 export const useChatToCall = defineStore('chatToCall', {
   state: () => ({
-    getChatList: null,
+    getChatList: [],
     chatId: null
   }),
   actions: {
     async create(chatMessage: any) {
       try {
-        const response = await useAPI('/chat-call', {
-          method: 'post',
-          body: chatMessage,
-        });
-        const responseData = response.data.value;
+        const response = await apiCreateChatToCall(chatMessage)
+        const responseData = response.data;
         if(this.chatId == null){
             this.chatId = responseData.data.chat_to_call_id
         }
@@ -23,17 +21,16 @@ export const useChatToCall = defineStore('chatToCall', {
     },
     async list(meetingId: any) {
       try {      
-        const response = await useAPI('/chat-call', {
-            method: 'get',
-            params : meetingId
-        });
-        const responseData = response.data.value;
-        this.getChatList = responseData.data;  
-        if(this.chatId == null){
-            if(this.getChatList.length > 0){
-                this.chatId = this.getChatList[0]?.chat_to_call_id;
-            }
-        }         
+        const response = await apiGetChatToCall(meetingId)
+        const responseData = response.data;
+        if(response.success){
+          this.getChatList = responseData;  
+          if(this.chatId == null){
+              if(this.getChatList.length > 0){
+                  this.chatId = this.getChatList[0]?.chat_to_call_id;
+              }
+          }         
+        }
         return responseData;
         } catch (error) {
         throw error;

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
+definePageMeta({
+       middleware: "is-authenticate",
+})
 const meetings = useMeetings()
 import { useRoute } from 'vue-router';
 const route = useRoute();

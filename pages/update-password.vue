@@ -31,19 +31,60 @@ const rules = {
 }
 const v$ = useVuelidate(rules, {reset})
 
+onMounted(async () => {
+    await nextTick();
+    if(!route.query?.token){
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        router.push('/login');
+    }
+})
+
+const clearValidation = () => {
+    reset.value.password = null
+    reset.value.confirmPassword = null
+    v$.value.$reset();
+}
+
 const forgotPassword = async() =>{
     const result = await v$.value.$validate()
     if (result) {    
         let data = { rest_token: resetToken.value,newpassword : reset.value.password,}
         auth.forgotPassword(data).then((resp:any) => {
-            if(resp.success) {   
+            if(resp.success) { 
+                v$.value.$reset();  
                 $toast('success', 'Password Updated Successfully', { duration: 10000 })
                 router.push('/login');
+            }else{
+                $toast('danger', resp?.message, { duration: 5000 })
             }
         }).catch((error) => {
-            console.log("Error:", error);                  
+            catchResponse(error); 
+            clearValidation();          
         })
     }
+}
+
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            if(!err?.response?.data?.success){
+                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            }else{
+                $toast('danger', 'something went wrong...!', { duration: 5000 })
+            }
+        }
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }  
 }
 </script>
 <template>

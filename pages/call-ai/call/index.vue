@@ -3,6 +3,9 @@ import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
+definePageMeta({
+  middleware: "is-authenticate",
+})
 const meetings = useMeetings()
 const router = useRouter()
 const folders = useFolders()
@@ -10,11 +13,12 @@ const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null);
 const recordedData = ref([]);
+const actionName = ref('Action')
 const tabItems = ref([
   { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
   { value: 'your', label: "Your Calls", icon: "fas fa-user" },
   { value: 'teams', label: "Teams Call", icon: "fas fa-user-plus" },
-  { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' },
+  { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' }
 ]);
 
 const tableHeadings = ref([
@@ -29,68 +33,73 @@ const tableHeadings = ref([
   { title: "Action", value: "action" }
 ]);
 
-const recordedParams = {
+const recordedParams = ref({
   page: 1,
   meeting: 'recorded',
   search: null,
   type: 'all',
   action: null
-}
+});
 
-const folder = ref({      
-    folder_id: null,
-    meeting_id: null,  
+const folder = ref({
+  folder_id: null,
+  meeting_id: null,
 })
 
 const rules = {
-    folder: {
-        folder_id: {
-            required: helpers.withMessage("The Folder field is required", required),
-        },                
-    }
+  folder: {
+    folder_id: {
+      required: helpers.withMessage("The Folder field is required", required),
+    },
+  }
 }
-const v$ = useVuelidate(rules, {folder})
+const v$ = useVuelidate(rules, { folder })
 
-const shareCall = (index) => {    
-    folder.value.meeting_id = recordedData.value[index]?.id
-    shareModal.value = true
+const shareCall = (index) => {
+  folder.value.meeting_id = recordedData.value[index]?.id
+  shareModal.value = true
 }
 
 const shareFolder = async () => {
-    const result = await v$.value.$validate();
-    if (result) {
-        console.log("folder.value",folder.value)
-        meetings.shareMeeting(folder.value).then((resp:any) => {
-              if(resp.success) {               
-                shareModal.value = false;
-              }
-        })
-    }
+  const result = await v$.value.$validate();
+  if (result) {
+    console.log("folder.value", folder.value)
+    meetings.shareMeeting(folder.value).then((resp: any) => {
+        resetFolderData()
+        shareModal.value = false;
+    })
+  }
+}
+
+const resetFolderData = () => {
+  folder.value = {
+    folder_id: null,
+    meeting_id: null,
+  }
+  v$.value.$reset()
 }
 
 const viewCall = (index: any) => {
-    router.push(`call/${recordedData.value[index]?.id}`);
+  router.push(`call/${recordedData.value[index]?.id}`);
 }
 
 const deleteMeet = (index: any) => {
   confirmationPopUP.value = true
   call_meeting_id.value = recordedData.value[index]?.id
-  return; 
+  return;
 }
 
 const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
-  if(data){
-    meetings.delete(call_meeting_id.value).then((resp:any) => {
-      if(resp.success) {               
+  if (data) {
+    meetings.delete(call_meeting_id.value).then((resp: any) => {
         getRecorded();
-      }
     })
   }
 }
 
 const getRecorded = () => {
-  meetings.recordedMeeting(recordedParams)
+  meetings.recordedMeeting(recordedParams.value)
 }
 
 onMounted(async () => {
@@ -99,27 +108,33 @@ onMounted(async () => {
 })
 
 const handleTabClick = (item: any) => {
-  recordedParams.type = item.value
+  recordedParams.value.type = item.value
   getRecorded()
 };
 
 const recordedSearch = (search: any) => {
-  recordedParams.search = search
+  recordedParams.value.search = search
   getRecorded()
 };
 
 const recordedPageChange = (page: any) => {
-  recordedParams.page = page
+  recordedParams.value.page = page
   getRecorded()
 };
 const onSelect = (item: any) => {
-  recordedParams.action = item.id
+  if(item == null){
+    recordedParams.value.action = null;
+    actionName.value = 'Action';
+  }else{
+    recordedParams.value.action = item.id
+    actionName.value = item.name
+  }
   getRecorded()
 };
 const recordedMeeting = computed(() => {
   let recordedAll = meetings.recorded
   recordedData.value = recordedAll?.data
- return recordedAll
+  return recordedAll
 });
 </script>
 
@@ -134,6 +149,7 @@ const recordedMeeting = computed(() => {
             title="Calls"
             @search="recordedSearch"
             :filterTab="tabItems"
+            :actionName="actionName"
             @tab-click="handleTabClick"
             @select="onSelect"
         >
@@ -149,7 +165,8 @@ const recordedMeeting = computed(() => {
         <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="shareModal = false">
             <div class="modal-content  p-4 md:p-5">
                 <div class="col-span-2">
-                    <FormSelect label="Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors"  :options="folders?.folders" rules="required" />
+                  <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
+                    :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

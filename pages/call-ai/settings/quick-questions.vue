@@ -2,6 +2,9 @@
   import { useQuickQuestions } from "@/stores/user/quickQuestions";
   import { useVuelidate } from "@vuelidate/core";
   import { required, helpers } from "@vuelidate/validators";
+  definePageMeta({
+       middleware: "is-authenticate",
+  })
   const QuickQuestionUpdate = ref(false);
   const quickQuestionsData = ref([]);
   const quickQuestions = useQuickQuestions()
@@ -62,11 +65,11 @@
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
-        if(resp.success) {
           $toast('success', 'Quick Question Create Successfully', { duration: 10000 })
-          fromRest();
           getQuickQuestion();               
-        }
+          fromRest();
+      }).catch((err: any) => {
+        catchResponse(err)
       })
     }
   }
@@ -96,14 +99,30 @@
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.update(quickQuestion.value).then((resp:any) => {
-        if(resp.success) {
           QuickQuestionUpdate.value = false;
+          $toast('success', 'Quick Question Updated Successfully', { duration: 10000 })
           fromRest();
           getQuickQuestion();               
-        }
+      }).catch((err: any) => {
+        catchResponse(err)
       })
     }
   }
+
+  const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }  
+}
 
   const handleSearch = (data:any) => {
     quickQuestionParams.value.page = 1
@@ -118,10 +137,11 @@
   const confirmation = (data: Boolean) => {
     confirmationPopUP.value = false
     if(data){
-       quickQuestions.delete(quick_questions_id.value).then((resp:any) => {
-        if(resp.success) {        
-          getQuickQuestion();               
-        }
+       quickQuestions.delete(quick_questions_id.value).then((resp:any) => {  
+        $toast('success', 'Quick Question Deleted Successfully', { duration: 10000 })      
+        getQuickQuestion();
+      }).catch((err: any) => {
+        catchResponse(err)
       })
     }
   }

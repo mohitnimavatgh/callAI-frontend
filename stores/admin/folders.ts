@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { apiCreateFolder, apiGetFolders, apiUpdateFolder } from '@/API/utils'
+import {  apiAdminGetFolders } from '@/API/utils'
 
 export const useFolders = defineStore('folders', {
   state: () => ({
@@ -7,18 +7,9 @@ export const useFolders = defineStore('folders', {
     folderPagination :null
   }),
   actions: {
-    async create(bot: any) {
-      try {
-        const response = await apiCreateFolder(bot)
-        const responseData = response.data;
-        return responseData;
-      } catch (error) {
-        throw error;
-      }
-    },
     async list(folder: any) {
       try {      
-        const response = await apiGetFolders(folder)
+        const response = await apiAdminGetFolders(folder)
         const responseData = response.data;
         if(response.success) {
           if(folder?.page){
@@ -31,15 +22,6 @@ export const useFolders = defineStore('folders', {
         } catch (error) {
         throw error;
         }
-    },
-    async update(data:any) {
-      try {      
-        const response = await apiUpdateFolder(data.id, data);
-        const responseData = response.data;
-        return responseData;
-      } catch (error) {
-        throw error;
-      }
     }
   },
   persist: {

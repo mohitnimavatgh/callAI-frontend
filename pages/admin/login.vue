@@ -9,6 +9,7 @@ const auth = adminAuth();
 const router = useRouter();
 
 definePageMeta({
+    layout : 'login-layout',
     middleware: "admin-auth"
 })
 
@@ -39,14 +40,12 @@ const v$ = useVuelidate(rules, { login })
 
 const loginAction = () => {
     auth.login(loginData.value).then((resp: any) => {
-        if (resp?.success) {
             loading.value = false
             $toast('success', 'Login Successfully', { duration: 10000 })
-            router.push('/admin/users');
-        }
+            router.push('/admin');
     }).catch(error => {
         console.log("error: " + error)
-        $toast('error', 'Invalide Cradential', { duration: 10000 })
+        $toast('danger', 'Invalide Cradential', { duration: 10000 })
     });
 }
 
@@ -65,7 +64,7 @@ const loginBtn = async () => {
 <template>
     <div class="w-full h-full flex items-center justify-center px-4">
         <div
-            class="xl:w-2/12 lg:w-3/12 sm:w-5/12 text-gray-800 dark:text-gray-400 w-full rounded-lg shadow-xl flex flex-col items-center h-fit bg-primary-50 py-4 px-6">
+            class="xl:w-[400px] lg:w-5/12 sm:w-7/12 text-gray-800 dark:text-gray-400 w-full rounded-lg shadow-xl flex flex-col items-center h-fit bg-primary-50 py-4 px-6">
             <div class="text-2xl font-bold">
                 Login
             </div>

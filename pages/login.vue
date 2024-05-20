@@ -80,15 +80,12 @@ const facebookLogin = (data: any) => {
 }
 
 const loginAction = () => {
-    console.log("loginData.value", loginData.value)
     auth.login(loginData.value).then((resp: any) => {
-        if (resp?.success) {
-            loading.value = false
-            $toast('success', 'Login Successfully', { duration: 10000 })
-            router.push(`call-ai`);
-        }
+        loading.value = false
+        $toast('success', 'Login Successfully', { duration: 10000 })
+        router.push('/call-ai');
     }).catch(error => {
-        console.log("error: " + error)
+        $toast('danger', 'Invalid Credantial', { duration: 10000 })
     });
 }
 
@@ -96,8 +93,8 @@ const loginBtn = async () => {
     const result = await v$.value.$validate()
     if (result) {
         loginData.value.email = login.value.email,
-            loginData.value.password = login.value.password,
-            loading.value = true
+        loginData.value.password = login.value.password,
+        loading.value = true
         loginAction();
     }
 }
