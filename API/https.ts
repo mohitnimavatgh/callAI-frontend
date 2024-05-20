@@ -3,7 +3,7 @@ import axios, { type AxiosResponse } from 'axios';
 import qs from "qs";
 
 axios.defaults.timeout = 50000;
-axios.defaults.baseURL = 'http://192.168.1.13:8000/api/v1';
+axios.defaults.baseURL = 'http://192.168.1.16:8000/api/v1';
 
 axios.interceptors.request.use(
   (config: any) => {

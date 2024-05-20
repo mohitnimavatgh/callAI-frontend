@@ -186,10 +186,18 @@ const catchResponse = (err) => {
         let firstValue = data[keys];
         $toast('danger', firstValue[0], { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
     }
   }else{
-      $toast('danger', 'something went wrong...!', { duration: 5000 })
+    if(!err?.response?.data?.success){
+        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
   }  
 }
 

@@ -14,11 +14,11 @@ definePageMeta({
 });
 
 const register = ref({
-    firstName: 'Mihir',
-    lastName: 'Agravat',
-    email: 'mihiragravat3@gmail.com',
-    password: '123456',
-    confirmPassword: '123456',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
     tac: false,
 });
 
@@ -61,7 +61,7 @@ const rules = {
 const v$ = useVuelidate(rules, { register })
 
 const handleOnError = () => {
-    console.error("Login failed");
+    $toast('danger', 'Login failed', { duration: 5000 })
 };
 
 const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
@@ -82,7 +82,7 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
             userSignup()
         }
     } else {
-        console.error('Failed to fetch user information');
+        $toast('danger', 'Failed to fetch user information', { duration: 5000 }) 
     }
 }
 
@@ -91,13 +91,36 @@ const { login: googleRegister } = useTokenClient({
     onError: handleOnError,
 });
 
+const catchResponse = (err) => {
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }
+  }else{
+    if(!err?.response?.data?.success){
+        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  }  
+}
+
 
 const userSignup = () => {
     auth.signup(signupData.value).then((resp: any) => {
         $toast('success', 'Register Successfully', { duration: 10000 })
         router.push('/login');
     }).catch((error) => {
-        $toast('danger', error.response.data.data.email[0], { duration: 10000 })
+        catchResponse(error)
     })
 }
 

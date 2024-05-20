@@ -16,7 +16,7 @@ definePageMeta({
 
 const loading = ref(false)
 const login = ref({
-    email: 'test@gmail.com',
+    email: 'harshadnariyaequipotech@gmail.com   ',
     password: '123456',
     role_id: 3
 })
@@ -59,13 +59,36 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
         loginData.value.social_type = 'google';
         loginAction()
     } else {
-        console.error('Failed to fetch user information');
+        $toast('danger', 'Failed to fetch user information', { duration: 5000 })
     }
 }
 
 const handleOnError = () => {
-    console.error("Login failed");
+    $toast('danger', 'Login failed', { duration: 5000 })
 };
+
+const catchResponse = (err) => {
+    if(err?.response?.status == 422){
+        let data = err?.response?.data?.data
+        if(data){
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast('danger', firstValue[0], { duration: 5000 })
+        }else{
+            if(!err?.response?.data?.success){
+                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            }else{
+                $toast('danger', 'something went wrong...!', { duration: 5000 })
+            }
+        }
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }  
+}
 
 const { login: googleLogin } = useTokenClient({
     onSuccess: handleOnSuccess,
@@ -85,7 +108,7 @@ const loginAction = () => {
         $toast('success', 'Login Successfully', { duration: 10000 })
         router.push('/call-ai');
     }).catch(error => {
-        $toast('danger', 'Invalid Credantial', { duration: 10000 })
+        catchResponse(error);
     });
 }
 

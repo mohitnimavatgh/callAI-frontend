@@ -75,18 +75,26 @@ const botSave = async () => {
 }
 
 const catchResponse = (err) => {
-    if(err?.response?.status == 422){
-        let data = err?.response?.data?.data
-        if(data){
-            let keys = Object.keys(data)[0];
-            let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
         }else{
             $toast('danger', 'something went wrong...!', { duration: 5000 })
         }
+    }
+  }else{
+    if(!err?.response?.data?.success){
+        $toast('danger', err?.response?.data?.message, { duration: 5000 })
     }else{
         $toast('danger', 'something went wrong...!', { duration: 5000 })
-    }  
+    }
+  }  
 }
 
 const resetBotValidation = () => {
