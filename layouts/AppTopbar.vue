@@ -12,6 +12,7 @@
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
                 menu.label }}</nuxt-link>
+                {{getMenuClass(menu.active)}}
               <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
               <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
@@ -119,6 +120,7 @@ const userMenuItems = ref([
 ]);
 
 const collapsed = ref<boolean>(true)
+const active = ref<String>('Dashboard')
 
 const mainMenuItems = ref([
   { label: 'Dashboard', active: false, link: '/' },
@@ -179,7 +181,7 @@ const changeTheme = () => {
   setTheme(newTheme);
 };
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
