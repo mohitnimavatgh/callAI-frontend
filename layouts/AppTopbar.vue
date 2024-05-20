@@ -132,7 +132,8 @@ const mainMenuItems = ref([
     //   { label: 'Folders', link: '/call-ai/settings/folders' },
     //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
     // ]  
-  }
+  },
+  { label: 'Users', active: false, link: '/users' },
 ]);
 
 const router = useRouter() as any;
