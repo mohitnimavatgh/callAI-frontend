@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { usersStore } from '@/stores/admin/users';
+import { usersStore } from '@/stores/user/users';
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, helpers, numeric, maxLength, minLength } from "@vuelidate/validators";
 
 definePageMeta({
-    layout: 'admin',
-    middleware: 'is-admin-authenticate',
+    middleware: 'is-authenticate',
 })
 
 const users = usersStore();
@@ -97,6 +96,7 @@ const edit = (index: any) => {
     formData.value.name = data.name
     formData.value.id = data.id
     formData.value.mobile_no = data.mobile_no
+    formData.value.email = data.email
     joinModal.value = true
 }
 
@@ -107,7 +107,8 @@ const addUpdateUser = async () => {
             let data = {
                 name: formData.value.name,
                 id: formData.value.id,
-                mobile_no: formData.value.mobile_no
+                mobile_no: formData.value.mobile_no,
+                email: formData.value.email
             }
             users.update(data).then((resp: any) => {
                 joinModal.value = false
@@ -180,8 +181,8 @@ const confirmation = (data: Boolean) => {
             } else {
                 getUserData();
             }
-        }).catch((err) => {
-            $toast('error', 'Somthing went wrong', { duration: 5000 })
+        }).catch((error) => {
+            catchResponse(error)
         })
     }
 }
@@ -207,7 +208,6 @@ const handlePageChange = (page: any) => {
                     <template v-slot:action="{ item, value, index }">
                         <div class="flex space-x-2">
                             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
-                            <i class="fas fa-eye text-blue-400 cursor-pointer" @click="view(index)"></i>
                             <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                         </div>
                     </template>
