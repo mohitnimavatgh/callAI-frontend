@@ -24,7 +24,7 @@
         shareModal.value = true
     }
     const viewCall = (item) => {
-        router.push(`call/${'456'}`);
+        router.push(`calls/${'456'}`);
     }
 </script>
 

@@ -10,6 +10,7 @@ export const apiUserForgetPassword = (params: any): Promise<any> => { return pos
 export const apiUserResetSendLink = (params: any): Promise<any> => { return get('/reset-link-email', params) };
 export const apiChangePassword = (params: any): Promise<any> => { return post('/change-password', params) };
 export const apiUserUpdateProfile = (params: any): Promise<any> => { return put('/user/update', params) };
+export const apiEmailVarification = (params: any): Promise<any> => { return get('/email-verified', params) };
 
 export const apiGetUsers = (params: any): Promise<any> => { return get('/user',params) };
 export const apiCreateUser = (params: any): Promise<any> => { return post('/user', params) };
@@ -24,6 +25,7 @@ export const apiGoogleCalanderConnection = (params: any): Promise<any> => { retu
 export const apiMicrosoftTeamsConnection = (params: any): Promise<any> => { return post('/microsoft/token/callback', params) };
 export const apiGetCalanderSetting = (): Promise<any> => { return get('/calendar-setting') };
 export const apiUpdateCalanderSetting = (params: any): Promise<any> => { return patch('/calendar-setting/update', params) };
+export const apiDisconnectGoogleCalendar = (params: any): Promise<any> => { return post('/calendar/disconnect/google', params) };
 
 //Chat To Call Api
 export const apiCreateChatToCall = (params: any): Promise<any> => { return post('/chat-call', params) };

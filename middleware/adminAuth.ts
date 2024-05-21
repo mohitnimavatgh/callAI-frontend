@@ -7,10 +7,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (adminState.authenticated === true) {
             return navigateTo('/admin');
         }else{
-            if(userState.authenticated === true){
-                return navigateTo('/login');
-            }
-            return ;
+            setTimeout(() => {
+                if(userState.authenticated === true){
+                    return navigateTo('/login');
+                }
+                return ;
+            }, 1000)
         }
     }
 });

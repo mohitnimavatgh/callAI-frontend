@@ -6,6 +6,7 @@ import {
   apiUserForgetPassword,
   apiChangePassword,
   apiUserUpdateProfile,
+  apiEmailVarification,
   apiUserLogout } from '@/API/utils'
 
 export const useAuth = defineStore('auth', {
@@ -13,6 +14,7 @@ export const useAuth = defineStore('auth', {
     userInfo: null as any,
     authenticated: false as boolean,
     role: '' as string,
+    topBarActiveVal: '' as string
   }),
   actions: {
     async login(login : any) {
@@ -82,6 +84,14 @@ export const useAuth = defineStore('auth', {
         throw error;
       }
     },
+    async emailVarification(payload: any) {
+      try {
+        const response = await apiEmailVarification(payload);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
     async logout() {
       try {
         const response = await apiUserLogout();
@@ -97,6 +107,9 @@ export const useAuth = defineStore('auth', {
         throw error;
       }
     },
+    handleChangeActiveValue(item: string){
+      this.topBarActiveVal = item
+    }
   },
   persist: {
     storage: persistedState.localStorage,
