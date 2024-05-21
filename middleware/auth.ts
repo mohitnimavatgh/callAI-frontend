@@ -10,13 +10,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     const isLoggedIn = authState?.authenticated;
     if (!isLoggedIn) {
-    
-        if(adminState.authenticated === true){
+        if (adminState.authenticated === true) {
             return navigateTo('/admin/login');
         }
-        return ;
+        return;
     }
-    else{
-        return navigateTo('/');
-    }
+    return navigateTo('/');
 });

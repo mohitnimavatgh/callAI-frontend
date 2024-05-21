@@ -235,7 +235,7 @@ onMounted(async () => {
         <Modal :title="'Select Folder'" :show="joinModal" @close="closeModal()">
             <div class="modal-content  p-4 md:p-5">           
                 <div class="col-span-2 mb-3">
-                    <FormSelect label="Folder" placeholder="Folders" id="Folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
+                    <FormSelect label="Folder" placeholder="Folders" id="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

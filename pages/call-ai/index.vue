@@ -224,7 +224,7 @@ const shareCall = (index: any) => {
 }
 
 const viewCall = (index: any) => {
-  router.push(`call-ai/call/${recordedData.value[index]?.id}`);
+  router.push(`call-ai/calls/${recordedData.value[index]?.id}`);
 }
 
 const deleteMeet = (index: any) => {

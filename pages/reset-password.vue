@@ -22,6 +22,8 @@ const rules = {
 }
 const v$ = useVuelidate(rules, { reset })
 const resetSendLink = async () => {
+  console.log(reset.value, 'reset.value');
+  
   const result = await v$.value.$validate()
   if (result) {
     auth.resetSendLink(reset.value).then((resp: any) => {
