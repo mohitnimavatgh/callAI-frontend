@@ -32,9 +32,12 @@ export default defineNuxtConfig({
       })
     }
   },
-  // runtimeConfig: {
-  //   public: {
-  //     API_BASE_URL: 'http://192.168.1.16:8000/api', 
-  //   },
-  // }
+  runtimeConfig: {
+    public: {
+      API_BASE_URL: 'https://confra.cuotainfotech.com/api/public/api', 
+    },
+  },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  },
 })

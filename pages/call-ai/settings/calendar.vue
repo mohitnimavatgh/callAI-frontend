@@ -87,7 +87,7 @@ const googleCalendar = async () =>{
     if (result) {  
         const params = {
             client_id: google_client_id,
-            redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
+            redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
             response_type: "code",
             scope: [
                 "https://www.googleapis.com/auth/calendar.events.readonly",
@@ -135,7 +135,7 @@ const disconnectedCalendar = (platformType:any) => {
 const microsoftTeamsCalendar = () => {
     const params = {
         client_id: 'b547715d-e50f-4ca6-9184-cd206d549cdd',
-        redirect_uri: 'http://localhost:3000/call-ai/settings/calendar',
+        redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
         response_type: 'code',
         scope: 'offline_access openid email Calendars.ReadWrite'       
     };
