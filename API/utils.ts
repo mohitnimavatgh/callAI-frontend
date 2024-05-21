@@ -10,6 +10,7 @@ export const apiUserForgetPassword = (params: any): Promise<any> => { return pos
 export const apiUserResetSendLink = (params: any): Promise<any> => { return get('/reset-link-email', params) };
 export const apiChangePassword = (params: any): Promise<any> => { return post('/change-password', params) };
 export const apiUserUpdateProfile = (params: any): Promise<any> => { return put('/user/update', params) };
+export const apiEmailVarification = (params: any): Promise<any> => { return get('/email-verified', params) };
 
 export const apiGetUsers = (params: any): Promise<any> => { return get('/user',params) };
 export const apiCreateUser = (params: any): Promise<any> => { return post('/user', params) };

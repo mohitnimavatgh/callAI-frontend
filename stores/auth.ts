@@ -6,6 +6,7 @@ import {
   apiUserForgetPassword,
   apiChangePassword,
   apiUserUpdateProfile,
+  apiEmailVarification,
   apiUserLogout } from '@/API/utils'
 
 export const useAuth = defineStore('auth', {
@@ -78,6 +79,14 @@ export const useAuth = defineStore('auth', {
           this.userInfo = responseData;
         }
         return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async emailVarification(payload: any) {
+      try {
+        const response = await apiEmailVarification(payload);
+        return response;
       } catch (error) {
         throw error;
       }
