@@ -28,6 +28,7 @@
         v-if="size === 'large'"
         class="absolute end-2.5 bottom-0 px-4 py-2 margin-10-px"
         outline
+        @click="submit"
         frontIcon="fas fa-paper-plane"
       />
     </div>
@@ -43,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(["update:modelValue", 'changeType']);
+const emit = defineEmits(["update:modelValue", 'changeType', 'submitChat']);
 const props = defineProps({
   label: { type: String, default: "" },
   modelValue: String,
@@ -101,6 +102,10 @@ const valueUpdate = computed({
 
 const changeInputType = () => {
   emit('changeType');
+}
+
+const submit = () => {
+  emit('submitChat');
 }
 
 // const updateModelValue = (val) => {

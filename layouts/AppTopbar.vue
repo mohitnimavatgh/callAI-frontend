@@ -8,11 +8,10 @@
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)" class="relative">
               <div v-if="menu.active" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                <div :class="route.path.includes(menu.link) ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
+                <div :class="isActive == menu.label ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full"></div>
               </div>
               <nuxt-link class="text-sm" :to="menu.link" :class="getMenuClass(menu.active)" aria-current="page">{{
                 menu.label }}</nuxt-link>
-                {{getMenuClass(menu.active)}}
               <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
               <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
@@ -120,7 +119,6 @@ const userMenuItems = ref([
 ]);
 
 const collapsed = ref<boolean>(true)
-const active = ref<String>('Dashboard')
 
 const mainMenuItems = ref([
   { label: 'Dashboard', active: false, link: '/' },
@@ -129,7 +127,7 @@ const mainMenuItems = ref([
   {
     label: 'Settings', active: false, link: '/call-ai/settings'
     // submenu: [
-    //   { label: 'Bot', link: '/call-ai/settings' },
+    //   { label: 'Bot', link: '/call-ai/settings' },0000000
     //   { label: 'Calendar', link: '/call-ai/settings/calendar' },
     //   { label: 'Folders', link: '/call-ai/settings/folders' },
     //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
@@ -167,13 +165,14 @@ onMounted(() => {
   //   }
   // });
 });
+
+const isActive = ref<String>('Dashboard')
+
 const handleMenuChange = (menuItem:any) => {
-  mainMenuItems.value.forEach(item => {
-    item.active = false;
-  });
-  menuItem.active = true;
+  isActive.value = menuItem.label
   router.push(menuItem.link);
 };
+
 const changeTheme = () => {
   currentTheme.value = localStorage.getItem("color-theme");
   const newTheme = currentTheme.value === "dark" ? "light" : "dark";
@@ -224,13 +223,11 @@ const onSelect = (item:any) => {
 
 };
 
-const currentMenuItem = ref('Home');
-
 const getMenuClass = (active:any) => {
-  return active
+  return isActive.value == active
     ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
     : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium ';
-};
+};5
 
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
