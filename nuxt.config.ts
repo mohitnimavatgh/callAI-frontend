@@ -36,5 +36,8 @@ export default defineNuxtConfig({
     public: {
       API_BASE_URL: 'https://confra.cuotainfotech.com/api/public/api', 
     },
-  }
+  },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  },
 })
