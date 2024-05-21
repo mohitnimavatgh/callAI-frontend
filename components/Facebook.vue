@@ -1,6 +1,6 @@
 <template>
     <div>
-      <Button :text="'Sign Up with Facebook'" @click="loginWithFacebook" class="w-full flex justify-center" frontIcon="fa-brands fa-facebook" />
+      <Button :text="'Sign Up with Facebook'" @click="loginWithFacebook" class="w-full sm:text-xs xl:text-sm flex justify-center" frontIcon="fa-brands fa-facebook" />
     </div>
   </template>
   

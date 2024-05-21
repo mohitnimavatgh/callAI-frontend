@@ -147,9 +147,9 @@ const signup = async () => {
 <template>
     <div class="flex flex-col min-h-screen">
         <AuthHeader />
-        <section class="flex-grow flex items-center justify-center h-full w-full bg-white relative dark:bg-gray-900">
+        <section class="flex-grow flex items-center overflow-y-auto justify-center h-full w-full bg-white relative dark:bg-gray-900">
             <div class="flex px-3 pb-3 justify-center items-center ">
-                <div class="container mx-auto px-4 lg:px-28 xl:px-60 py-8">
+                <div class="container mx-auto px-4 lg:px-20 xl:px-44 py-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="md:mr-8">
                             <p class="text-2xl font-semibold text-gray-600 text-center">Welcome to our Bot Creation Platform
@@ -226,7 +226,7 @@ const signup = async () => {
                             <h3 class="text-md flex justify-center font-semibold text-gray-600">Sign Up to Get Started</h3>
                             <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
                                 <div>
-                                    <Button :text="'Sign Up with Google'" class="w-full flex justify-center"
+                                    <Button :text="'Sign Up with Google'" class="w-full sm:text-xs xl:text-sm flex justify-center"
                                         @click="googleRegister()" frontIcon="fa-brands fa-google" outline />
                                 </div>
                                 <div>
