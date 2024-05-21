@@ -66,10 +66,10 @@ const saveNote = async () =>{
         }
         console.log("data: ",data)
         meetings.notes(data).then((resp:any) => {
-            if(resp.success) {               
-                detail.value.notes = notes.value   
-                $toast('success', 'Note Save Successfully', { duration: 10000 })
-            }
+            detail.value.notes = notes.value   
+            $toast('success', 'Note Save Successfully', { duration: 10000 })
+        }).catch((error) => {
+            catchResponse(error)
         })
     }
 }
@@ -104,6 +104,29 @@ const getDuration = () =>{
     }else{
         return `${seconds} seconds`
     }
+}
+
+const catchResponse = (err) => {
+  if(err?.response?.status == 422){
+    let data = err?.response?.data?.data
+    if(data){
+        let keys = Object.keys(data)[0];
+        let firstValue = data[keys];
+        $toast('danger', firstValue[0], { duration: 5000 })
+    }else{
+        if(!err?.response?.data?.success){
+            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        }else{
+            $toast('danger', 'something went wrong...!', { duration: 5000 })
+        }
+    }
+  }else{
+    if(!err?.response?.data?.success){
+        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+    }else{
+        $toast('danger', 'something went wrong...!', { duration: 5000 })
+    }
+  }  
 }
 </script>
 <template>

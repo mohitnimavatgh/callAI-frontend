@@ -107,10 +107,26 @@ const googleCalendar = async () =>{
 const refreshToken = () => {
     folder.value.code = route.query.code
     folder.value.folder_id = localStorage.getItem('folder_id')
-    calendar.google(folder.value).then((resp:any) => {
-        if(resp?.success) {   
-            router.push('/call-ai/settings/calendar'); 
-        }
+    calendar.google(folder.value).then((resp:any) => {       
+        $toast('success', 'google calendar account connected..', { duration: 5000 })
+        calendar.google_calendar_connection = true;
+        router.push('/call-ai/settings/calendar');        
+    }).catch((error) => {
+        catchResponse(error)               
+    })
+}
+
+const disconnectedCalendar = (platformType:any) => {
+    let data = {
+        platform: platformType 
+    }
+    calendar.disconnectGoogleCalendar(data).then((resp:any) => {       
+        $toast('success', 'disconnect calendar...', { duration: 5000 })
+        if(platformType == 'google_calendar'){
+            calendar.google_calendar_connection = false;
+        }else{
+            calendar.microsoft_calendar_connection = false;
+        }         
     }).catch((error) => {
         catchResponse(error)               
     })
@@ -155,6 +171,8 @@ const catchResponse = (err) => {
 const getMicrosoftToken = () =>{
     calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
         if(resp?.success) {   
+            $toast('success', 'microsoft teams calendar account connected..', { duration: 5000 })
+            calendar.microsoft_calendar_connection = true;
             router.push('/call-ai/settings/calendar'); 
         }
     }).catch((error) => {
@@ -200,7 +218,7 @@ onMounted(async () => {
                     <span class="font-medium text-gray-500 text-sm">Google Calendar</span>
                 </div>
                 <Button :text="'Connect'" outline class="mt-2" v-if="!calendar.google_calendar_connection" @click="openModal('google')" />
-                <Button :text="'Disconnect'"  v-if="calendar.google_calendar_connection" class="mt-2" />
+                <Button :text="'Disconnect'"  v-if="calendar.google_calendar_connection" @click="disconnectedCalendar('google_calendar')" class="mt-2" />
             </div>
             <div class="lg:border-l border-gray-300 lg:flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">

@@ -4,7 +4,8 @@ import {
   apiGoogleCalanderConnection,
   apiMicrosoftTeamsConnection,
   apiGetCalanderSetting,
-  apiUpdateCalanderSetting
+  apiUpdateCalanderSetting,
+  apiDisconnectGoogleCalendar
  } from '@/API/utils'
 
 export const useCalendar = defineStore('calendar', {
@@ -45,12 +46,21 @@ export const useCalendar = defineStore('calendar', {
         throw error;
       }
     },
+    async disconnectGoogleCalendar(data: any) {
+      try {
+        const response = await apiDisconnectGoogleCalendar(data)
+        const responseData = response.data.value;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
     async calendarSetting() {
       try {
         const response = await apiGetCalanderSetting()     
-        const responseData = response.data.value; 
+        const responseData = response.data; 
         if(response.success){   
-          this.calendarSettingData = responseData.data
+          this.calendarSettingData = responseData
         }
         return responseData;
       } catch (error) {
