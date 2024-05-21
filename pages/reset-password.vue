@@ -76,8 +76,7 @@ const catchResponse = (err) => {
         <FormInput id="Email" label="Email" name="Email" v-model="v$.reset.email.$model" :errors="v$.reset.email.$errors"
           type="text" placeholder="Recovery email ID" />
         <Button :text="'Send Code'" class="mt-3" @click="resetSendLink()" />
-        <span class="text-xs text-gray-500 mt-5 flex">Did not receive code? <a href="#"
-            class="underline decoration-gray-400">Send again</a></span>
+        <span class="text-xs text-gray-500 mt-5 flex">Did not receive code? Send again</span>
       </div>
     </section>
     <div class="h-fit">
