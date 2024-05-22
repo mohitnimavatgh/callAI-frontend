@@ -126,7 +126,7 @@ const recordedParams = ref({
 });
 
 const folder = ref({
-  folder_id: null,
+  folder_id: '',
   meeting_id: null,
 })
 
@@ -197,6 +197,7 @@ const shareFolder = async () => {
   if (result) {
     meetings.shareMeeting(folder.value).then((resp: any) => {
       resetFolderData()
+      getRecorded()
       shareModal.value = false;
     }).catch((error) => {
       catchResponse(error)
@@ -206,13 +207,17 @@ const shareFolder = async () => {
 }
 
 const closeModal = () => {
+  folder.value = {
+    folder_id: '',
+    meeting_id: null,
+  }
   v$.value.$reset()
   shareModal.value = false;
 }
 
 const resetFolderData = () => {
   folder.value = {
-    folder_id: null,
+    folder_id: '',
     meeting_id: null,
   }
   v$.value.$reset()

@@ -42,7 +42,7 @@ const recordedParams = ref({
 });
 
 const folder = ref({
-  folder_id: null,
+  folder_id: '',
   meeting_id: null,
 })
 
@@ -66,6 +66,7 @@ const shareFolder = async () => {
     console.log("folder.value", folder.value)
     meetings.shareMeeting(folder.value).then((resp: any) => {
         resetFolderData()
+        getRecorded()
         shareModal.value = false;
     })
   }
@@ -73,7 +74,7 @@ const shareFolder = async () => {
 
 const resetFolderData = () => {
   folder.value = {
-    folder_id: null,
+    folder_id: '',
     meeting_id: null,
   }
   v$.value.$reset()
@@ -106,6 +107,15 @@ onMounted(async () => {
   await nextTick();
   await getRecorded()
 })
+
+const closeModal = () => {
+  folder.value = {
+    folder_id: '',
+    meeting_id: null,
+  }
+  v$.value.$reset()
+  shareModal.value = false;
+}
 
 const handleTabClick = (item: any) => {
   recordedParams.value.type = item.value
@@ -162,7 +172,7 @@ const recordedMeeting = computed(() => {
             </template>
         </Table>
         <Pagination v-if="recordedMeeting && recordedMeeting.total && recordedMeeting.per_page && recordedMeeting.total > recordedMeeting.per_page" class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page" :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange"/>
-        <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="shareModal = false">
+        <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="closeModal">
             <div class="modal-content  p-4 md:p-5">
                 <div class="col-span-2">
                   <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
@@ -171,7 +181,7 @@ const recordedMeeting = computed(() => {
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder()"/>
-                <Button :text="'Cancel'" @click="shareModal = false" outline/>
+                <Button :text="'Cancel'" @click="closeModal" outline/>
             </div>
         </Modal>
      <NuxtPage />

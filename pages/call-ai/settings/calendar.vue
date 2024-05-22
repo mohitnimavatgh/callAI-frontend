@@ -27,7 +27,7 @@ const calendarSettings = ref({
 })
 
 const folder = ref({
-    folder_id: null,
+    folder_id: '',
 })
 const rules = {
     folder: {       
@@ -72,7 +72,7 @@ const openModal = (type) => {
 }
 
 const closeModal = () => {
-    folder.value.folder_id = null
+    folder.value.folder_id = ''
     v$.value.$reset();
     joinModal.value = false
 }
@@ -235,7 +235,7 @@ onMounted(async () => {
         <Modal :title="'Select Folder'" :show="joinModal" @close="closeModal()">
             <div class="modal-content  p-4 md:p-5">           
                 <div class="col-span-2 mb-3">
-                    <FormSelect label="Folder" placeholder="Folders" id="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
+                    <FormSelect label="Folder" placeholder="Select Folder" id="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
