@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDashboard } from "@/stores/user/dashboard";
+import { useLoader } from "@/stores/loader";
 
 definePageMeta({
     layout: 'app-layout',
@@ -7,9 +8,15 @@ definePageMeta({
 })
 
 const dashboardStore = useDashboard()
+const loader = useLoader();
 
 const getDashboard = () => {
-    dashboardStore.list()
+    loader.loading = true
+    dashboardStore.list().then((res) => {
+        loader.loading = false
+    }).catch((err) => {
+        loader.loading = false
+    })
 }
 
 onMounted(async () => {
@@ -22,6 +29,7 @@ const dashboard = <any>computed(() => dashboardStore.dashboard);
 </script>
 <template>
   <div class="flex">
+    <Loader />
     <div class="max-w-sm w-60 p-3 ml-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
        <i class="fas fa-folder-open"></i>
         <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Folders</h5>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loader />
     <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab" />
     <NuxtPage />
   </div>

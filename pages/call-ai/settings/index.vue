@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useBots } from "@/stores/user/bots";
 import { initFlowbite } from 'flowbite'
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, email, requiredIf } from "@vuelidate/validators";
 definePageMeta({
        middleware: "is-authenticate",
 })
 const bots = useBots()
+const loader = useLoader();
 const { $toast } = useNuxtApp()
 
 onMounted(() => {
@@ -62,19 +64,22 @@ const actionList = ref([
 const botSave = async () => {
     const result = await v$.value.$validate()
     if (result) {
+        loader.loading = true
         if (bot.value.after_complete_run_actions == 'Send Email') {
             bot.value.multiple_emails = emailArray.value
         }
         bots.create(bot.value).then((resp: any) => {
+            loader.loading = false
             resetBotValidation()
-            $toast.success('bot create Successfully', { duration: 5000 })
+            $toast.success('Bot create Successfully', { duration: 5000 })
         }).catch((err) => {
+            loader.loading = false
             catchResponse(err)
         })
     }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
@@ -109,7 +114,7 @@ const resetBotValidation = () => {
     v$.value.$reset()
 }
 
-const handleKeys = (event) => {
+const handleKeys = (event: any) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
     if (event.key === 'Enter') {
         event.preventDefault();
