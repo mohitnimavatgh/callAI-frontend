@@ -58,7 +58,7 @@ const rules = {
 }
 const v$ = useVuelidate(rules, { folder })
 
-const shareCall = (index) => {
+const shareCall = (index:any) => {
   folder.value.meeting_id = recordedData.value[index]?.id
   shareModal.value = true
 }
