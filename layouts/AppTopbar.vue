@@ -14,7 +14,7 @@
                   : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium '"
                 >{{
                 menu.label }}</nuxt-link>
-              <div v-if="route.name == isActive.toLowerCase() || isActive == 'Calls' || isActive == 'Settings' || isActive == 'Dashboard'" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
+              <div v-if="route.name == isActive.toLowerCase() || isActive == 'Calls' || isActive == 'Users' || isActive == 'Settings' || isActive == 'Dashboard'" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
                 <div :class="isActive == menu.label ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
                 </div>
               </div>
@@ -142,7 +142,7 @@ const mainMenuItems = ref([
     //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
     // ]  
   },
-  { label: 'Users', active: false, link: '/users' },
+  { label: 'Users', active: false, link: '/call-ai/users' },
 ]);
 
 const router = useRouter() as any;
