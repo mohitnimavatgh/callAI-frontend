@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es';
 import { useFolders } from "@/stores/user/folders";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 definePageMeta({
        middleware: "is-authenticate",
 })
 const ShowAddModal = ref(false);
+const loader = useLoader();
 const folderUpdate = ref(false);
 const { $toast } = useNuxtApp()
 const folders = useFolders()
@@ -47,7 +49,13 @@ const rules = {
 const v$ = useVuelidate(rules, { folder })
 
 const getFolder = () => {
-  folders.list(folderParams.value)
+  loader.loading = true
+  folders.list(folderParams.value).then((res) => {
+    loader.loading = false
+  }).catch((err) => {
+    loader.loading = false
+    catchResponse(err)
+  })
 }
 
 onMounted(async () => {
@@ -58,12 +66,15 @@ onMounted(async () => {
 async function createFolder() {
   const result = await v$.value.$validate()
   if (result) {
+    loader.loading = true
     folders.create(folder.value).then((resp : any) => {
         $toast.success('Folder Create Successfully', { duration: 10000 })
+        loader.loading = false
         ShowAddModal.value = false;
         resetFolderData()
         getFolder();
     }).catch((err: any) => {
+      loader.loading = false
       catchResponse(err)
     })
   }
@@ -72,12 +83,15 @@ async function createFolder() {
 const updateFolder = async () => {
   const result = await v$.value.$validate()
   if (result) {
+    loader.loading = true
     folders.update(folder.value).then((resp: any) => {
       ShowAddModal.value = false
+      loader.loading = false
       folderUpdate.value = false;
       $toast.success('Folder Updated Successfully', { duration: 10000 })
       getFolder();
     }).catch((err: any) => {
+      loader.loading = false
       catchResponse(err)
     })
   }

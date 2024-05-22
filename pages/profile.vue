@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from "@/stores/auth";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, sameAs, helpers } from "@vuelidate/validators";
 
@@ -7,6 +8,7 @@ definePageMeta({
     middleware: 'is-authenticate'
 })
 
+const loader = useLoader();
 const userState = useAuth();
 const router  = useRouter();
 const { $toast } = useNuxtApp();
@@ -35,6 +37,7 @@ const v$ = useVuelidate(profileRules, { formData })
 const saveProfile = async () => {
     const result = await v$.value.$validate()
     if (result) {
+        loader.loading = true
         let data = {
             id: formData.value.id,
             name: formData.value.name,
@@ -42,8 +45,10 @@ const saveProfile = async () => {
             mobile_no: formData.value.mobile_no,
         }
         userState.updateProfile(data).then((res: any) => {      
+            loader.loading = false
             $toast.success('Updated Profile successfully', { duration: 5000 })
         }).catch((err) => {
+            loader.loading = false
             catchResponse(err);
         })
     }
@@ -75,6 +80,7 @@ const catchResponse = (err: any) => {
 </script>
 <template>
     <div class="mt-5">
+        <Loader />
         <div>
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Profile</h4>
         </div>

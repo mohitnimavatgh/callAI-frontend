@@ -16,7 +16,6 @@ definePageMeta({
     middleware: ['auth'],
 })
 
-const loading = ref(false)
 const login = ref({
     email: 'harshadnariyaequipotech01@gmail.com',
     password: '123456',

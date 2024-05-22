@@ -28,6 +28,7 @@
         </div>
       </Modal>
     </div>
+    <Loader />
     <!-- <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" /> -->
     <div class="mt-5 mb-5">
       <NuxtPage />

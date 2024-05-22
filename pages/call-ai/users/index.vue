@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { usersStore } from '@/stores/user/users';
 import { useVuelidate } from "@vuelidate/core";
+import { useLoader } from "@/stores/loader";
 import { required, email, helpers, numeric, maxLength, minLength } from "@vuelidate/validators";
 
 definePageMeta({
@@ -9,6 +10,7 @@ definePageMeta({
 
 const users = usersStore();
 const router = useRouter()
+const loader = useLoader();
 const { $toast } = useNuxtApp();
 
 onMounted(() => {
@@ -75,8 +77,13 @@ const botRules = {
 const vv$ = useVuelidate(botRules, { formData })
 
 const getUserData = async () => {
+    loader.loading = true
     await users.getUserList(getUserParams.value).then((response) => {
         userList.value = response
+        loader.loading = false
+    }).catch((err) => {
+        loader.loading = false
+        catchResponse(err)
     })
 }
 
@@ -103,6 +110,7 @@ const edit = (index: any) => {
 const addUpdateUser = async () => {
     const result = await vv$.value.$validate()
     if (result) {
+        loader.loading = true
         if (isEdit.value) {
             let data = {
                 name: formData.value.name,
@@ -112,28 +120,32 @@ const addUpdateUser = async () => {
             }
             users.update(data).then((resp: any) => {
                 joinModal.value = false
+                loader.loading = false
                 isEdit.value = false
                 getUserData()
                 resetFormData()
                 $toast.success('User Updated Successfully', { duration: 10000 })
             }).catch((error) => {
+                loader.loading = false
                 catchResponse(error)
             })
         }
         else {
             users.create(formData.value).then((resp: any) => {
                 joinModal.value = false
+                loader.loading = false
                 getUserData()
                 resetFormData()
                 $toast.success('User Created Successfully', { duration: 10000 })
             }).catch((error) => {
+                loader.loading = false
                 catchResponse(error)
             })
         }
     }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
@@ -176,7 +188,9 @@ const deleteUpcomingMeet = (index: any) => {
 const confirmation = (data: Boolean) => {
     confirmationPopUP.value = false
     if (data) {
+        loader.loading = true
         users.delete(user_List_id.value).then((resp: any) => {
+            loader.loading = false
             if (deleteAction.value = 'upcoming') {
                 getUserData();
                 $toast.success('User Deleted successfully', { duration: 5000 })
@@ -184,6 +198,7 @@ const confirmation = (data: Boolean) => {
                 getUserData();
             }
         }).catch((error) => {
+            loader.loading = false
             catchResponse(error)
         })
     }
