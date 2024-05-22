@@ -83,7 +83,7 @@ const updateFolder = async () => {
   }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
@@ -206,9 +206,11 @@ const edit = (data: any) => {
       </div>
       <div v-else class="w-full">
         <div
-          class="mx-auto text-xl w-full py-5 px-8 flex items-center justify-center border border-gray-100 text-gray-500 rounded-lg">
-          <i class="fa fa-folder-open"></i>
-          <div class="ml-5">
+          class="mx-auto text-xl w-full py-16 lg:py-20 px-8 flex flex-col items-center justify-center border border-gray-100 text-gray-500 rounded-lg">
+          <div class="flex items-center justify-center w-16 h-16 rounded-full border border-gray-300">
+            <i class="fa fa-folder-open"></i>
+          </div>
+          <div class="mt-3">
             No folders found.
           </div>
         </div>

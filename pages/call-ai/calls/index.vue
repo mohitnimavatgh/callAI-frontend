@@ -65,8 +65,8 @@ const shareFolder = async () => {
   if (result) {
     console.log("folder.value", folder.value)
     meetings.shareMeeting(folder.value).then((resp: any) => {
-        resetFolderData()
-        shareModal.value = false;
+      resetFolderData()
+      shareModal.value = false;
     })
   }
 }
@@ -93,7 +93,7 @@ const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
   if (data) {
     meetings.delete(call_meeting_id.value).then((resp: any) => {
-        getRecorded();
+      getRecorded();
     })
   }
 }
@@ -102,9 +102,8 @@ const getRecorded = () => {
   meetings.recordedMeeting(recordedParams.value)
 }
 
-onMounted(async () => {
-  await nextTick();
-  await getRecorded()
+onMounted(() => {
+  getRecorded();
 })
 
 const handleTabClick = (item: any) => {
@@ -122,10 +121,10 @@ const recordedPageChange = (page: any) => {
   getRecorded()
 };
 const onSelect = (item: any) => {
-  if(item == null){
+  if (item == null) {
     recordedParams.value.action = null;
     actionName.value = 'Action';
-  }else{
+  } else {
     recordedParams.value.action = item.id
     actionName.value = item.name
   }
@@ -139,43 +138,37 @@ const recordedMeeting = computed(() => {
 </script>
 
 <template>
-    <div class="box mt-5 bg-white dark:bg-gray-800">
-        <Table
-            :headings="tableHeadings"
-            :data="recordedMeeting?.data"
-            :isSearchable="true"
-            :isActionable="true"
-            :actions="folders?.folders"
-            title="Calls"
-            @search="recordedSearch"
-            :filterTab="tabItems"
-            :actionName="actionName"
-            @tab-click="handleTabClick"
-            @select="onSelect"
-        >
-            <template v-slot:action="{ item, value, index }">
-            <div class="flex space-x-2 justify-around">
-                    <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-                    <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
-                    <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
-                </div>
-            </template>
-        </Table>
-        <Pagination v-if="recordedMeeting && recordedMeeting.total && recordedMeeting.per_page && recordedMeeting.total > recordedMeeting.per_page" class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page" :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange"/>
-        <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="shareModal = false">
-            <div class="modal-content  p-4 md:p-5">
-                <div class="col-span-2">
-                  <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder" v-model="v$.folder.folder_id.$model"
-                    :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
-                </div>
-            </div>
-            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder()"/>
-                <Button :text="'Cancel'" @click="shareModal = false" outline/>
-            </div>
-        </Modal>
-     <NuxtPage />
-     <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation"/> 
-       </div>
+  <div class="box mt-5 bg-white dark:bg-gray-800">
+    <Table :headings="tableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
+      :actions="folders?.folders" title="Calls" @search="recordedSearch" :filterTab="tabItems" :actionName="actionName"
+      @tab-click="handleTabClick" @select="onSelect">
+      <template v-slot:action="{ item, value, index }">
+        <div class="flex space-x-2 justify-around">
+          <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+          <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+          <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+        </div>
+      </template>
+    </Table>
+    <Pagination
+      v-if="recordedMeeting && recordedMeeting.total && recordedMeeting.per_page && recordedMeeting.total > recordedMeeting.per_page"
+      class="mt-4 flex justify-end" :totalRecords="recordedMeeting.total" :currentPage="recordedParams.page"
+      :recordsPerPage="recordedMeeting.per_page" @pageChange="recordedPageChange" />
+    <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal"
+      @close="shareModal = false">
+      <div class="modal-content  p-4 md:p-5">
+        <div class="col-span-2">
+          <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"
+            v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
+        </div>
+      </div>
+      <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder()" />
+        <Button :text="'Cancel'" @click="shareModal = false" outline />
+      </div>
+    </Modal>
+    <NuxtPage />
+    <confirmation-popup v-if="confirmationPopUP" @confirmation="confirmation" />
+  </div>
 </template>
 

@@ -267,7 +267,7 @@ const recordedMeeting = computed(() => {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
       <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
         :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" @tab-click="upcomingHndleTabClick">
