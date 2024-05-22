@@ -34,7 +34,7 @@ const v$ = useVuelidate(rules, {reset})
 onMounted(async () => {
     await nextTick();
     if(!route.query?.token){
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
         router.push('/login');
     }
 })
@@ -52,10 +52,10 @@ const forgotPassword = async() =>{
         auth.forgotPassword(data).then((resp:any) => {
             if(resp.success) { 
                 v$.value.$reset();  
-                $toast('success', 'Password Updated Successfully', { duration: 10000 })
+                $toast.success('Password Updated Successfully', { duration: 10000 })
                 router.push('/login');
             }else{
-                $toast('danger', resp?.message, { duration: 5000 })
+                $toast.error(resp?.message, { duration: 5000 })
             }
         }).catch((error) => {
             catchResponse(error); 
@@ -70,19 +70,19 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }

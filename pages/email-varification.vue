@@ -41,10 +41,10 @@ const verifyEmail = (tokenId:any) => {
     auth.emailVarification({token:tokenId}).then((resp:any) => {       
         if(resp.success){
             isVerified.value = true
-            $toast('success', 'Email Varification sucessfully', { duration: 5000 })
+            $toast.success('Email Varification sucessfully', { duration: 5000 })
         }else{
             isVerified.value = false
-            $toast('danger', 'Email is not Varification..', { duration: 5000 })
+            $toast.error('Email is not Varification..', { duration: 5000 })
         }
     }).catch((error) => {
         isVerified.value = false
@@ -58,19 +58,19 @@ const catchResponse = (err:any) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }

@@ -121,11 +121,17 @@ import { adminAuth } from "@/stores/admin/auth";
 const auth = useAuth()
 const adminState = adminAuth()
 const { $toast } = useNuxtApp()
-const userMenuItems = ref([
+const usersMenuItems = ref([
   { url: '/profile', name: 'Profile' },
   { url: '/change-password', name: 'Change Password' },
   { url: '', name: 'Sign out' }
 ]);
+
+const userMenuItems = computed(() => {
+  return usersMenuItems.value.filter(item => {
+    return !(auth?.userInfo?.social_type != null && item.url === '/change-password');
+  });
+});
 
 const collapsed = ref<boolean>(true)
 
@@ -196,19 +202,19 @@ const catchResponse = (err: any) => {
     if (data) {
       let keys = Object.keys(data)[0];
       let firstValue = data[keys];
-      $toast('danger', firstValue[0], { duration: 5000 })
+      $toast.error(firstValue[0], { duration: 5000 })
     } else {
       if (!err?.response?.data?.success) {
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
       } else {
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
       }
     }
   } else {
     if (!err?.response?.data?.success) {
-      $toast('danger', err?.response?.data?.message, { duration: 5000 })
+      $toast.error(err?.response?.data?.message, { duration: 5000 })
     } else {
-      $toast('danger', 'something went wrong...!', { duration: 5000 })
+      $toast.error('something went wrong...!', { duration: 5000 })
     }
   }
 }
@@ -218,7 +224,7 @@ const onSelect = (item: any) => {
     let role = auth.role;
     let user = role == 'Company' ? auth.logout() : adminState.logout();
     user.then(() => {
-      $toast('success', 'Logout Successfully', { duration: 10000 })
+      $toast.success('Logout Successfully', { duration: 10000 })
       if (role == 'Company') {
         router.push('/login');
       } else {

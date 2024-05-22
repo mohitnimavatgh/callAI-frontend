@@ -65,7 +65,7 @@
     const result = await v$.value.$validate()
     if (result) {     
       quickQuestions.create(quickQuestion.value).then((resp:any) => {
-          $toast('success', 'Quick Question Create Successfully', { duration: 10000 })
+          $toast.success('Quick Question Create Successfully', { duration: 10000 })
           getQuickQuestion();               
           fromRest();
       }).catch((err: any) => {
@@ -100,7 +100,7 @@
     if (result) {     
       quickQuestions.update(quickQuestion.value).then((resp:any) => {
           QuickQuestionUpdate.value = false;
-          $toast('success', 'Quick Question Updated Successfully', { duration: 10000 })
+          $toast.success('Quick Question Updated Successfully', { duration: 10000 })
           fromRest();
           getQuickQuestion();               
       }).catch((err: any) => {
@@ -115,19 +115,19 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -146,7 +146,7 @@ const catchResponse = (err) => {
     confirmationPopUP.value = false
     if(data){
        quickQuestions.delete(quick_questions_id.value).then((resp:any) => {  
-        $toast('success', 'Quick Question Deleted Successfully', { duration: 10000 })      
+        $toast.success('Quick Question Deleted Successfully', { duration: 10000 })      
         getQuickQuestion();
       }).catch((err: any) => {
         catchResponse(err)
