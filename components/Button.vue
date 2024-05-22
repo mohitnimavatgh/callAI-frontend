@@ -1,5 +1,5 @@
 <template>
-    <button :class="buttonClasses" @click="onClick" >
+    <button :class="buttonClasses" @click="onClick" :disabled="disabled" >
       <i v-if="frontIconClass" :class="frontIconClass"></i>
       <span v-if="text" class="mx-2">{{ text }}</span>
       <i v-if="backIconClass" :class="backIconClass"></i>
@@ -29,6 +29,10 @@
         type: Boolean,
         default: false
       },
+      disabled:{
+        type: Boolean,
+        default: false
+      }
     },
     computed: {
       buttonClasses() {
