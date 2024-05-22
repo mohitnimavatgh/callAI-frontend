@@ -28,6 +28,7 @@
         </div>
       </Modal>
     </div>
+    <Loader />
     <!-- <Tabs class="mt-3" :menuItems="menuItems" @change="handleMenuChange" /> -->
     <div class="mt-5 mb-5">
       <NuxtPage />
@@ -124,7 +125,7 @@ const createBot = async () => {
   if (result) {
     meetings.create(bot.value).then((resp: any) => {
       resetBotData()
-      $toast('success', 'Create Bot Successfully', { duration: 10000 })
+      $toast.success('Create Bot Successfully', { duration: 10000 })
       meetings.upcomingMeeting(upcomingParams)
       joinModal.value = false
     }).catch((err) => {
@@ -140,19 +141,19 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -168,4 +169,15 @@ const resetBotData = () => {
 
 </script>
 
-<style></style>
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.2500s !important;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0 !important;
+  filter: blur(0.1rem) !important;
+}
+
+</style>

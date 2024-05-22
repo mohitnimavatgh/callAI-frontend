@@ -3,20 +3,21 @@ import AuthHeader from '@/layouts/AuthHeader'
 import AppFooter from '@/layouts/AppFooter'
 import FacebookBtn from '@/components/Facebook'
 import { useAuth } from "@/stores/auth";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import type { useTokenClient, AuthCodeFlowSuccessResponse } from "vue3-google-signin";
 // import { decodeCredential} from "vue3-google-signin";
 import { required, email, helpers } from "@vuelidate/validators";
 const router = useRouter();
+const loader = useLoader();
 
 definePageMeta({
     layout: 'login-layout',
     middleware: ['auth'],
 })
 
-const loading = ref(false)
 const login = ref({
-    email: 'harshadnariyaequipotech@gmail.com   ',
+    email: 'harshadnariyaequipotech01@gmail.com',
     password: '123456',
     role_id: 3
 })
@@ -52,19 +53,18 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
         },
     });
     if (responseData.ok) {
-        const userInfo = await responseData.json();
-        console.log('User Information:', userInfo);
+        const userInfo = await responseData.json();       
         loginData.value.email = userInfo.email
         loginData.value.google_id = userInfo.sub
         loginData.value.social_type = 'google';
         loginAction()
     } else {
-        $toast('danger', 'Failed to fetch user information', { duration: 5000 })
+        $toast.error('Failed to fetch user information', { duration: 5000 })
     }
 }
 
 const handleOnError = () => {
-    $toast('danger', 'Login failed', { duration: 5000 })
+    $toast.error('Login failed', { duration: 5000 })
 };
 
 const catchResponse = (err) => {
@@ -73,21 +73,33 @@ const catchResponse = (err) => {
         if(data){
             let keys = Object.keys(data)[0];
             let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
+            $toast.error(firstValue[0], { duration: 5000 })
         }else{
             if(!err?.response?.data?.success){
-                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+                $toast.error(err?.response?.data?.message, { duration: 5000 })
             }else{
-                $toast('danger', 'something went wrong...!', { duration: 5000 })
+                $toast.error('something went wrong...!', { duration: 5000 })
             }
         }
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }  
+}
+
+const clearData = () => {    
+    loginData.value = {
+        email: login.value.email,
+        password: login.value.password,
+        login_type: null,
+        social_login_type: null,
+        google_id: null,
+        facebook_id: null,
+        role_id: 3
+    }
 }
 
 const { login: googleLogin } = useTokenClient({
@@ -103,11 +115,14 @@ const facebookLogin = (data: any) => {
 }
 
 const loginAction = () => {
+    loader.loading = true
     auth.login(loginData.value).then((resp: any) => {
-        loading.value = false
-        $toast('success', 'Login Successfully', { duration: 10000 })
+        loader.loading = false
+        $toast.success('Login Successfully', { duration: 10000 })
         router.push('/call-ai');
     }).catch(error => {
+        clearData();
+        loader.loading = false
         catchResponse(error);
     });
 }
@@ -116,8 +131,7 @@ const loginBtn = async () => {
     const result = await v$.value.$validate()
     if (result) {
         loginData.value.email = login.value.email,
-        loginData.value.password = login.value.password,
-        loading.value = true
+        loginData.value.password = login.value.password,       
         loginAction();
     }
 }
@@ -126,6 +140,7 @@ const loginBtn = async () => {
 <template>
     <div class="flex flex-col min-h-screen">
         <AuthHeader />
+        <Loader />
         <section class="flex-grow flex items-center justify-center h-full bg-white relative dark:bg-gray-900">
             <div class="flex px-3 pb-3 justify-center items-center ">
                 <div class="container mx-auto px-4 lg:px-28 xl:px-60 py-8">

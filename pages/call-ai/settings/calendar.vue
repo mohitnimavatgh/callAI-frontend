@@ -27,7 +27,7 @@ const calendarSettings = ref({
 })
 
 const folder = ref({
-    folder_id: null,
+    folder_id: '',
 })
 const rules = {
     folder: {       
@@ -72,7 +72,7 @@ const openModal = (type) => {
 }
 
 const closeModal = () => {
-    folder.value.folder_id = null
+    folder.value.folder_id = ''
     v$.value.$reset();
     joinModal.value = false
 }
@@ -108,7 +108,7 @@ const refreshToken = () => {
     folder.value.code = route.query.code
     folder.value.folder_id = localStorage.getItem('folder_id')
     calendar.google(folder.value).then((resp:any) => {       
-        $toast('success', 'google calendar account connected..', { duration: 5000 })
+        $toast.success('google calendar account connected..', { duration: 5000 })
         calendar.google_calendar_connection = true;
         router.push('/call-ai/settings/calendar');        
     }).catch((error) => {
@@ -121,7 +121,7 @@ const disconnectedCalendar = (platformType:any) => {
         platform: platformType 
     }
     calendar.disconnectGoogleCalendar(data).then((resp:any) => {       
-        $toast('success', 'disconnect calendar...', { duration: 5000 })
+        $toast.success('disconnect calendar...', { duration: 5000 })
         if(platformType == 'google_calendar'){
             calendar.google_calendar_connection = false;
         }else{
@@ -145,25 +145,25 @@ const microsoftTeamsCalendar = () => {
     window.location.href = redirectUrl;
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -171,7 +171,7 @@ const catchResponse = (err) => {
 const getMicrosoftToken = () =>{
     calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
         if(resp?.success) {   
-            $toast('success', 'microsoft teams calendar account connected..', { duration: 5000 })
+            $toast.success('microsoft teams calendar account connected..', { duration: 5000 })
             calendar.microsoft_calendar_connection = true;
             router.push('/call-ai/settings/calendar'); 
         }
@@ -184,7 +184,7 @@ const saveCalendarSetting = () => {
    console.log("Calendar",calendarSettings.value);
     calendar.update(calendarSettings.value).then((resp:any) => {        
         setCalendarOption(); 
-        $toast('success', 'Calendar Meeting Settings Updated', { duration: 10000 })       
+        $toast.success('Calendar Meeting Settings Updated', { duration: 10000 })       
     }).catch((error) => {
         catchResponse(error)             
     })
@@ -235,7 +235,7 @@ onMounted(async () => {
         <Modal :title="'Select Folder'" :show="joinModal" @close="closeModal()">
             <div class="modal-content  p-4 md:p-5">           
                 <div class="col-span-2 mb-3">
-                    <FormSelect label="Folder" placeholder="Folders" id="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
+                    <FormSelect label="Folder" placeholder="Select Folder" id="folder" v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" name="folder" :options="folders.folders" />
                 </div>
             </div>
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

@@ -41,11 +41,11 @@ const v$ = useVuelidate(rules, { login })
 const loginAction = () => {
     auth.login(loginData.value).then((resp: any) => {
             loading.value = false
-            $toast('success', 'Login Successfully', { duration: 10000 })
+            $toast.success('Login Successfully', { duration: 10000 })
             router.push('/admin');
     }).catch(error => {
         console.log("error: " + error)
-        $toast('danger', 'Invalide Cradential', { duration: 10000 })
+        $toast.error('Invalide Cradential', { duration: 10000 })
     });
 }
 

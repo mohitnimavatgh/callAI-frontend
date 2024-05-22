@@ -43,7 +43,7 @@ const changePassword = async () => {
         }
         adminData.changePassword(data).then((res: any) => {
             clearData();
-            $toast('success', 'Password changed successfully', { duration: 5000 })
+            $toast.success('Password changed successfully', { duration: 5000 })
         }).catch((err) => {
             catchResponse(err);
         })
@@ -70,19 +70,19 @@ const catchResponse = (err: any) => {
         if (data) {
             let keys = Object.keys(data)[0];
             let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
+            $toast.error(firstValue[0], { duration: 5000 })
         } else {
             if (!err?.response?.data?.success) {
-                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+                $toast.error(err?.response?.data?.message, { duration: 5000 })
             } else {
-                $toast('danger', 'Something went wrong...!', { duration: 5000 })
+                $toast.error('Something went wrong...!', { duration: 5000 })
             }
         }
     } else {
         if (!err?.response?.data?.success) {
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         } else {
-            $toast('danger', 'Something went wrong...!', { duration: 5000 })
+            $toast.error('Something went wrong...!', { duration: 5000 })
         }
     }
 }

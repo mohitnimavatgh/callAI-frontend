@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
 
@@ -9,6 +10,7 @@ definePageMeta({
   middleware: "is-authenticate",
 })
 
+const loader = useLoader();
 const meetings = useMeetings()
 const folders = useFolders()
 const router = useRouter()
@@ -88,26 +90,26 @@ const updateBot = async () => {
 }
 
 const catchResponse = (err) => {
-  if(err?.response?.status == 422){
+  if (err?.response?.status == 422) {
     let data = err?.response?.data?.data
-    if(data){
-        let keys = Object.keys(data)[0];
-        let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
-    }else{
-        if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
-        }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
-        }
+    if (data) {
+      let keys = Object.keys(data)[0];
+      let firstValue = data[keys];
+      $toast.error(firstValue[0], { duration: 5000 })
+    } else {
+      if (!err?.response?.data?.success) {
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
+      } else {
+        $toast.error('something went wrong...!', { duration: 5000 })
+      }
     }
-  }else{
-    if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
-    }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+  } else {
+    if (!err?.response?.data?.success) {
+      $toast.error(err?.response?.data?.message, { duration: 5000 })
+    } else {
+      $toast.error('something went wrong...!', { duration: 5000 })
     }
-  }  
+  }
 }
 
 const upcomingParams = ref({
@@ -126,7 +128,7 @@ const recordedParams = ref({
 });
 
 const folder = ref({
-  folder_id: null,
+  folder_id: '',
   meeting_id: null,
 })
 
@@ -143,10 +145,22 @@ const v$ = useVuelidate(rules, { folder })
 const actionList = ref(["Reward", "Promote", "Activate account", "Delete User"]);
 
 const getUpcoming = () => {
-  meetings.upcomingMeeting(upcomingParams.value)
+  loader.loading = true
+  meetings.upcomingMeeting(upcomingParams.value).then((res) => {
+    loader.loading = false
+  }).catch((err) => {
+    loader.loading = false
+    catchResponse(err)
+  })
 }
 const getRecorded = () => {
-  meetings.recordedMeeting(recordedParams.value)
+  loader.loading = true
+  meetings.recordedMeeting(recordedParams.value).then((res) => {
+    loader.loading = false
+  }).catch((err) => {
+    loader.loading = false
+    catchResponse(err)
+  })
 }
 
 onMounted(async () => {
@@ -182,10 +196,10 @@ const recordedPageChange = (page: any) => {
   getRecorded()
 };
 const onSelect = (item: any) => {
-  if(item == null){
+  if (item == null) {
     recordedParams.value.action = null;
     actionName.value = 'Action';
-  }else{
+  } else {
     recordedParams.value.action = item.id
     actionName.value = item.name
   }
@@ -195,24 +209,32 @@ const onSelect = (item: any) => {
 const shareFolder = async () => {
   const result = await v$.value.$validate();
   if (result) {
+    loader.loading = true
     meetings.shareMeeting(folder.value).then((resp: any) => {
       resetFolderData()
+      getRecorded()
+      loader.loading = false
       shareModal.value = false;
     }).catch((error) => {
-      catchResponse(error)
+      loader.loading = false
       shareModal.value = false
+      catchResponse(error)
     })
   }
 }
 
 const closeModal = () => {
+  folder.value = {
+    folder_id: '',
+    meeting_id: null,
+  }
   v$.value.$reset()
   shareModal.value = false;
 }
 
 const resetFolderData = () => {
   folder.value = {
-    folder_id: null,
+    folder_id: '',
     meeting_id: null,
   }
   v$.value.$reset()
@@ -244,7 +266,9 @@ const deleteUpcomingMeet = (index: any) => {
 const confirmation = (data: Boolean) => {
   confirmationPopUP.value = false
   if (data) {
+    loader.loading = true
     meetings.delete(call_meeting_id.value).then((resp: any) => {
+      loader.loading = false
       if (deleteAction.value = 'upcoming') {
         getUpcoming();
       } else {
@@ -267,7 +291,7 @@ const recordedMeeting = computed(() => {
 </script>
 
 <template>
-  <div class="">
+  <div class="w-full h-full">
     <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
       <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
         :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" @tab-click="upcomingHndleTabClick">

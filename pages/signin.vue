@@ -33,31 +33,31 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
 
 async function loginBtn() {
-    $toast('success', 'Login Successfully', { duration: 10000 })
+    $toast.success('Login Successfully', { duration: 10000 })
     const result = await v$.value.$validate()
         if (result) {
             loading.value = true
             auth.login(login.value).then((resp:any) => {
                 loading.value = false
-                $toast('success', 'Login Successfully', { duration: 10000 })
+                $toast.success('Login Successfully', { duration: 10000 })
                 router.push(`call-ai`);
             }).catch((error) => {
                 catchResponse(error)       

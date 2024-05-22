@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es';
 import { useFolders } from "@/stores/user/folders";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 definePageMeta({
        middleware: "is-authenticate",
 })
 const ShowAddModal = ref(false);
+const loader = useLoader();
 const folderUpdate = ref(false);
 const { $toast } = useNuxtApp()
 const folders = useFolders()
@@ -47,7 +49,13 @@ const rules = {
 const v$ = useVuelidate(rules, { folder })
 
 const getFolder = () => {
-  folders.list(folderParams.value)
+  loader.loading = true
+  folders.list(folderParams.value).then((res) => {
+    loader.loading = false
+  }).catch((err) => {
+    loader.loading = false
+    catchResponse(err)
+  })
 }
 
 onMounted(async () => {
@@ -58,12 +66,15 @@ onMounted(async () => {
 async function createFolder() {
   const result = await v$.value.$validate()
   if (result) {
-    folders.create(folder.value).then((resp: any) => {
-        $toast('success', 'Folder Create Successfully', { duration: 10000 })
+    loader.loading = true
+    folders.create(folder.value).then((resp : any) => {
+        $toast.success('Folder Create Successfully', { duration: 10000 })
+        loader.loading = false
         ShowAddModal.value = false;
         resetFolderData()
         getFolder();
     }).catch((err: any) => {
+      loader.loading = false
       catchResponse(err)
     })
   }
@@ -72,36 +83,39 @@ async function createFolder() {
 const updateFolder = async () => {
   const result = await v$.value.$validate()
   if (result) {
+    loader.loading = true
     folders.update(folder.value).then((resp: any) => {
       ShowAddModal.value = false
+      loader.loading = false
       folderUpdate.value = false;
-      $toast('success', 'Folder Updated Successfully', { duration: 10000 })
+      $toast.success('Folder Updated Successfully', { duration: 10000 })
       getFolder();
     }).catch((err: any) => {
+      loader.loading = false
       catchResponse(err)
     })
   }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
   if(err?.response?.status == 422){
     let data = err?.response?.data?.data
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -206,9 +220,11 @@ const edit = (data: any) => {
       </div>
       <div v-else class="w-full">
         <div
-          class="mx-auto text-xl w-full py-5 px-8 flex items-center justify-center border border-gray-100 text-gray-500 rounded-lg">
-          <i class="fa fa-folder-open"></i>
-          <div class="ml-5">
+          class="mx-auto text-xl w-full py-16 lg:py-20 px-8 flex flex-col items-center justify-center border border-gray-100 text-gray-500 rounded-lg">
+          <div class="flex items-center justify-center w-16 h-16 rounded-full border border-gray-300">
+            <i class="fa fa-folder-open"></i>
+          </div>
+          <div class="mt-3">
             No folders found.
           </div>
         </div>

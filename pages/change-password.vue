@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from "@/stores/auth";
+import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
 import { required, sameAs, helpers } from "@vuelidate/validators";
 
@@ -7,6 +8,7 @@ definePageMeta({
     middleware: 'is-authenticate'
 })
 
+const loader = useLoader();
 const userState = useAuth();
 const router  = useRouter();
 const { $toast } = useNuxtApp();
@@ -36,14 +38,17 @@ const vv$ = useVuelidate(passwordRules, { formData })
 const updatePassword = async () => {
     const result = await vv$.value.$validate()
     if (result) {
+        loader.loading = true
         let data = {
             currentpassword: formData.value.currentPassword,
             newpassword: formData.value.newPassword
         }
         userState.changePassword(data).then((res: any) => {
+            loader.loading = false
             clearData();
-            $toast('success', 'Password changed successfully', { duration: 5000 })
+            $toast.success('Password changed successfully', { duration: 5000 })
         }).catch((err) => {
+            loader.loading = false
             catchResponse(err);
         })
     }
@@ -56,9 +61,12 @@ const clearData = () => {
         confirmNewPassword: ''
     }
     vv$.value.$reset()
+    loader.loading = true
     userState.logout().then((res: any) => {
+        loader.loading = false
         router.push('/login')
     }).catch((err: any) => {
+        loader.loading = false
         catchResponse(err);
     });
 }
@@ -69,19 +77,19 @@ const catchResponse = (err: any) => {
         if (data) {
             let keys = Object.keys(data)[0];
             let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
+            $toast.error(firstValue[0], { duration: 5000 })
         } else {
             if (!err?.response?.data?.success) {
-                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+                $toast.error(err?.response?.data?.message, { duration: 5000 })
             } else {
-                $toast('danger', 'Something went wrong...!', { duration: 5000 })
+                $toast.error('Something went wrong...!', { duration: 5000 })
             }
         }
     } else {
         if (!err?.response?.data?.success) {
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         } else {
-            $toast('danger', 'Something went wrong...!', { duration: 5000 })
+            $toast.error('Something went wrong...!', { duration: 5000 })
         }
     }
 }
@@ -106,6 +114,7 @@ const handleConfirmChangeType = () => {
 </script>
 <template>
     <div class="mt-5">
+        <Loader />
         <div>
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Change Password</h4>
         </div>

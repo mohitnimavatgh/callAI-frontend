@@ -24,6 +24,7 @@
     "qs": "^6.12.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
+    "vue-toastification": "^2.0.0-rc.5",
     "vue3-apexcharts": "^1.5.2"
   },
   "devDependencies": {

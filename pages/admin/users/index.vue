@@ -136,19 +136,19 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -176,7 +176,7 @@ const confirmation = (data: Boolean) => {
         users.delete(user_List_id.value).then((resp: any) => {
             if (deleteAction.value = 'upcoming') {
                 getUserData();
-                $toast('success', 'User Deleted successfully', { duration: 5000 })
+                $toast.success('User Deleted successfully', { duration: 5000 })
             } else {
                 getUserData();
             }
