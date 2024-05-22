@@ -108,7 +108,7 @@ const refreshToken = () => {
     folder.value.code = route.query.code
     folder.value.folder_id = localStorage.getItem('folder_id')
     calendar.google(folder.value).then((resp:any) => {       
-        $toast('success', 'google calendar account connected..', { duration: 5000 })
+        $toast.success('google calendar account connected..', { duration: 5000 })
         calendar.google_calendar_connection = true;
         router.push('/call-ai/settings/calendar');        
     }).catch((error) => {
@@ -121,7 +121,7 @@ const disconnectedCalendar = (platformType:any) => {
         platform: platformType 
     }
     calendar.disconnectGoogleCalendar(data).then((resp:any) => {       
-        $toast('success', 'disconnect calendar...', { duration: 5000 })
+        $toast.success('disconnect calendar...', { duration: 5000 })
         if(platformType == 'google_calendar'){
             calendar.google_calendar_connection = false;
         }else{
@@ -151,19 +151,19 @@ const catchResponse = (err: any) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -171,7 +171,7 @@ const catchResponse = (err: any) => {
 const getMicrosoftToken = () =>{
     calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
         if(resp?.success) {   
-            $toast('success', 'microsoft teams calendar account connected..', { duration: 5000 })
+            $toast.success('microsoft teams calendar account connected..', { duration: 5000 })
             calendar.microsoft_calendar_connection = true;
             router.push('/call-ai/settings/calendar'); 
         }
@@ -184,7 +184,7 @@ const saveCalendarSetting = () => {
    console.log("Calendar",calendarSettings.value);
     calendar.update(calendarSettings.value).then((resp:any) => {        
         setCalendarOption(); 
-        $toast('success', 'Calendar Meeting Settings Updated', { duration: 10000 })       
+        $toast.success('Calendar Meeting Settings Updated', { duration: 10000 })       
     }).catch((error) => {
         catchResponse(error)             
     })

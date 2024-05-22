@@ -59,12 +59,12 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
         loginData.value.social_type = 'google';
         loginAction()
     } else {
-        $toast('danger', 'Failed to fetch user information', { duration: 5000 })
+        $toast.error('Failed to fetch user information', { duration: 5000 })
     }
 }
 
 const handleOnError = () => {
-    $toast('danger', 'Login failed', { duration: 5000 })
+    $toast.error('Login failed', { duration: 5000 })
 };
 
 const catchResponse = (err) => {
@@ -73,19 +73,19 @@ const catchResponse = (err) => {
         if(data){
             let keys = Object.keys(data)[0];
             let firstValue = data[keys];
-            $toast('danger', firstValue[0], { duration: 5000 })
+            $toast.error(firstValue[0], { duration: 5000 })
         }else{
             if(!err?.response?.data?.success){
-                $toast('danger', err?.response?.data?.message, { duration: 5000 })
+                $toast.error(err?.response?.data?.message, { duration: 5000 })
             }else{
-                $toast('danger', 'something went wrong...!', { duration: 5000 })
+                $toast.error('something went wrong...!', { duration: 5000 })
             }
         }
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }  
 }
@@ -105,7 +105,7 @@ const facebookLogin = (data: any) => {
 const loginAction = () => {
     auth.login(loginData.value).then((resp: any) => {
         loading.value = false
-        $toast('success', 'Login Successfully', { duration: 10000 })
+        $toast.success('Login Successfully', { duration: 10000 })
         router.push('/call-ai');
     }).catch(error => {
         catchResponse(error);

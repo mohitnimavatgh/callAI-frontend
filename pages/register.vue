@@ -61,7 +61,7 @@ const rules = {
 const v$ = useVuelidate(rules, { register })
 
 const handleOnError = () => {
-    $toast('danger', 'Login failed', { duration: 5000 })
+    $toast.error('Login failed', { duration: 5000 })
 };
 
 const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
@@ -82,7 +82,7 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
             userSignup()
         }
     } else {
-        $toast('danger', 'Failed to fetch user information', { duration: 5000 }) 
+        $toast.error('Failed to fetch user information', { duration: 5000 }) 
     }
 }
 
@@ -97,19 +97,19 @@ const catchResponse = (err) => {
     if(data){
         let keys = Object.keys(data)[0];
         let firstValue = data[keys];
-        $toast('danger', firstValue[0], { duration: 5000 })
+        $toast.error(firstValue[0], { duration: 5000 })
     }else{
         if(!err?.response?.data?.success){
-            $toast('danger', err?.response?.data?.message, { duration: 5000 })
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
         }else{
-            $toast('danger', 'something went wrong...!', { duration: 5000 })
+            $toast.error('something went wrong...!', { duration: 5000 })
         }
     }
   }else{
     if(!err?.response?.data?.success){
-        $toast('danger', err?.response?.data?.message, { duration: 5000 })
+        $toast.error(err?.response?.data?.message, { duration: 5000 })
     }else{
-        $toast('danger', 'something went wrong...!', { duration: 5000 })
+        $toast.error('something went wrong...!', { duration: 5000 })
     }
   }  
 }
@@ -117,7 +117,7 @@ const catchResponse = (err) => {
 
 const userSignup = () => {
     auth.signup(signupData.value).then((resp: any) => {
-        $toast('success', 'Register Successfully', { duration: 10000 })
+        $toast.success('Register Successfully', { duration: 10000 })
         router.push('/login');
     }).catch((error) => {
         catchResponse(error)
