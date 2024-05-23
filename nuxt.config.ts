@@ -1,15 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr:true,
+  ssr:false,
   devtools: { enabled: true },
   css: ['~/assets/css/main.css', '~/assets/css/global.css', '@fortawesome/fontawesome-free/css/all.css'],
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-vue3-google-signin'
-  ],
-  plugins: [
-    '~/plugins/api',
   ],
   googleSignIn: {
     clientId: import.meta.env.GOOGLE_CLIENT_ID,
