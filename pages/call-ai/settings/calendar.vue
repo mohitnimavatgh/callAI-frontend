@@ -168,10 +168,11 @@ const getCodeMicrosoftTeamsCalendar = async () => {
     if(result){
         localStorage.setItem('folder_id',folder.value.folder_id)
         const params = {
-            client_id: 'b547715d-e50f-4ca6-9184-cd206d549cdd',
+            client_id: import.meta.env.VITE_MICROSOFT_CLIENT_ID,
             redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
             response_type: 'code',
-            scope: 'offline_access openid email Calendars.ReadWrite'       
+            scope: 'openid offline_access email Calendars.Read',   
+            prompt: 'consent'
         };
         const url = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?");
         url.search = new URLSearchParams(params).toString();   
