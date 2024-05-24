@@ -30,18 +30,16 @@ export const useCalendar = defineStore('calendar', {
     },
     async google(data: any) {
       try {
-        const response = await apiGoogleCalanderConnection(data) 
-        const responseData = response.data;
-        return responseData;
+        const response = await apiGoogleCalanderConnection(data)     
+        return response;
       } catch (error) {
         throw error;
       }
     },
     async microsoftTeams(data: any) {
       try {
-        const response = await apiMicrosoftTeamsConnection(data)
-        const responseData = response.data.value;
-        return responseData;
+        const response = await apiMicrosoftTeamsConnection(data)      
+        return response;
       } catch (error) {
         throw error;
       }
@@ -49,8 +47,7 @@ export const useCalendar = defineStore('calendar', {
     async disconnectCalendar(data: any) {
       try {
         const response = await apiDisconnectCalendar(data)
-        const responseData = response.data.value;
-        return responseData;
+        return response;
       } catch (error) {
         throw error;
       }

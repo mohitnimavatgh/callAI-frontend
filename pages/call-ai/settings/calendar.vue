@@ -15,7 +15,6 @@ const folders = useFolders()
 const loader = useLoader();
 const google_client_id = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
 const joinModal = ref(false);
-const microsoftTeamsCode = ref('')
 const modalType = ref('')
 const googleCalendarLoading = ref(false)
 const googleBtnDisabled = ref(false)
@@ -152,11 +151,13 @@ const getCodeGoogleCalendar = async () =>{
 const googleConnecting = () => {    
     folder.value.code = route.query.code
     folder.value.folder_id = localStorage.getItem('folder_id')
-    calendar.google(folder.value).then((resp:any) => {       
-        $toast.success('google calendar account connected..', { duration: 5000 })
-        calendarStatusHandle('google_calendar')
-        calendar.google_calendar_connection = true;
-        router.push('/call-ai/settings/calendar');        
+    calendar.google(folder.value).then((resp:any) => {  
+        if(resp?.success) {       
+            $toast.success('google calendar account connected..', { duration: 5000 })
+            calendarStatusHandle('google_calendar')
+            calendar.google_calendar_connection = true;
+            router.push('/call-ai/settings/calendar');        
+        }
     }).catch((error) => {
         calendarStatusHandle('google_calendar')
         catchResponse(error)               
@@ -181,8 +182,10 @@ const getCodeMicrosoftTeamsCalendar = async () => {
     }
 }
 
-const microsoftConnecting = () =>{    
-    calendar.microsoftTeams({code :microsoftTeamsCode.value}).then((resp:any) => {
+const microsoftConnecting = () =>{  
+    folder.value.code = route.query.code
+    folder.value.folder_id = localStorage.getItem('folder_id')  
+    calendar.microsoftTeams(folder.value).then((resp:any) => {
         if(resp?.success) {   
             $toast.success('microsoft teams calendar account connected..', { duration: 5000 })
             calendarStatusHandle('microsoft_outlook')
@@ -200,14 +203,16 @@ const disconnectedCalendar = (platformType:any) => {
         platform: platformType 
     }
     calendarStatusHandle(platformType)
-    calendar.disconnectGoogleCalendar(data).then((resp:any) => {       
-        $toast.success('disconnect calendar...', { duration: 5000 })
-        calendarStatusHandle(platformType)
-        if(platformType == 'google_calendar'){
-            calendar.google_calendar_connection = false;
-        }else{
-            calendar.microsoft_calendar_connection = false;
-        }      
+    calendar.disconnectCalendar(data).then((resp:any) => {    
+        if(resp?.success) {   
+            $toast.success('disconnect calendar...', { duration: 5000 })
+            calendarStatusHandle(platformType)
+            if(platformType == 'google_calendar'){
+                calendar.google_calendar_connection = false;
+            }else{
+                calendar.microsoft_calendar_connection = false;
+            }      
+        }
     }).catch((error) => {
         calendarStatusHandle(platformType)        
         catchResponse(error)               
@@ -252,7 +257,6 @@ onMounted(async () => {
         calendarStatusHandle('google_calendar')
         googleConnecting();
     }else if(route.query.code && Object.keys(route.query).length == 1){
-        microsoftTeamsCode.value = route.query.code
         calendarStatusHandle('microsoft_outlook')
         microsoftConnecting();
     }
@@ -290,7 +294,7 @@ onMounted(async () => {
                 </div>
                 <div class="flex relative items-center mt-2">
                     <Button :text="'Connect'" outline class="mr-2" :disabled="microsoftBtnDisabled" v-if="!calendar.microsoft_calendar_connection"  @click="openModal('microsoft')" />
-                    <Button :text="'Disconnect'"  v-else class="mr-2" :disabled="microsoftBtnDisabled" />
+                    <Button :text="'Disconnect'"  v-else class="mr-2" :disabled="microsoftBtnDisabled"  @click="disconnectedCalendar('microsoft_outlook')"/>
                     <div class="absolute -right-20 sm:-right-24 flex items-center" v-if="microsoftCalendarLoading">
                         <svg aria-hidden="true" class="w-2 h-2 sm:w-4 sm:h-4 text-gray-50 animate-spin dark:text-gray-600 fill-primary-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
