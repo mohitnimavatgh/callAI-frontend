@@ -20,6 +20,9 @@ const googleCalendarLoading = ref(false)
 const googleBtnDisabled = ref(false)
 const microsoftBtnDisabled = ref(false)
 const microsoftCalendarLoading = ref(false)
+const confirmationPopUP = ref(false)
+const platform = ref('')
+const authCode = ref('')
 const calendarSettings = ref({
     is_saved: true,
     record_all:true,
@@ -122,7 +125,7 @@ const calendarStatusHandle = (platform:any)=>{
         microsoftCalendarLoading.value = !microsoftCalendarLoading.value
         microsoftBtnDisabled.value = !microsoftBtnDisabled.value
         !microsoftBtnDisabled.value ? resetData() : '' 
-    }
+    }   
 }
 
 const getCodeGoogleCalendar = async () =>{
@@ -139,7 +142,7 @@ const getCodeGoogleCalendar = async () =>{
                 ].join(" "),
             access_type: "offline",
             prompt: "consent",
-            state: "user-Id1",
+            state: "google_calendar",
         };
         const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
         url.search = new URLSearchParams(params).toString();   
@@ -149,16 +152,18 @@ const getCodeGoogleCalendar = async () =>{
 }
 
 const googleConnecting = () => {    
-    folder.value.code = route.query.code
+    folder.value.code = authCode.value
     folder.value.folder_id = localStorage.getItem('folder_id')
     calendar.google(folder.value).then((resp:any) => {  
         if(resp?.success) {       
             $toast.success('google calendar account connected..', { duration: 5000 })
             calendarStatusHandle('google_calendar')
             calendar.google_calendar_connection = true;
+            authCode.value = ''
             router.push('/call-ai/settings/calendar');        
         }
     }).catch((error) => {
+        authCode.value = ''
         calendarStatusHandle('google_calendar')
         catchResponse(error)               
     })
@@ -173,7 +178,8 @@ const getCodeMicrosoftTeamsCalendar = async () => {
             redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
             response_type: 'code',
             scope: 'openid offline_access email https://graph.microsoft.com/User.Read https://graph.microsoft.com/Calendars.Read',   
-            prompt: 'consent'
+            prompt: 'consent',
+            state: "microsoft_teams",
         };
         const url = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?");
         url.search = new URLSearchParams(params).toString();   
@@ -183,16 +189,18 @@ const getCodeMicrosoftTeamsCalendar = async () => {
 }
 
 const microsoftConnecting = () =>{  
-    folder.value.code = route.query.code
+    folder.value.code = authCode.value
     folder.value.folder_id = localStorage.getItem('folder_id')  
     calendar.microsoftTeams(folder.value).then((resp:any) => {
         if(resp?.success) {   
             $toast.success('microsoft teams calendar account connected..', { duration: 5000 })
             calendarStatusHandle('microsoft_outlook')
-            calendar.microsoft_calendar_connection = true;
+            calendar.microsoft_calendar_connection = true; 
+            authCode.value = ''           
             router.push('/call-ai/settings/calendar'); 
         }
     }).catch((error) => {
+        authCode.value = ''
         calendarStatusHandle('microsoft_outlook')
         catchResponse(error)       
     })
@@ -243,9 +251,47 @@ const catchResponse = (err: any) => {
   }  
 }
 
+const confirmationModel = (data: any) => {
+  confirmationPopUP.value = true
+  platform.value = data
+  return;
+}
+
+const confirmation = (data: Boolean) => {
+  confirmationPopUP.value = false
+  if (data) {
+    disconnectedCalendar(platform.value)
+  }
+}
+
 const resetData = () => {
     folder.value.folder_id = ''
     v$.value.$reset()
+}
+
+const queryRequest = (data:any) => {
+    if(data?.state == 'google_calendar'){
+        if(data?.code){
+            authCode.value = data?.code
+            calendarStatusHandle('google_calendar')
+            googleConnecting();
+        }
+        if(data?.error == 'access_denied'){
+            $toast.error('google calendar access denied', { duration: 5000 });            
+        }       
+    }else if(data?.state == 'microsoft_teams'){
+        if(data?.code){
+            authCode.value = data?.code
+            calendarStatusHandle('microsoft_outlook')
+            microsoftConnecting();
+        }
+        if(data?.error == 'access_denied'){
+            $toast.error('microsoft temas access denied', { duration: 5000 });             
+        }    
+    }
+    setTimeout(()=>{
+        router.push('/call-ai/settings/calendar');
+    },200);
 }
 
 onMounted(async () => {
@@ -253,13 +299,8 @@ onMounted(async () => {
     await getCalendarSetting();
     await getFolderList();
     await getCalendarStatus()
-    if(route.query.code && Object.keys(route.query).length > 1){
-        calendarStatusHandle('google_calendar')
-        googleConnecting();
-    }else if(route.query.code && Object.keys(route.query).length == 1){
-        calendarStatusHandle('microsoft_outlook')
-        microsoftConnecting();
-    }
+    await queryRequest(route.query) 
+    
 })
 
 </script>
@@ -277,7 +318,7 @@ onMounted(async () => {
                 </div>
                 <div class="flex relative items-center mt-2">
                     <Button :text="'Connect'" outline class="mr-2" v-if="!calendar.google_calendar_connection" :disabled="googleBtnDisabled" @click="openModal('google')" />
-                    <Button :text="'Disconnect'"  v-if="calendar.google_calendar_connection" :disabled="googleBtnDisabled" @click="disconnectedCalendar('google_calendar')" class="mr-2" />
+                    <Button :text="'Disconnect'"  v-if="calendar.google_calendar_connection" :disabled="googleBtnDisabled" @click="confirmationModel('google_calendar')" class="mr-2" />
                     <div class="absolute -right-20 sm:-right-24 flex items-center"  v-if="googleCalendarLoading">
                         <svg aria-hidden="true" class="w-2 h-2 sm:w-4 sm:h-4 text-gray-50 animate-spin dark:text-gray-600 fill-primary-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -294,7 +335,7 @@ onMounted(async () => {
                 </div>
                 <div class="flex relative items-center mt-2">
                     <Button :text="'Connect'" outline class="mr-2" :disabled="microsoftBtnDisabled" v-if="!calendar.microsoft_calendar_connection"  @click="openModal('microsoft')" />
-                    <Button :text="'Disconnect'"  v-else class="mr-2" :disabled="microsoftBtnDisabled"  @click="disconnectedCalendar('microsoft_outlook')"/>
+                    <Button :text="'Disconnect'"  v-else class="mr-2" :disabled="microsoftBtnDisabled"  @click="confirmationModel('microsoft_outlook')"/>
                     <div class="absolute -right-20 sm:-right-24 flex items-center" v-if="microsoftCalendarLoading">
                         <svg aria-hidden="true" class="w-2 h-2 sm:w-4 sm:h-4 text-gray-50 animate-spin dark:text-gray-600 fill-primary-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -367,5 +408,6 @@ onMounted(async () => {
                 <Button :text="'Save'" class="flex text-center mr-2" @click="saveCalendarSetting()" outline/>
             </div>
         </div>
+        <confirmation-popup title="Are you sure you want to disconnect to the calendar?" v-if="confirmationPopUP" @confirmation="confirmation" />
     </div>
 </template>
