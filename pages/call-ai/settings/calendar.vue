@@ -171,7 +171,7 @@ const getCodeMicrosoftTeamsCalendar = async () => {
             client_id: import.meta.env.VITE_MICROSOFT_CLIENT_ID,
             redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
             response_type: 'code',
-            scope: 'openid offline_access email Calendars.Read',   
+            scope: 'openid offline_access email https://graph.microsoft.com/User.Read https://graph.microsoft.com/Calendars.Read',   
             prompt: 'consent'
         };
         const url = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?");

@@ -25,7 +25,7 @@ export const apiGoogleCalanderConnection = (params: any): Promise<any> => { retu
 export const apiMicrosoftTeamsConnection = (params: any): Promise<any> => { return post('/microsoft/token/callback', params) };
 export const apiGetCalanderSetting = (): Promise<any> => { return get('/calendar-setting') };
 export const apiUpdateCalanderSetting = (params: any): Promise<any> => { return patch('/calendar-setting/update', params) };
-export const apiDisconnectGoogleCalendar = (params: any): Promise<any> => { return post('/calendar/disconnect/google', params) };
+export const apiDisconnectCalendar = (params: any): Promise<any> => { return post('/calendar/disconnect', params) };
 
 //Chat To Call Api
 export const apiCreateChatToCall = (params: any): Promise<any> => { return post('/chat-call', params) };
