@@ -1,1 +1,0 @@
-import{af as r,a6 as t}from"./-26k3Kfm.js";import{a as i}from"./D-d9pQah.js";import{u as o}from"./Dkzkeb-w.js";import"./DYk6i2Lg.js";const c=r(async(u,n)=>{{const e=i(),a=o();if(e.authenticated===!0)return t("/admin");setTimeout(()=>{if(a.authenticated===!0)return t("/login")},1e3)}});export{c as default};
