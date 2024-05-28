@@ -204,7 +204,7 @@ const recordedMeeting = computed(() => {
         @close="shareModal = false">
         <div class="modal-content  p-4 md:p-5">
           <div class="col-span-2">
-            <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"
+            <FormSelect label="Folder" placeholder="Selected Folder" id="Folder" name="folder"
               v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors" :options="folders?.folders" />
           </div>
         </div>

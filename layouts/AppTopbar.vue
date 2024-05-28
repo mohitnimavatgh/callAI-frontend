@@ -8,37 +8,35 @@
           <ul v-if="!route.name.includes('admin')"
             class="flex flex-col font-light p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li v-for="(menu, index) in  mainMenuItems " :key="index" class="relative">
-              <nuxt-link class="text-sm" :to="menu.link" @click="handleMenuChange(menu)"
-                :class="isActive === menu.label
-                  ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
-                  : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium '"
-                >{{
-                menu.label }}</nuxt-link>
-              <div v-if="route.name == isActive.toLowerCase() || isActive == 'Calls' || isActive == 'Users' || isActive == 'Settings' || isActive == 'Dashboard'" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                <div :class="isActive == menu.label ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
+              <div v-if="menu.label == 'Dashboard'">
+                <nuxt-link class="text-sm" :to="menu.link" @click="handleMenuChange(menu)"
+                  :class="route.name == 'index'
+                    ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
+                    : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium '"
+                  >{{
+                  menu.label }}</nuxt-link>
+                <div v-if="route.name == 'index'" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
+                  <div :class="isActive == menu.label || route.name == 'index' ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
+                  </div>
                 </div>
               </div>
-              <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
-              <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
-                  <li v-for="submenu in menu.submenu">
-                    <nuxt-link class="block px-4 py-2 hover:bg-primary-500 hover:text-gray-50 dark:hover:bg-gray-600 dark:hover:text-white" :to="submenu.link" aria-current="page">{{ submenu.label }}</nuxt-link>
-                  </li>
-                </ul>
-              </div> -->
+              <div v-else>
+                <nuxt-link class="text-sm" :to="menu.link" @click="handleMenuChange(menu)"
+                  :class="route.name.includes(menu.label.toLowerCase())
+                    ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
+                    : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium '"
+                  >{{
+                  menu.label }}</nuxt-link>
+                <div v-if="route.name.includes(menu.label.toLowerCase())" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
+                  <div :class="isActive == menu.label ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
+                  </div>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
       </div>
       <div class="hidden md:flex items-center">
-        <button @click=" changeTheme " type="button"
-          class="relative  dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
-          <i class="fa-regular fa-bell text-xl"
-            :class=" route.name.includes('admin') ? 'text-white' : 'text-gray-400' "></i>
-          <div
-            class="absolute inline-flex items-center justify-center w-2.5 h-2.5 text-xs font-bold text-white bg-primary-500 border-2 border-white rounded-full top-0 end-0.5 dark:border-gray-900">
-          </div>
-        </button>
         <button @click=" changeTheme " id="theme-toggle" type="button"
           :class=" route.name.includes('admin') ? 'text-white' : 'text-gray-400' "
           class="dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
@@ -71,13 +69,6 @@
             <DropDown
               image="https://media.licdn.com/dms/image/C5103AQFl656k2-DwOg/profile-displayphoto-shrink_800_800/0/1517034956958?e=2147483647&v=beta&t=6H_aZri3qcbtlgwTyTKBceuyTEPYW43xGViq5UL4J-w"
               :buttonText=" 'Action' " :actions=" userMenuItems " @select=" onSelect " />
-            <button @click=" changeTheme " type="button"
-              class="relative text-gray-500 ml-3 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
-              <i class="fa-regular fa-bell text-gray-400 text-xl"></i>
-              <div
-                class="absolute inline-flex items-center justify-center w-2.5 h-2.5 text-xs font-bold text-white bg-primary-500 border-2 border-white rounded-full top-0 end-0.5 dark:border-gray-900">
-              </div>
-            </button>
             <button @click=" changeTheme " id="theme-toggle" type="button"
               class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1 mr-2">
               <svg v-if=" currentTheme == 'light' " id="theme-toggle-dark-icon" class="w-5 h-5" fill="currentColor"
@@ -164,6 +155,8 @@ const setTheme = (theme: any) => {
 };
 
 onMounted(() => {
+  console.log(route.name, 'route.name++++++++++++++++++++');
+  
   setActiveMenuItem()
   currentTheme.value = localStorage.getItem("color-theme");
   if (!currentTheme.value) {

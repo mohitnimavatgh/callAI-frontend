@@ -1,0 +1,1 @@
+import{J as e,K as o}from"./-26k3Kfm.js";import{a as r}from"./DYk6i2Lg.js";const c=e("folders",{state:()=>({folders:null,folderPagination:null}),actions:{async list(s){try{const t=await r(s),a=t.data;return t.success&&(s!=null&&s.page?this.folderPagination=a:this.folders=a),a}catch(t){throw t}}},persist:{storage:o.localStorage}});export{c as u};

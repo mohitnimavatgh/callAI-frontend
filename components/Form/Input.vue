@@ -70,7 +70,7 @@ const inputClasses = computed(() => [
   "border",
   "border-gray-300",
   "text-gray-900",
-  "text-sm",
+  "text-xs",
   "rounded-lg",
   "block",
   "w-full",

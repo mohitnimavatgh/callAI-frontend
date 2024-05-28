@@ -116,7 +116,7 @@ const resetBotValidation = () => {
 
 const handleKeys = (event: any) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Backspace') {
         event.preventDefault();
         if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
             if(!emailArray.value.includes(bot.value.multiple_emails.trim())){
@@ -130,11 +130,13 @@ const handleKeys = (event: any) => {
 watch(() => bot.value.after_complete_run_actions, (val) => {  
   if(val == 'nothing'){
     emailArray.value = []
+    bot.value.action = null
+    bot.value.multiple_emails = null
     v$.value.$reset()
   }
 });
 
-const deleteField = (index) => {
+const deleteField = (index : any) => {
     emailArray.value.splice(index, 1);
 }
 
@@ -160,9 +162,9 @@ const deleteField = (index) => {
                 <FormInput id="Email" class="mt-4" label="Enter Email" name="Email" type="text" placeholder="Enter Email"
                     rules="required|email" v-model="v$.bot.multiple_emails.$model" :errors="v$.bot.multiple_emails.$errors"
                     @keydown="handleKeys" @blur="handleKeys" />
-                <ul>
+                <ul class="flex items-center flex-wrap">
                     <li v-for="(item, index) in emailArray" :key="index">
-                        <p class="mt-2 dark:text-white text-ref-500 w-fit">
+                        <p class="mt-2 mr-2 dark:text-white text-ref-500 w-fit">
                             <span
                                 class="text-lg font-medium flex items-center px-2.5 py-0.5 rounded text-black-500 bg-gray-100 dark:bg-gray-900 dark:text-gray-300`">
                                 {{ item }} <i class="text-sm text-black-400 fas fa-close ml-1"

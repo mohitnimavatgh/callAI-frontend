@@ -27,11 +27,11 @@ export default defineNuxtConfig({
         path: '/',
         redirect: '/call-ai'
       })
-    }
+    },
   },
   runtimeConfig: {
     public: {
-      API_BASE_URL: 'https://confra.cuotainfotech.com/api/public/api', 
+      API_BASE_URL: 'https://confra.cuotainfotech.com/api/public/api',
     },
   },
   app: {

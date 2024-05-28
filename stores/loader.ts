@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 export const useLoader = defineStore('loader', {
     state: () => ({
         loading: false,
+        topBarActiveVal: '' as string
     }),
     actions: {
         async loader(status : any) {
@@ -11,5 +12,8 @@ export const useLoader = defineStore('loader', {
             throw error;
         }
         },
+        handleChangeActiveValue(item: string){
+            this.topBarActiveVal = item
+          }
     }
 });

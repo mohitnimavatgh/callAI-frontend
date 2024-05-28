@@ -1,0 +1,1 @@
+import{n as o,A as n,B as t,o as s,c}from"./-26k3Kfm.js";const _=o({__name:"index",setup(a){const e=n();return t(async()=>{console.log("route--",e.query.code)}),(r,u)=>(s(),c("h1",null,"Hello"))}});export{_ as default};
