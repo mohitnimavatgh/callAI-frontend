@@ -296,9 +296,9 @@ const recordedMeeting = computed(() => {
       <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
         :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" @tab-click="upcomingHndleTabClick">
         <template v-slot:action="{ item, value, index }">
-          <div class="flex space-x-2">
+          <div class="flex space-x-2" v-if="item.is_type != 'calendar'">
             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
-            <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+            <i @click="deleteUpcomingMeet(index)"  class="fas fa-trash text-red-400 cursor-pointer"></i>
           </div>
         </template>
       </Table>

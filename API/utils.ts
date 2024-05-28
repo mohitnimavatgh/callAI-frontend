@@ -22,10 +22,10 @@ export const apiCreateBot = (params: any): Promise<any> => { return post('/setti
 //Calandar
 export const apiGetCalanderStatus = (): Promise<any> => { return get('/calendar/connect/status') };
 export const apiGoogleCalanderConnection = (params: any): Promise<any> => { return post('/calendar/connect/google', params) };
-export const apiMicrosoftTeamsConnection = (params: any): Promise<any> => { return post('/microsoft/token/callback', params) };
+export const apiMicrosoftTeamsConnection = (params: any): Promise<any> => { return post('/calendar/connect/microsoft', params) };
 export const apiGetCalanderSetting = (): Promise<any> => { return get('/calendar-setting') };
 export const apiUpdateCalanderSetting = (params: any): Promise<any> => { return patch('/calendar-setting/update', params) };
-export const apiDisconnectGoogleCalendar = (params: any): Promise<any> => { return post('/calendar/disconnect/google', params) };
+export const apiDisconnectCalendar = (params: any): Promise<any> => { return post('/calendar/disconnect', params) };
 
 //Chat To Call Api
 export const apiCreateChatToCall = (params: any): Promise<any> => { return post('/chat-call', params) };
