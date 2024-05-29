@@ -4,6 +4,7 @@ import { useChatToCall } from "@/stores/user/chatToCall";
 import { useRoute } from 'vue-router';
 import { initFlowbite } from "flowbite";
 const route = useRoute();
+const router = useRouter();
 const quickQuestions = useQuickQuestions()
 const chatToCall = useChatToCall()
 const { $toast } = useNuxtApp()
@@ -11,14 +12,14 @@ const props = defineProps({
     meetingDetail: null,
 });
 const meetingId = ref(route.params.id)
+const history_id = ref(route.query?.history == 'undefined' ? null : route.query?.history)
 
 const chat = ref({
     meeting_id: meetingId.value,
-    chat_to_call_id: chatToCall.chatId,
+    chat_to_call_id: history_id.value,
     quick_question_id: null,
     question: '',
 })
-const collapse = ref<boolean>(false)
 
 const detail = ref(null)
 const faqsList = computed(() => {
@@ -30,10 +31,11 @@ const faqsList = computed(() => {
 });
 
 const quickQuestionParams = { page: null, search: '' }
-const chatToCallParams = { meeting_id: meetingId.value }
+const chatToCallParams = { meeting_id: meetingId.value,history_id: history_id.value }
 
 onMounted(async () => {
     initFlowbite();
+    chatToCall.getChatList = []
     await nextTick()
     await getChatToCall()
     await getQuickQuestions()
@@ -58,14 +60,30 @@ const handleKeyEvent = () => {
 }
 
 const sendMessage = () => {
+    chat.value.chat_to_call_id = history_id.value
     chatToCall.create(chat.value).then((resp: any) => {
-        chat.value.question = null;
+        // chat.value.question = null;
+        // chatToCall.chatId = resp?.data?.chat_to_call_id
+        if(history_id.value == null){
+            let chat_id = resp?.data?.chat_to_call_id;
+            chatToCallParams.history_id = chat_id;
+            history_id.value = chat_id;
+            router.push({query: { history: history_id.value }})
+        }
         //@ts-ignore
         document.getElementById("question").value = null;
         getChatToCall();
     }).catch((error) => {
         catchResponse(error)
     })
+}
+
+const clearQueryParams = () =>{
+    const queryParams = { ...route.query };
+
+    delete queryParams.history;
+
+    router.replace({ query: queryParams });
 }
 
 const catchResponse = (err: any) => {
@@ -98,49 +116,17 @@ const quickQuestionCall = (item: any) => {
     document.getElementById("question").value = item.name;
 }
 
-const copyChat = () => {
-    const chatString = chatToCall.getChatList.map(chat => `Q:- ${chat.question}\nA:- ${chat.answer}`).join('\n\n');
+const collapse = ref<boolean>(false)
 
-    // Create a temporary textarea to hold the text to copy
-    const tempTextArea = document.createElement('textarea');
-    tempTextArea.value = chatString;
-    document.body.appendChild(tempTextArea);
-
-    // Select the text
-    tempTextArea.select();
-    tempTextArea.setSelectionRange(0, tempTextArea.value.length); // For mobile devices
-
-    try {
-        // Copy the text
-        document.execCommand('copy');
-        $toast.success('Chat Copied to clipboard', { duration: 100 });
-    } catch (err) {
-        console.error('Failed to copy text: ', err);
-    }
-
-    // Clean up
-    document.body.removeChild(tempTextArea); 
+const handleCollapse = () => {
+    collapse.value = !collapse.value
 }
 
-const downloadChat = () => {
-    const chatString = chatToCall.getChatList.map(chat => `Q:- ${chat.question}\nA:- ${chat.answer}`).join('\n\n');
-
-    // Create a blob from the string
-    const blob = new Blob([chatString], { type: 'text/plain' });
-
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'chat.txt';
-
-    // Append the link to the body
-    document.body.appendChild(link);
-
-    // Trigger the download
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
+const handleClearChat = () => {
+    chat.value.chat_to_call_id = null;
+    history_id.value = null;
+    chatToCall.chatId = null;
+    clearQueryParams()
 }
 
 
@@ -150,68 +136,10 @@ const downloadChat = () => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="col-span-2 ">
                 <div class="flex flex-col" :class="collapse ? 'fixed top-0 right-0 left-0 bottom-0' : ''">
-                    <div class="py-2.5 h-fit text-gray-800 px-5 block bg-gray-200 sm:flex items-center justify-between">
-                        <div>
-                            <FormInput icon="fa fa-pencil" class="w-fit" id="question" placeholder="Chat title" @keypress="" />
-                        </div>
-                        <div class="">
-                            <ul class="flex items-center space-x-3">
-                                <li>
-                                    <button @click="copyChat" data-tooltip-target="tooltip-copy" type="button"><i
-                                            class="fa fa-copy"></i></button>
-
-                                    <div id="tooltip-copy" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Copy
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button @click="downloadChat" data-tooltip-target="tooltip-download" type="button"><i
-                                            class="fa fa-download"></i></button>
-
-                                    <div id="tooltip-download" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Download
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button data-tooltip-target="tooltip-clear" type="button"><i
-                                            class="fa fa-rotate-right"></i></button>
-
-                                    <div id="tooltip-clear" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Clear
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button data-tooltip-target="tooltip-email" type="button"><i
-                                            class="fa fa-envelope"></i></button>
-
-                                    <div id="tooltip-email" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Send Email
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button @click="collapse = !collapse" class="text-xl transition duration-300" data-tooltip-target="tooltip-collapse"
-                                        type="button"><i class="fa"
-                                            :class="collapse ? 'fa-compress' : 'fa-expand'"></i></button>
-
-                                    <div id="tooltip-collapse" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        {{ collapse ? 'Collapse' : 'Expand' }}
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                    <div v-if="chatToCall.getChatList.length" class="h-fit">
+                        <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat"/>
                     </div>
-                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'"
-                        class="bg-white overflow-hidden flex flex-col">
+                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white overflow-hidden flex flex-col">
                         <div class="p-5 h-full overflow-y-scroll">
                             <CallChatTiles id="chat" :lists="chatToCallLists" />
                         </div>
@@ -241,4 +169,5 @@ const downloadChat = () => {
                 </div>
             </div>
         </div>
-    </div></template>
+    </div>
+</template>

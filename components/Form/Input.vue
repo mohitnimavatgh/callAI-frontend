@@ -23,6 +23,7 @@
         :placeholder="placeholder"
         autocomplete="off"
         :disabled="disabled"
+        @blur="handleBlur"
       />
       <Button
         v-if="size === 'large'"
@@ -44,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(["update:modelValue", 'changeType', 'submitChat']);
+const emit = defineEmits(["update:modelValue", 'changeType', 'submitChat', 'focusOut']);
 const props = defineProps({
   label: { type: String, default: "" },
   modelValue: String,
@@ -59,6 +60,7 @@ const props = defineProps({
   errors: { type: Array, default: [] },
   iconPosition: { type: String, default: 'left' },
   pointer: { type: Boolean, default: true },
+  onBlur: { type: Boolean, default: false },
 });
 
 // const valueUpdate = ref(props.modelValue);
@@ -102,6 +104,12 @@ const valueUpdate = computed({
 
 const changeInputType = () => {
   emit('changeType');
+}
+
+const handleBlur =() => {
+  if(props.onBlur === true){
+    emit('focusOut')
+  }
 }
 
 const submit = () => {

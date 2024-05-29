@@ -26,6 +26,10 @@ const getMeetingDetail = async (id) => {
     await meetings.meetingDetail({ meeting_id: id })
 }
 
+const handleTabChange = () => {
+    selectedTab.value = 'Chat To Call'
+}
+
 const meetingDetail = computed(() => meetings.getMeetingDetail);
 
 </script>
@@ -34,6 +38,6 @@ const meetingDetail = computed(() => meetings.getMeetingDetail);
         <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab"/>
         <CallDetail v-if="selectedTab == 'Calls'"  :meetingDetail="meetingDetail"  />
         <CallChat v-if="selectedTab == 'Chat To Call'"  :meetingDetail="meetingDetail" />
-        <CallHistory v-if="selectedTab == 'History'" />
+        <CallHistory v-if="selectedTab == 'History'" @changeTab="handleTabChange" />
     </div>
 </template>

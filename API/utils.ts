@@ -30,6 +30,8 @@ export const apiDisconnectCalendar = (params: any): Promise<any> => { return pos
 //Chat To Call Api
 export const apiCreateChatToCall = (params: any): Promise<any> => { return post('/chat-call', params) };
 export const apiGetChatToCall = (id: any): Promise<any> => { return get('/chat-call', id) };
+export const apiGetChatToCallHistory = (id: any): Promise<any> => { return get('/call-history', id) };
+export const apiUpdateChatTitle = (params: any): Promise<any> => { return put('/chat-call/update', params) };
 
 //Dashboard Api
 export const apiGetDashboardData = (): Promise<any> => { return get('/dashboard') };
