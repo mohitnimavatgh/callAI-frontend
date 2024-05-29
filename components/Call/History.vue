@@ -1,64 +1,100 @@
 <script setup lang="ts">
-    const router = useRouter()
-    const shareModal = ref(false)
-    const folder = ref('')
-    const tableHeadings = ref([
-        { title: 'Name', value: 'name' },
-        { title: 'Type', value: 'type' },
-        { title: 'Record', value: 'record' },
-        { title: 'Calander Plateform', value: 'calendar_plateform' },
-        { title: 'Date', value: 'date' },
-        { title: 'Time', value: 'time' },            
-        { title: 'Meeting Platefrom', value:  'meeting_platefrom' },
-        { title: 'Folder', value: 'folder' }
-    ])
-    const tableData = ref([
-        { name: 'Neil Sims', type: 'React Developer', date: '2024-04-01', time: '09:00 AM', calendar_plateform: 'Google Calendar', 'meeting_platefrom': 'Zoom', folder: 'Project X', record: 'Yes' },
-        { name: 'Bonnie Green', type: 'Designer', date: '2024-04-02', time: '10:30 AM', calendar_plateform: 'Outlook', 'meeting_platefrom': 'Teams', folder: 'Project Y', record: 'No' },
-        { name: 'Jese Leos', type: 'Vue JS Developer', date: '2024-04-03', time: '11:45 AM', calendar_plateform: 'Apple Calendar', 'meeting_platefrom': 'Skype', folder: 'Project Z', record: 'Yes' },
-        { name: 'Thomas Lean', type: 'UI/UX Engineer', date: '2024-04-04', time: '01:00 PM', calendar_plateform: 'Yahoo Calendar', 'meeting_platefrom': 'WebEx', folder: 'Project A', record: 'No' },
-        { name: 'Leslie Livingston', type: 'SEO Specialist', date: '2024-04-05', time: '02:15 PM', calendar_plateform: 'Microsoft Calendar', 'meeting_platefrom': 'Google Meet', folder: 'Project B', record: 'Yes' }
-    ]);
-    
-    const ShareCall = (item) => {
-        shareModal.value = true
+import { useChatToCall } from '@/stores/user/chatToCall'
+const emit = defineEmits(['changeTab'])
+const chatToCall = useChatToCall()
+const { $toast } = useNuxtApp()
+const route = useRoute()
+const router = useRouter()
+const tableHeadings = ref([
+    { title: 'Name', value: 'title' },
+    { title: 'Create Date', value: 'created_at' },
+    { title: 'Last Update', value: 'updated_at' },
+    { title: 'Action', value: 'action' },
+])
+const historyData = ref([]);
+
+const history = ref<any>({
+    meeting_id: route.params.id,
+    page: 1,
+    search: ''
+})
+
+const addQueryParams = (id: any) =>{
+    const queryParams = { ...route.query };
+
+    queryParams.history = id;
+
+    router.replace({ query: queryParams });
+}
+
+const viewCall = (index: any) => {
+    let history_id = historyData.value.data[index]?.id
+    addQueryParams(history_id);
+    emit('changeTab')
+}
+
+onMounted(() => {
+    router.replace({ query: {} }) 
+    getHistory();
+})
+
+const getHistory = () => {
+    chatToCall.getHistory(history.value).then((res: any) => {
+        historyData.value = res
+    }).catch((err: any) => {
+        catchResponse(err)
+    })
+}
+
+const catchResponse = (err: any) => {
+    if (err?.response?.status == 422) {
+        let data = err?.response?.data?.data
+        if (data) {
+            let keys = Object.keys(data)[0];
+            let firstValue = data[keys];
+            $toast.error(firstValue[0], { duration: 5000 })
+        } else {
+            if (!err?.response?.data?.success) {
+                $toast.error(err?.response?.data?.message, { duration: 5000 })
+            } else {
+                $toast.error('something went wrong...!', { duration: 5000 })
+            }
+        }
+    } else {
+        if (!err?.response?.data?.success) {
+            $toast.error(err?.response?.data?.message, { duration: 5000 })
+        } else {
+            $toast.error('something went wrong...!', { duration: 5000 })
+        }
     }
-    const viewCall = (item) => {
-        router.push(`calls/${'456'}`);
-    }
+}
+
+const handleSearch = (data: any) => {
+    history.value.search = data
+    getHistory()
+}
+
+const historyPageChange = (page: any) => {
+    history.value.page = page
+    getHistory()
+};
+
 </script>
 
 <template>
     <div class="box mt-5 bg-white">
-           <Table
-               :headings="tableHeadings"
-               :data="tableData"
-               :isSearchable="true"
-               title="History"
-               @search="handleSearch"
-           >
-               <template v-slot:action="{ item, value }">
-                   <div class="flex justify-around">
-                       <i @click="ShareCall(item)" class="fas fa-share-nodes text-primary-400"></i>
-                       <i @click="viewCall(item)" class="fas fa-eye text-blue-400"></i>
-                       <i class="fas fa-trash text-red-400"></i>
-                   </div>
-                   
-               </template>
-           </Table>
-           <Pagination class="mt-4 flex justify-end" :totalPage="10" :currentPage="3"/>
-           <Modal :title="'Share Meeting'" :subTitle="'Share call with your team member'" :show="shareModal" @close="shareModal = false">
-               <div class="modal-content  p-4 md:p-5">
-                   <div class="col-span-2">
-                       <FormSelect label="Folder" id="Folder" name="folder" v-model="folder" :options="folderList" rules="required" />
-                   </div>
-               </div>
-               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                   <Button :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareModal = false"/>
-                   <Button :text="'Cancel'" @click="shareModal = false" outline/>
-               </div>
-           </Modal>
-     <NuxtPage />
+        <Table :headings="tableHeadings" :data="historyData.data" :isSearchable="true" title="History" @search="handleSearch">
+            <template v-slot:action="{ item, value, index }">
+                <div class="flex justify-start">
+                    <i @click="viewCall(index)" class="fas fa-eye cursor-pointer text-blue-400"></i>
+                </div>
 
-       </div>
+            </template>
+        </Table>
+ 
+   
+            <Pagination v-if="historyData && historyData.total"
+                class="mt-4 flex justify-end" :totalRecords="historyData.total" :currentPage="historyData.page"
+                :recordsPerPage="historyData.per_page" @pageChange="historyPageChange" />
+    </div>
 </template>
