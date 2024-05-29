@@ -31,7 +31,7 @@ const setPosterDimensions = () => {
 onMounted(() => {
   if (props.videoUrl) {
 
-    posterUrl.value = `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg`;
+    posterUrl.value = ``;
 
     const video = document.getElementById("videoRef");
     video.load();

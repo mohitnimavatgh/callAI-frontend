@@ -1,1 +1,0 @@
-import{_ as t,o as e,c as s,Q as r}from"./-26k3Kfm.js";const a={},c={class:"fixed top-0 left-0 right-0 bottom-0 overflow-y-auto"};function n(o,l,f,_,d,i){return e(),s("div",c,[r(o.$slots,"default")])}const u=t(a,[["render",n]]);export{u as default};

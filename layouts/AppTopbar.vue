@@ -155,7 +155,6 @@ const setTheme = (theme: any) => {
 };
 
 onMounted(() => {
-  console.log(route.name, 'route.name++++++++++++++++++++');
   
   setActiveMenuItem()
   currentTheme.value = localStorage.getItem("color-theme");

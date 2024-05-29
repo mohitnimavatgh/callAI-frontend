@@ -1,1 +1,0 @@
-import{af as e,a6 as o}from"./-26k3Kfm.js";import{u as n}from"./Dkzkeb-w.js";import{a as i}from"./D-d9pQah.js";import"./DYk6i2Lg.js";const g=e(async(r,s)=>{const t=n(),a=i();return console.log(t),(t==null?void 0:t.authenticated)?o("/"):a.authenticated===!0?o("/admin/login"):void 0});export{g as default};
