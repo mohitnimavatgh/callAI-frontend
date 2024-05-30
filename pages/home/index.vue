@@ -7,6 +7,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
 
 definePageMeta({
+  layout: 'user',
   middleware: "is-authenticate",
 })
 
@@ -89,7 +90,7 @@ const updateBot = async () => {
   }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err :any) => {
   if (err?.response?.status == 422) {
     let data = err?.response?.data?.data
     if (data) {
@@ -153,6 +154,7 @@ const getUpcoming = () => {
     catchResponse(err)
   })
 }
+
 const getRecorded = () => {
   loader.loading = true
   meetings.recordedMeeting(recordedParams.value).then((res) => {
@@ -166,7 +168,7 @@ const getRecorded = () => {
 onMounted(async () => {
   await nextTick();
   await getUpcoming();
-  await getRecorded()
+  await getRecorded();
 })
 
 const handleTabClick = (item: any) => {
@@ -291,7 +293,7 @@ const recordedMeeting = computed(() => {
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="w-full my-5 h-full">
     <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
       <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
         :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch" @tab-click="upcomingHndleTabClick">

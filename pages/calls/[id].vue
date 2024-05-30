@@ -14,7 +14,7 @@ const tabItems = ref([
     { label: 'History', icon: 'fas fa-clock-rotate-left' }
 ]);
 
-const tabChanged = (item) => {
+const tabChanged = (item : any) => {
     selectedTab.value = item.label
 }
 
@@ -26,7 +26,7 @@ onMounted(async () => {
     await getMeetingDetail(route.params.id)
 });
 
-const getMeetingDetail = async (id) => {
+const getMeetingDetail = async (id :any) => {
     await meetings.meetingDetail({ meeting_id: id })
 }
 

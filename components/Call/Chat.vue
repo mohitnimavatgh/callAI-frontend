@@ -115,7 +115,7 @@ const quickQuestionCall = (item: any) => {
     chat.value.question = null;
     chat.value.quick_question_id = item.id;
     //@ts-ignore
-    document.getElementById("question").value = item.name;
+    sendMessage()
 }
 
 const collapse = ref<boolean>(false)
