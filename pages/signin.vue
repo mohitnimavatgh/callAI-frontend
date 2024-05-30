@@ -58,7 +58,7 @@ async function loginBtn() {
             auth.login(login.value).then((resp:any) => {
                 loading.value = false
                 $toast.success('Login Successfully', { duration: 10000 })
-                router.push(`call-ai`);
+                router.push(`/home`);
             }).catch((error) => {
                 catchResponse(error)       
             })
