@@ -30,11 +30,12 @@ const addQueryParams = (id: any) =>{
 const viewCall = (index: any) => {
     let history_id = historyData.value.data[index]?.id
     addQueryParams(history_id);
-    emit('changeTab')
+    setTimeout(() => {
+        emit('changeTab')
+    }, 500)
 }
 
 onMounted(() => {
-    router.replace({ query: {} }) 
     getHistory();
 })
 
@@ -44,6 +45,7 @@ const getHistory = () => {
     }).catch((err: any) => {
         catchResponse(err)
     })
+    router.replace({query: {}})
 }
 
 const catchResponse = (err: any) => {

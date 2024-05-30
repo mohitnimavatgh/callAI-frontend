@@ -24,6 +24,7 @@
         autocomplete="off"
         :disabled="disabled"
         @blur="handleBlur"
+        @keypress.exact.enter="enterPress"
       />
       <Button
         v-if="size === 'large'"
@@ -61,6 +62,7 @@ const props = defineProps({
   iconPosition: { type: String, default: 'left' },
   pointer: { type: Boolean, default: true },
   onBlur: { type: Boolean, default: false },
+  onEnterPress: {type: Boolean, default: false}
 });
 
 // const valueUpdate = ref(props.modelValue);
@@ -114,6 +116,12 @@ const handleBlur =() => {
 
 const submit = () => {
   emit('submitChat');
+}
+
+const enterPress = () => {
+  if(props.onEnterPress === true){
+    emit('submitChat');
+  }
 }
 
 // const updateModelValue = (val) => {

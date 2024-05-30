@@ -5,6 +5,7 @@ import { useLoader } from "@/stores/loader";
 import { required, email, helpers, numeric, maxLength, minLength } from "@vuelidate/validators";
 
 definePageMeta({
+    layout: 'user',
     middleware: 'is-authenticate',
 })
 

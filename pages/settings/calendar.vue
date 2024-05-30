@@ -290,7 +290,7 @@ const queryRequest = (data:any) => {
         }    
     }
     setTimeout(()=>{
-        router.push('/call-ai/settings/calendar');
+        router.push('/settings/calendar');
     },200);
 }
 
@@ -300,7 +300,6 @@ onMounted(async () => {
     await getFolderList();
     await getCalendarStatus()
     await queryRequest(route.query) 
-    
 })
 
 </script>

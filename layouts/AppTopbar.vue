@@ -128,10 +128,10 @@ const collapsed = ref<boolean>(true)
 
 const mainMenuItems = ref([
   { label: 'Dashboard', active: false, link: '/' },
-  { label: 'Call-ai', active: false, link: '/call-ai' },
-  { label: 'Calls', active: false, link: '/call-ai/calls' },
+  { label: 'Home', active: false, link: '/home' },
+  { label: 'Calls', active: false, link: '/calls' },
   {
-    label: 'Settings', active: false, link: '/call-ai/settings'
+    label: 'Settings', active: false, link: '/settings'
     // submenu: [
     //   { label: 'Bot', link: '/call-ai/settings' },0000000
     //   { label: 'Calendar', link: '/call-ai/settings/calendar' },
@@ -139,7 +139,7 @@ const mainMenuItems = ref([
     //   { label: 'Quick Questions', link: '/call-ai/settings/quick-questions' },
     // ]  
   },
-  { label: 'Users', active: false, link: '/call-ai/users' },
+  { label: 'Users', active: false, link: '/users' },
 ]);
 
 const router = useRouter() as any;

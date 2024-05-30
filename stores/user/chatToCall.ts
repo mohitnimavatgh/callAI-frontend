@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { apiCreateChatToCall, apiGetChatToCall, apiGetChatToCallHistory, apiUpdateChatTitle } from '@/API/utils'
+import { apiCreateChatToCall, apiGetChatToCall, apiGetChatToCallHistory, apiUpdateChatTitle, apiSendChatEmail } from '@/API/utils'
 
 export const useChatToCall = defineStore('chatToCall', {
   state: () => ({
@@ -52,6 +52,15 @@ export const useChatToCall = defineStore('chatToCall', {
     async updateChatName(id: Number){
       try {
         const response = await apiUpdateChatTitle(id)
+        const responseData = response.data;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async sendChatEmail(data: any){
+      try {
+        const response = await apiSendChatEmail(data)
         const responseData = response.data;
         return responseData;
       } catch (error) {
