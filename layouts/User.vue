@@ -33,9 +33,9 @@ const v$ = useVuelidate(rules, { bot })
 
 const joinModal = ref(false);
 const menuItems = ref([
-    { label: 'Home', icon: 'fas fa-home', active: false, url: '/call-ai' },
-    { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/call-ai/call' },
-    { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/call-ai/settings' }
+    { label: 'Home', icon: 'fas fa-home', active: false, url: '/home' },
+    { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/calls' },
+    { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/settings' }
 ]);
 const upcomingParams = {
     page: 1,
@@ -61,8 +61,8 @@ const closeModal = () => {
 const setActiveMenuItem = () => {
     const currentPath = router.currentRoute.value.path;
     menuItems.value.forEach(item => {
-        if (item.url === '/call-ai') {
-            item.active = currentPath === '/call-ai';
+        if (item.url === '/home') {
+            item.active = currentPath === '/home';
         } else {
             item.active = currentPath.startsWith(item.url);
         }

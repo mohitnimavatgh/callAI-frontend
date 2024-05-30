@@ -134,7 +134,7 @@ const getCodeGoogleCalendar = async () =>{
         localStorage.setItem('folder_id',folder.value.folder_id)
         const params = {
             client_id: google_client_id,
-            redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
+            redirect_uri: `${import.meta.env.VITE_APP_URL}/settings/calendar`,
             response_type: "code",
             scope: [
                 "https://www.googleapis.com/auth/calendar.events.readonly",
@@ -160,7 +160,7 @@ const googleConnecting = () => {
             calendarStatusHandle('google_calendar')
             calendar.google_calendar_connection = true;
             authCode.value = ''
-            router.push('/call-ai/settings/calendar');        
+            router.push('/settings/calendar');        
         }
     }).catch((error) => {
         authCode.value = ''
@@ -175,7 +175,7 @@ const getCodeMicrosoftTeamsCalendar = async () => {
         localStorage.setItem('folder_id',folder.value.folder_id)
         const params = {
             client_id: import.meta.env.VITE_MICROSOFT_CLIENT_ID,
-            redirect_uri: `${import.meta.env.VITE_APP_URL}/call-ai/settings/calendar`,
+            redirect_uri: `${import.meta.env.VITE_APP_URL}/settings/calendar`,
             response_type: 'code',
             scope: 'openid offline_access email https://graph.microsoft.com/User.Read https://graph.microsoft.com/Calendars.Read',   
             prompt: 'consent',
@@ -197,7 +197,7 @@ const microsoftConnecting = () =>{
             calendarStatusHandle('microsoft_outlook')
             calendar.microsoft_calendar_connection = true; 
             authCode.value = ''           
-            router.push('/call-ai/settings/calendar'); 
+            router.push('/settings/calendar'); 
         }
     }).catch((error) => {
         authCode.value = ''

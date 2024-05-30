@@ -240,8 +240,8 @@ const getMenuClass = (active: any) => {
 const setActiveMenuItem = () => {
   const currentPath = router.currentRoute.value.path;
   mainMenuItems.value.forEach(item => {
-    if (item.link === '/call-ai') {
-      item.active = currentPath === '/call-ai';
+    if (item.link === '/home') {
+      item.active = currentPath === '/home';
     } else {
       item.active = currentPath.startsWith(item.link);
     }
