@@ -127,7 +127,7 @@ const catchResponse = (err: any) => {
 <template>
     <div class="py-2.5 h-fit text-gray-800 px-5 block bg-gray-200 sm:flex items-center justify-between">
         <div>
-            <FormInput icon="fa fa-pencil" class="w-fit" v-model="data.title" :onBlur="true" id="question" @focusOut="updatedTitle" placeholder="Chat title" />
+            <FormInput icon="fa fa-pencil" class="w-fit" v-model="data.title" :onBlur="true" @focusOut="updatedTitle" placeholder="Chat title" />
         </div>
         <div class="">
             <ul class="flex items-center space-x-3">

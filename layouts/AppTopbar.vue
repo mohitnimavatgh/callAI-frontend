@@ -16,7 +16,7 @@
                   >{{
                   menu.label }}</nuxt-link>
                 <div v-if="route.name == 'index'" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                  <div :class="isActive == menu.label || route.name == 'index' ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
+                  <div :class="route.name == 'index' ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
                   </div>
                 </div>
               </div>
@@ -28,7 +28,7 @@
                   >{{
                   menu.label }}</nuxt-link>
                 <div v-if="route.name.includes(menu.label.toLowerCase())" class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 ">
-                  <div :class="isActive == menu.label ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
+                  <div :class="route.name.includes(menu.label.toLowerCase()) ? 'rounded-full border-b-4 border-primary-500' : ''" class="w-full">
                   </div>
                 </div>
               </div>

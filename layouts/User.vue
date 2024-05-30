@@ -4,9 +4,6 @@ import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
-definePageMeta({
-    middleware: ["is-authenticate"]
-})
 const meetings = useMeetings()
 const folders = useFolders()
 const { $toast } = useNuxtApp()
@@ -71,7 +68,7 @@ const setActiveMenuItem = () => {
 
 watch(router.currentRoute, setActiveMenuItem);
 
-const handleMenuChange = (menuItem) => {
+const handleMenuChange = (menuItem: any) => {
     menuItems.value.forEach(item => {
         item.active = false;
     });
@@ -79,7 +76,7 @@ const handleMenuChange = (menuItem) => {
     router.push(menuItem.url);
 };
 
-const handleSearch = (value) => {
+const handleSearch = (value: any) => {
     console.log('Search value:', value);
 };
 const createBot = async () => {
@@ -98,7 +95,7 @@ const createBot = async () => {
     }
 }
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
     if (err?.response?.status == 422) {
         let data = err?.response?.data?.data
         if (data) {
@@ -174,7 +171,7 @@ const resetBotData = () => {
                 <Loader />
             </div>
             <div>
-                <slot></slot>
+                <NuxtPage />
             </div>
         </div>
     </div>

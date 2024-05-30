@@ -25,7 +25,7 @@ export default defineNuxtConfig({
     extendRoutes(routes : any) {
       routes.push({
         path: '/',
-        redirect: '/call-ai'
+        redirect: '/home'
       })
     },
   },
