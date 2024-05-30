@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-5">
     <Loader />
     <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab" />
     <NuxtPage />
@@ -8,12 +8,16 @@
   
 <script setup lang="ts">
 
+definePageMeta({
+  layout: 'user'
+})
+
 const selectedTab = ref('');
 const tabItems = ref([
-  { label: 'Bot', icon: 'fas fa-robot', url: 'call-ai-settings' },
-  { label: 'Calander', icon: 'fas fa-calendar', url: 'call-ai-settings-calendar' },
-  { label: 'Folders', icon: 'fas fa-folder-open', url: 'call-ai-settings-folders' },
-  { label: 'Quick Questions', icon: 'fas fa-question', url: 'call-ai-settings-quick-questions' }
+  { label: 'Bot', icon: 'fas fa-robot', url: 'settings' },
+  { label: 'Calander', icon: 'fas fa-calendar', url: 'settings-calendar' },
+  { label: 'Folders', icon: 'fas fa-folder-open', url: 'settings-folders' },
+  { label: 'Quick Questions', icon: 'fas fa-question', url: 'settings-quick-questions' }
 ]);
 
 const route = useRoute();

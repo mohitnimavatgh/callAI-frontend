@@ -32,6 +32,7 @@ export const apiCreateChatToCall = (params: any): Promise<any> => { return post(
 export const apiGetChatToCall = (id: any): Promise<any> => { return get('/chat-call', id) };
 export const apiGetChatToCallHistory = (id: any): Promise<any> => { return get('/call-history', id) };
 export const apiUpdateChatTitle = (params: any): Promise<any> => { return put('/chat-call/update', params) };
+export const apiSendChatEmail = (params: any): Promise<any> => { return post('/chat-call/send-email', params) };
 
 //Dashboard Api
 export const apiGetDashboardData = (): Promise<any> => { return get('/dashboard') };

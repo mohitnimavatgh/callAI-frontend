@@ -12,11 +12,11 @@ const props = defineProps({
     meetingDetail: null,
 });
 const meetingId = ref(route.params.id)
-const history_id = ref(route.query?.history == 'undefined' ? null : route.query?.history)
+const history_id = ref(route.query.history == 'undefined' ? null : route.query.history)
 
 const chat = ref({
     meeting_id: meetingId.value,
-    chat_to_call_id: history_id.value,
+    chat_to_call_id: route.query.history == 'undefined' ? null : route.query.history,
     quick_question_id: null,
     question: '',
 })
@@ -31,7 +31,8 @@ const faqsList = computed(() => {
 });
 
 const quickQuestionParams = { page: null, search: '' }
-const chatToCallParams = { meeting_id: meetingId.value,history_id: history_id.value }
+const chatToCallParams = { meeting_id: meetingId.value,history_id: route.query.history }
+
 
 onMounted(async () => {
     initFlowbite();
@@ -76,6 +77,7 @@ const sendMessage = () => {
     }).catch((error) => {
         catchResponse(error)
     })
+    chat.value.question = ''
 }
 
 const clearQueryParams = () =>{
@@ -140,22 +142,22 @@ const handleClearChat = () => {
                         <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat"/>
                     </div>
                     <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white overflow-hidden flex flex-col">
-                        <div class="p-5 h-full overflow-y-scroll">
+                        <div id="chatContainer" class="p-5 h-full overflow-y-scroll">
                             <CallChatTiles id="chat" :lists="chatToCallLists" />
                         </div>
                         <div class="p-4 h-fit">
-                            <FormInput size="large" id="question" v-model="chat.question" placeholder="Ask Someting"
+                            <FormInput size="large" id="question" :onEnterPress="true" v-model="chat.question" placeholder="Ask Someting"
                                 @keypress="handleKeyEvent()" @submitChat="sendMessage()" />
                         </div>
                     </div>
                 </div>
                 <div class="mt-5">
                     <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Quick Questions</label>
-                    <div class="bg-white rounded-lg p-5 text-gray-600 text-sm leading-7">
-                        <ul>
-                            <li v-for="quickQuestion in quickQuestionLists" :key="index">
+                    <div class="rounded-lg bg-white p-5 text-gray-600 text-sm leading-7">
+                        <ul class="w-full flex items-center flex-wrap">
+                            <li class="me-2 mb-2" v-for="(quickQuestion, index) in quickQuestionLists" :key="index">
                                 <button type="button" @click="quickQuestionCall(quickQuestion)"
-                                    class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2">
+                                    class="text-gray-900 w-fit bg-white hover:bg-gray-100 border border-primary-500 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                     {{ quickQuestion?.name }}
                                 </button>
                             </li>

@@ -14,6 +14,13 @@ const data = ref<any>({
     title : ''
 })
 
+const sendEmailData = ref<any>({
+    meeting_id: route.params.id,
+    history_id: route.query.history
+})
+
+const originalTitle = ref(data.value.title)
+
 onMounted(async () => {
     initFlowbite();
 });
@@ -74,9 +81,20 @@ const handleCollapse = () => {
 }
 
 const updatedTitle = () =>{
-    chatToCall.updateChatName(data.value).then((res) => {
-        $toast.success('Chat name updated successfully!', { duration: 100 });
-    }).catch((err: any) => {
+    if (data.value.title !== originalTitle.value) {
+        chatToCall.updateChatName(data.value).then((res) => {
+            $toast.success('Chat name updated successfully!', { duration: 100 });
+        }).catch((err: any) => {
+            catchResponse(err)
+        })
+    }
+    originalTitle.value = data.value.title
+}
+
+const sendEmail = () => {
+    chatToCall.sendChatEmail(sendEmailData.value).then((res) => {
+        $toast.success('Email sent successfully!', { duration: 100 });
+    }).catch((err) => {
         catchResponse(err)
     })
 }
@@ -143,7 +161,7 @@ const catchResponse = (err: any) => {
                     </div>
                 </li>
                 <li>
-                    <button data-tooltip-target="tooltip-email" type="button"><i class="fa fa-envelope"></i></button>
+                    <button @click="sendEmail" data-tooltip-target="tooltip-email" type="button"><i class="fa fa-envelope"></i></button>
 
                     <div id="tooltip-email" role="tooltip"
                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-500 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
