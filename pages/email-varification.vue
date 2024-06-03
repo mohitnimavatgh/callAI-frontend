@@ -1,8 +1,8 @@
 <template>
     <div class="flex flex-col h-full">
-        <div class="h-fit">
+        <!-- <div class="h-fit">
             <AppTopbar />
-        </div>
+        </div> -->
         <div class="flex flex-col px-4 items-center justify-center h-full w-full">
             <div class="w-fit bg-white shadow rounded-xl px-10 py-6 text-center h-fit">
                 <i class="fa-solid text-5xl text-primary-600 fa-envelope-circle-check"></i>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTopbar from '~/layouts/AppTopbar.vue';
+// import AppTopbar from '~/layouts/AppTopbar.vue';
 import { useAuth } from "@/stores/auth";
 const route = useRoute();
 const router = useRouter()
