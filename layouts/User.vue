@@ -30,7 +30,7 @@ const v$ = useVuelidate(rules, { bot })
 
 const joinModal = ref(false);
 const menuItems = ref([
-    { label: 'Home', icon: 'fas fa-home', active: false, url: '/home' },
+    { label: 'Home', icon: 'fas fa-home', active: false, url: '/' },
     { label: 'Calls', icon: 'fas fa-phone', active: false, url: '/calls' },
     { label: 'Settings', icon: 'fas fa-gear', active: false, url: '/settings' }
 ]);
@@ -58,8 +58,8 @@ const closeModal = () => {
 const setActiveMenuItem = () => {
     const currentPath = router.currentRoute.value.path;
     menuItems.value.forEach(item => {
-        if (item.url === '/home') {
-            item.active = currentPath === '/home';
+        if (item.url === '/') {
+            item.active = currentPath === '/';
         } else {
             item.active = currentPath.startsWith(item.url);
         }
@@ -130,7 +130,7 @@ const resetBotData = () => {
 </script>
 
 <template>
-    <div class="fixed top-0 left-0 right-0 bottom-0 overflow-y-auto">
+    <div class="fixed top-0 left-0 right-0 bottom-0 bg-primary-50 overflow-y-auto">
         <div>
             <AppTopbar />
         </div>

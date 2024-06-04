@@ -13,7 +13,7 @@ const props = defineProps({
 });
 const meetingId = ref(route.params.id)
 const history_id = ref(route.query.history == 'undefined' ? null : route.query.history)
-
+const chatContainer = ref<HTMLElement | null>(null);
 const chat = ref({
     meeting_id: meetingId.value,
     chat_to_call_id: route.query.history == 'undefined' ? null : route.query.history,
@@ -31,7 +31,7 @@ const faqsList = computed(() => {
 });
 
 const quickQuestionParams = { page: null, search: '' }
-const chatToCallParams = { meeting_id: meetingId.value,history_id: route.query.history }
+const chatToCallParams = { meeting_id: meetingId.value, history_id: route.query.history }
 
 
 onMounted(async () => {
@@ -54,10 +54,32 @@ const quickQuestionPageChange = (page: any) => {
 };
 
 const quickQuestionLists = computed(() => quickQuestions.allQuickQuestions);
-const chatToCallLists = computed(() => chatToCall.getChatList);
+const chatList = ref(chatToCall.getChatList);
+const chatToCallLists = computed({
+    get() {
+        return chatList.value;
+    },
+    set(newValue) {
+        chatList.value = newValue;
+    }
+});
 
 const handleKeyEvent = () => {
     chat.value.quick_question_id = null;
+}
+
+const addChat = () => {
+        if (chat.value.question != '') {
+            const setChat = {
+                id: meetingId.value,
+                chat_to_call_id: route.query.history,
+                answer: '',
+                question: chat.value.question
+            }
+            //@ts-ignore
+            chatList.value.push(setChat);
+            sendMessage()
+        }
 }
 
 const sendMessage = () => {
@@ -65,12 +87,15 @@ const sendMessage = () => {
     chatToCall.create(chat.value).then((resp: any) => {
         // chat.value.question = null;
         // chatToCall.chatId = resp?.data?.chat_to_call_id
-        if(history_id.value == null){
+        if (history_id.value == null) {
             let chat_id = resp?.data?.chat_to_call_id;
             chatToCallParams.history_id = chat_id;
             history_id.value = chat_id;
-            router.push({query: { history: history_id.value }})
+            router.push({ query: { history: history_id.value } })
         }
+        setTimeout(() => {
+            chatList.value[chatList.value.length -1].answer = resp.data.answer
+        }, 5000)
         //@ts-ignore
         document.getElementById("question").value = null;
         getChatToCall();
@@ -80,12 +105,14 @@ const sendMessage = () => {
     chat.value.question = ''
 }
 
-const clearQueryParams = () =>{
+const clearQueryParams = () => {
     const queryParams = { ...route.query };
 
     delete queryParams.history;
 
     router.replace({ query: queryParams });
+    chatToCall.getChatList = []
+    chatList.value = []
 }
 
 const catchResponse = (err: any) => {
@@ -131,23 +158,22 @@ const handleClearChat = () => {
     clearQueryParams()
 }
 
-
 </script>
 <template>
     <div class="mt-5">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="col-span-2 ">
                 <div class="flex flex-col" :class="collapse ? 'fixed top-0 right-0 left-0 bottom-0' : ''">
-                    <div v-if="chatToCall.getChatList.length" class="h-fit">
-                        <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat"/>
+                    <div v-if="chatList.length" class="h-fit">
+                        <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat" />
                     </div>
                     <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white overflow-hidden flex flex-col">
-                        <div id="chatContainer" class="p-5 h-full overflow-y-scroll">
+                        <div id="chatContainer" ref="chatContainer" class="p-5 h-full overflow-y-scroll">
                             <CallChatTiles id="chat" :lists="chatToCallLists" />
                         </div>
                         <div class="p-4 h-fit">
-                            <FormInput size="large" id="question" :onEnterPress="true" v-model="chat.question" placeholder="Ask Someting"
-                                @keypress="handleKeyEvent()" @submitChat="sendMessage()" />
+                            <FormInput size="large" id="question" :onEnterPress="true" v-model="chat.question"
+                                placeholder="Ask Someting" @keypress="handleKeyEvent()" @submitChat="addChat()" />
                         </div>
                     </div>
                 </div>

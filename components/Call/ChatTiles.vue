@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <div v-for="chat in lists">
+        <div v-for="(chat, index) in lists">
             <div class="flex gap-2.5 mt-2 justify-end" v-if="chat?.question">
                 <div class="flex max-w-80 px-4 border border-gray-100 rounded-xl dark:bg-gray-700 bg-primary-50">
                     <p class="text-sm font-normal py-2.5 text-gray-600 dark:text-white leading-6">{{ chat?.question }}</p>
@@ -14,7 +14,7 @@
                     <p class="text-sm font-normal py-2.5 text-gray-600 dark:text-white leading-6">{{ chat?.answer }}</p>
                 </div>
             </div>
-            <div class="flex gap-2.5 mt-2 items-start" v-else>
+            <div class="flex gap-2.5 mt-2 items-start" v-if="!chat?.answer && (index == lists.length - 1)">
                 <i class="fas fa-robot text-gray-700"></i>
                 <div class="flex max-w-80 px-4 border border-gray-100 rounded-xl dark:bg-gray-700 bg-gray-50">
                     <p class="text-sm font-normal py-2.5 text-gray-600 dark:text-white leading-6">Typing</p>

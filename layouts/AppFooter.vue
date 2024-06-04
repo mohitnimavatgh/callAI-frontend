@@ -10,7 +10,7 @@
             <NuxtLink to="/privacy-policy" class="hover:underline me-4 md:me-6">Privacy Policy</NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/licensing" class="hover:underline me-4 md:me-6">Licensing</NuxtLink>
+            <NuxtLink to="/support" class="hover:underline me-4 md:me-6">Support</NuxtLink>
           </li>
           <li>
             <NuxtLink to="/contact" class="hover:underline">Contact</NuxtLink>

@@ -119,7 +119,7 @@ const loginAction = () => {
     auth.login(loginData.value).then((resp: any) => {
         loader.loading = false
         $toast.success('Login Successfully', { duration: 10000 })
-        router.push('/home');
+        router.push('/');
     }).catch(error => {
         clearData();
         loader.loading = false
