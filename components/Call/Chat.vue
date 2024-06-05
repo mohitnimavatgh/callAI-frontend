@@ -11,6 +11,11 @@ const { $toast } = useNuxtApp()
 const props = defineProps({
     meetingDetail: null,
 });
+const chatTxt = ref('');
+const type = ref('');
+const is_typing = ref(false);
+const intervalId = ref();
+const writerCount = ref(0);
 const meetingId = ref(route.params.id)
 const history_id = ref(route.query.history == 'undefined' ? null : route.query.history)
 const chatContainer = ref<HTMLElement | null>(null);
@@ -40,7 +45,15 @@ onMounted(async () => {
     await nextTick()
     await getChatToCall()
     await getQuickQuestions()
+    setTimeout(()=>{
+        scrollBehavior();  
+    },900)
 });
+
+const scrollBehavior = () => {
+    let element = document.getElementById('chatContainer');
+    element.scroll({ top: element.scrollHeight,block: 'end' })
+}
 
 const getQuickQuestions = () => {
     quickQuestions.list(quickQuestionParams)
@@ -65,21 +78,24 @@ const chatToCallLists = computed({
 });
 
 const handleKeyEvent = () => {
+    scrollBehavior();
     chat.value.quick_question_id = null;
 }
 
 const addChat = () => {
-        if (chat.value.question != '') {
-            const setChat = {
-                id: meetingId.value,
-                chat_to_call_id: route.query.history,
-                answer: '',
-                question: chat.value.question
-            }
-            //@ts-ignore
-            chatList.value.push(setChat);
-            sendMessage()
+    if (!is_typing.value && chat.value.question != '') {
+        startTyping()
+        const setChat = {
+            id: meetingId.value,
+            chat_to_call_id: route.query.history,
+            answer: '',
+            question: chat.value.question
         }
+        //@ts-ignore
+        chatList.value.push(setChat);
+        chat.value.quick_question_id ? chat.value.question = null : null
+        sendMessage()
+    }
 }
 
 const sendMessage = () => {
@@ -93,9 +109,10 @@ const sendMessage = () => {
             history_id.value = chat_id;
             router.push({ query: { history: history_id.value } })
         }
-        setTimeout(() => {
-            chatList.value[chatList.value.length -1].answer = resp.data.answer
-        }, 5000)
+        setTimeout(async() => {
+            chatTxt.value = resp.data.answer;
+            await stopTyping();                       
+        }, 4000)
         //@ts-ignore
         document.getElementById("question").value = null;
         getChatToCall();
@@ -103,6 +120,37 @@ const sendMessage = () => {
         catchResponse(error)
     })
     chat.value.question = ''
+}
+
+const typeWriter = () => {
+    if (writerCount.value < chatTxt.value.length) {
+        chatList.value[chatList.value.length -1].answer += chatTxt.value[writerCount.value++];
+        scrollBehavior()
+        setTimeout(typeWriter, 50);
+    }else{
+        writerCount.value = 0;
+        is_typing.value = false;
+    }
+}
+
+const startTyping = () =>{    
+    is_typing.value = true;
+    type.value = "";  
+    setTimeout(()=>{
+        scrollBehavior()
+    },400)  
+    intervalId.value = setInterval(() => {
+        type.value += ".";
+        if (type.value.length >= 4) {
+            type.value = "";
+        }
+    }, 500);
+    
+}
+
+const stopTyping = () => {
+    clearInterval(intervalId.value);
+    typeWriter()
 }
 
 const clearQueryParams = () => {
@@ -139,10 +187,15 @@ const catchResponse = (err: any) => {
 }
 
 const quickQuestionCall = (item: any) => {
-    chat.value.question = null;
-    chat.value.quick_question_id = item.id;
-    //@ts-ignore
-    sendMessage()
+    if(!is_typing.value){
+        //@ts-ignore
+        chat.value.question = null;
+        chat.value.quick_question_id = item.id;
+        chat.value.question = item.name;
+        addChat()
+    }else{
+        return;
+    }
 }
 
 const collapse = ref<boolean>(false)
@@ -169,7 +222,7 @@ const handleClearChat = () => {
                     </div>
                     <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white overflow-hidden flex flex-col">
                         <div id="chatContainer" ref="chatContainer" class="p-5 h-full overflow-y-scroll">
-                            <CallChatTiles id="chat" :lists="chatToCallLists" />
+                            <CallChatTiles id="chat" :lists="chatToCallLists" :typing="type" />
                         </div>
                         <div class="p-4 h-fit">
                             <FormInput size="large" id="question" :onEnterPress="true" v-model="chat.question"
