@@ -10,6 +10,7 @@ const props = defineProps({
 
 const detail = ref(null)
 const notes = ref(null);
+const openTranscript = ref<boolean>(false)
 
 const rules = {
     notes: {
@@ -137,8 +138,12 @@ const catchResponse = (err) => {
                 <VideoPlayer :videoUrl="detail?.video_url" />
             </div>
             <div class="mt-5">
-                <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Meeintg Summary</label>
-                <div class="bg-white rounded-lg p-5 text-gray-600 text-sm leading-7">
+                <div class="flex items-center justify-between">
+                    <label class="block text-sm font-medium text-gray-500 dark:text-white">Meeintg Summary</label>
+                    <Button text="View Transcript" @click="openTranscript = !openTranscript" />
+                </div>
+                <DownloadModal title="Transcript" :show="openTranscript" @close="openTranscript = !openTranscript"/>
+                <div class="bg-white mt-4 rounded-lg p-5 text-gray-600 text-sm leading-7">
                     {{ detail?.summary }}
                 </div>
             </div>
