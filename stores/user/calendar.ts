@@ -59,7 +59,7 @@ export const useCalendar = defineStore('calendar', {
         if(response.success){   
           this.calendarSettingData = responseData
         }
-        return responseData;
+        return response;
       } catch (error) {
         throw error;
       }
