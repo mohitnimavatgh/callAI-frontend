@@ -202,7 +202,6 @@ const catchResponse = (err) => {
                             </li>
                         </ol>
                     </div>
-                    
                 </div>
             </div>
             <div class="bg-white rounded mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
