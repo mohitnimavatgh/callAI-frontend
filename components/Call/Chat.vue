@@ -220,7 +220,7 @@ const handleClearChat = () => {
                     <div v-if="chatList.length" class="h-fit">
                         <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat" />
                     </div>
-                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white overflow-hidden flex flex-col">
+                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white dark:bg-gray-700 overflow-hidden flex flex-col">
                         <div id="chatContainer" ref="chatContainer" class="p-5 h-full overflow-y-scroll">
                             <CallChatTiles id="chat" :lists="chatToCallLists" :typing="type" />
                         </div>
@@ -231,8 +231,8 @@ const handleClearChat = () => {
                     </div>
                 </div>
                 <div class="mt-5">
-                    <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Quick Questions</label>
-                    <div class="rounded-lg bg-white p-5 text-gray-600 text-sm leading-7">
+                    <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">Quick Questions</label>
+                    <div class="rounded-lg bg-white dark:bg-gray-700 p-5 text-gray-600 dark:text-gray-300 text-sm leading-7">
                         <ul class="w-full flex items-center flex-wrap">
                             <li class="me-2 mb-2" v-for="(quickQuestion, index) in quickQuestionLists" :key="index">
                                 <button type="button" @click="quickQuestionCall(quickQuestion)"

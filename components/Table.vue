@@ -1,6 +1,6 @@
 <template>
-  <div class="relative overflow-hidden sm:rounded-lg">
-    <label class="block mb-2 text-md font-medium text-gray-700 dark:text-white">{{ title }}</label>
+  <div class="relative overflow-hidden py-2 sm:rounded-lg">
+    <label class="block mb-2 text-md font-medium text-gray-700 dark:text-gray-300">{{ title }}</label>
     <div class="flex items-center justify-end flex-column flex-wrap md:flex-row pb-4 bg-white dark:bg-gray-800">
       <div class="my-1 overflow-x-auto mr-2">
         <tab-button-group :items="filterTab" @tab-click="handleTabClick" />
@@ -18,8 +18,8 @@
       </div>
     </div>
     <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-2">
+    <div :class="!filteredData?.length ? 'rounded-b-none rounded-lg' : ''" class="overflow-x-auto dark:border dark:border-gray-500 rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 bg-primary-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th  scope="col" class="p-4" v-if="1 != 1">
@@ -55,8 +55,8 @@
         </tbody>
       </table>
     </div>
-    <div  v-if="!filteredData?.length" class="py-12">
-          <div  class="text-center flex justify-center items-center w-full overflow-hidden">
+    <div  v-if="!filteredData?.length" :class="!filteredData?.length ? 'rounded-t-none rounded-lg' : ''" class="py-12 dark:border dark:border-t-0 dark:border-gray-500">
+          <div  class="text-center flex justify-center items-center w-full">
             <div class="flex flex-col items-center justify-center">
               <div class="flex items-center justify-center mx-auto mb-6 w-16 h-16 border rounded-full">
                 <h1 class="fas fa-search text-xl text-gray-400"></h1>

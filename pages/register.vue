@@ -145,32 +145,32 @@ const signup = async () => {
 }
 </script>
 <template>
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col dark:bg-gray-800 min-h-screen">
         <AuthHeader />
-        <section class="flex-grow flex items-center overflow-y-auto justify-center h-full w-full bg-white relative dark:bg-gray-900">
+        <section class="flex-grow flex items-center overflow-y-auto justify-center h-full w-full bg-white relative dark:bg-gray-800">
             <div class="flex px-3 pb-3 justify-center items-center ">
                 <div class="container mx-auto px-4 lg:px-20 xl:px-44 py-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="md:mr-8">
-                            <p class="text-2xl font-semibold text-gray-600 text-center">Welcome to our Bot Creation Platform
+                            <p class="text-2xl font-semibold text-gray-600 dark:text-gray-300 text-center">Welcome to our Bot Creation Platform
                             </p>
-                            <span class="text-sm text-gray-500 mt-3 px-4 xl:px-20 flex justify-center text-center">Start
+                            <span class="text-sm text-gray-500 mt-3 px-4 xl:px-20 flex justify-center text-center dark:text-gray-300">Start
                                 building
                                 your intelligent bots for Microsoft Teams, Google Meet, and Zoom.</span>
                             <ul class="mt-6">
                                 <li class="flex items-center mt-1.5">
                                     <i class="fas fa-check mr-2 text-primary-500"></i>
-                                    <span class="text-sm text-gray-500">Create bots for seamless integration with your
+                                    <span class="text-sm text-gray-500 dark:text-gray-300">Create bots for seamless integration with your
                                         favorite video conferencing platforms.</span>
                                 </li>
                                 <li class="flex items-center mt-1.5">
                                     <i class="fas fa-check mr-2 text-primary-500"></i>
-                                    <span class="text-sm text-gray-500">Access call recordings and transcripts effortlessly
+                                    <span class="text-sm text-gray-500 dark:text-gray-300">Access call recordings and transcripts effortlessly
                                         after each session.</span>
                                 </li>
                                 <li class="flex items-center mt-1.5">
                                     <i class="fas fa-check mr-2 text-primary-500"></i>
-                                    <span class="text-sm text-gray-500">Engage in post-call chat discussions to provide
+                                    <span class="text-sm text-gray-500 dark:text-gray-300">Engage in post-call chat discussions to provide
                                         feedback and collaborate.</span>
                                 </li>
                             </ul>
@@ -186,7 +186,7 @@ const signup = async () => {
                                         <div class="p-3 sm:p-5">
                                             <a href="#">
                                                 <h5
-                                                    class="mb-2 text-xs sm:text-md font-normal text-gray-700 dark:text-white">
+                                                    class="mb-2 text-xs sm:text-md font-normal text-gray-700 dark:text-gray-300">
                                                     Help
                                                     Center</h5>
                                             </a>
@@ -207,7 +207,7 @@ const signup = async () => {
                                         <div class="p-3 sm:p-5">
                                             <a href="#">
                                                 <h5
-                                                    class="mb-2 text-xs sm:text-md font-normal text-gray-700 dark:text-white">
+                                                    class="mb-2 text-xs sm:text-md font-normal text-gray-700 dark:text-gray-300">
                                                     Research
                                                     Center</h5>
                                             </a>
@@ -218,12 +218,12 @@ const signup = async () => {
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-xs text-gray-500 mt-5 flex justify-center">Join us today and revolutionize
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-5 flex justify-center">Join us today and revolutionize
                                 your virtual meetings! <a href="#" class="underline decoration-gray-400">Learn
                                     More</a></span>
                         </div>
-                        <div class=" md:pl-8 md:border-l border-gray-200">
-                            <h3 class="text-md flex justify-center font-semibold text-gray-600">Sign Up to Get Started</h3>
+                        <div class=" md:pl-8 md:border-l border-gray-200 dark:border-gray-500">
+                            <h3 class="text-md flex justify-center font-semibold text-gray-600 dark:text-gray-300">Sign Up to Get Started</h3>
                             <div class="grid gap-2 mb-6 md:grid-cols-2 mt-8">
                                 <div>
                                     <Button :text="'Sign Up with Google'" class="w-full sm:text-xs xl:text-sm flex justify-center"
@@ -244,9 +244,9 @@ const signup = async () => {
                                 </div>
                             </div> -->
                             <div class="flex items-center my-5">
-                                <div class="flex-grow border-b border-gray-300"></div>
-                                <h2 class="px-3 text-xs text-gray-400">Or</h2>
-                                <div class="flex-grow border-b border-gray-300"></div>
+                                <div class="flex-grow border-b border-gray-300 dark:border-gray-500"></div>
+                                <h2 class="px-3 text-xs text-gray-400 dark:text-gray-300">Or</h2>
+                                <div class="flex-grow border-b border-gray-300 dark:border-gray-500"></div>
                             </div>
                             <div>
                                 <div class="grid gap-6 mb-6 md:grid-cols-2">

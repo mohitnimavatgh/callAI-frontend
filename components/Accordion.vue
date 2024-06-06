@@ -34,7 +34,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <label class="block px-5 py-4 text-md font-medium text-gray-700 dark:text-white bg-gray-200 border "><i :class="icon" class="mr-2"></i>{{title}}</label>
+    <label class="block px-5 py-4 text-md font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 border dark:border-gray-500"><i :class="icon" class="mr-2"></i>{{title}}</label>
     <!-- <div v-for="(accordion, index) in accordions" :key="index" :id="`accordion-${index}`" :data-accordion="accordion.isOpen ? 'open' : 'closed'">
       <h2 :id="`accordion-${index}-heading`">
         <button type="button" class="text-start bg-white-100 flex items-center justify-between w-full px-5 py-3 font-medium rtl:text-right text-gray-700 border border-b-0 border-gray-200 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-200 gap-3" :data-accordion-target="`#accordion-${index}-body`" :aria-expanded="accordion.isOpen" :aria-controls="`accordion-${index}-body`" @click="toggleAccordion(index)">

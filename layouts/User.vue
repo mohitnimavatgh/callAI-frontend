@@ -130,7 +130,7 @@ const resetBotData = () => {
 </script>
 
 <template>
-    <div class="fixed top-0 left-0 right-0 bottom-0 bg-primary-50 overflow-y-auto">
+    <div class="fixed top-0 left-0 right-0 bottom-0 bg-primary-50 dark:bg-gray-800 overflow-y-auto">
         <div>
             <AppTopbar />
         </div>

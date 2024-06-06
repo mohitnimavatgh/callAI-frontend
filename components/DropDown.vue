@@ -22,7 +22,7 @@
         <li v-for="(action, index) in actions" :key="index" :class="{ 'bg-primary-50': selectedAction == action.name }"
           class="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           @click="selectAction(action)">
-          <a class="text-black">{{ action.name }}</a>
+          <a class="text-black dark:text-gray-300">{{ action.name }}</a>
         </li>
       </ul>
     </div>

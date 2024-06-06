@@ -60,7 +60,10 @@ const rules = {
 const v$ = useVuelidate(rules, { folder })
 
 const shareCall = (index:any) => {
+  //@ts-ignore
   folder.value.meeting_id = recordedData.value[index]?.id
+  //@ts-ignore
+  folder.value.folder_id = recordedData.value[index]?.folder_id
   shareModal.value = true
 }
 

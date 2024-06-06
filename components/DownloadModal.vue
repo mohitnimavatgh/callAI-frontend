@@ -21,7 +21,7 @@
         </div>
         <div class="p-4">
           <div class="overflow-y-auto max-h-96">
-            {{ data }}
+            <p v-html="data.replace(/\n/g, '<br />')"></p>
           </div>
         </div>
         <div class="border-t pt-3 md:px-3 border-gray-500">
@@ -57,7 +57,7 @@ export default {
       this.$emit('close');
     },
     downloadTranscript() {
-      const chatString = chatToCall.getChatList.map(chat => `Q:- ${chat.question}\nA:- ${chat.answer}`).join('\n\n');
+      const chatString = this.data;
 
       // Create a blob from the string
       const blob = new Blob([chatString], { type: 'text/plain' });

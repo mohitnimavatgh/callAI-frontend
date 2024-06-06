@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block mb-2 text-sm font-semibold text-gray-500 dark:text-white"
+      class="block mb-2 text-sm font-semibold text-gray-500 dark:text-gray-300"
       >{{ label }}</label
     >
     <div class="relative">
@@ -73,6 +73,7 @@ const inputClasses = computed(() => [
   "bg-gray-50",
   "border",
   "border-gray-300",
+  "dark:border-gray-500",
   "text-gray-900",
   "text-xs",
   "rounded-lg",
@@ -81,9 +82,8 @@ const inputClasses = computed(() => [
   "focus:ring-primary-500",
   "focus:border-primary-500",
   "dark:bg-gray-700",
-  "dark:border-gray-600",
   "dark:placeholder-gray-400",
-  "dark:text-white",
+  "dark:text-gray-300",
   "dark:focus:ring-primary-500",
   "dark:focus:border-primary-500",
   {

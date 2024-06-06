@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 h-16">
+  <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-500 h-16">
     <div class="flex items-center px-4 justify-between mx-auto container h-full">
       <div class="flex items-center">
         <AppLogo />

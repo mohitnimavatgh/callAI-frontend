@@ -179,7 +179,7 @@ const deleteField = (index : any) => {
                     <li v-for="(item, index) in emailArray" :key="index">
                         <p class="mt-2 mr-2 dark:text-white text-ref-500 w-fit">
                             <span
-                                class="text-lg font-medium flex items-center px-2.5 py-0.5 rounded text-black-500 bg-gray-100 dark:bg-gray-900 dark:text-gray-300`">
+                                class="text-sm font-medium flex items-center px-2.5 py-0.5 rounded text-black-500 bg-gray-100 dark:bg-gray-900 dark:text-gray-300`">
                                 {{ item }} <i class="text-sm text-black-400 fas fa-close ml-1"
                                     @click="deleteField(index)"></i>
                             </span>

@@ -139,11 +139,11 @@ const catchResponse = (err) => {
             </div>
             <div class="mt-5">
                 <div class="flex items-center justify-between">
-                    <label class="block text-sm font-medium text-gray-500 dark:text-white">Meeintg Summary</label>
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-300">Meeintg Summary</label>
                     <Button text="View Transcript" @click="openTranscript = !openTranscript" />
                 </div>
-                <DownloadModal title="Transcript" :show="openTranscript" @close="openTranscript = !openTranscript"/>
-                <div class="bg-white mt-4 rounded-lg p-5 text-gray-600 text-sm leading-7">
+                <DownloadModal title="Transcript" :data="detail?.transcribe" :show="openTranscript" @close="openTranscript = !openTranscript"/>
+                <div class="bg-white mt-4 rounded-lg p-5 text-gray-600 text-sm leading-7 dark:bg-gray-700 dark:text-gray-300">
                     {{ detail?.summary }}
                 </div>
             </div>
@@ -162,36 +162,37 @@ const catchResponse = (err) => {
             </div>
         </div>
         <div>
-            <div class="rounded px-5 py-4 bg-white border border-1 border-gray-200 shadow-md">
-                <label class="block mb-2 text-md font-medium text-gray-800 dark:text-white">Meeintg Detail</label>
-                <hr class="bg-primary-500"/>
+            <div class="rounded px-5 py-4 bg-white dark:bg-gray-700 border border-1 border-gray-200 dark:border-gray-500 shadow-md">
+                <label class="block mb-2 text-md font-medium text-gray-800 dark:text-gray-300">Meeintg Detail</label>
+                <!-- <hr class="bg-primary-500"/> -->
+                <div class="border-t border-primary-500 dark:border-gray-500 w-full"></div>
                 <div class="text-sm dark:text-white mt-5">
-                    <span class="font-bold text-gray-700">Name :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ detail?.name }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Name :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ detail?.name }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700">Duration :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ getDuration() }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Duration :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ getDuration() }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700">Date :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ meetingDateTime('date') }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Date :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ meetingDateTime('date') }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700">Time :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ meetingDateTime('time') }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Time :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ meetingDateTime('time') }}</span>
                 </div>                
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700">Folder :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ detail?.folders_name }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Folder :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ detail?.folders_name }}</span>
                 </div>                                
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700">Type :</span>
-                    <span class="font-medium text-gray-600 ml-2">{{ detail?.is_type }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Type :</span>
+                    <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ detail?.is_type }}</span>
                 </div>
                 <div class="text-sm dark:text-white mt-3.5">
-                    <span class="font-bold text-gray-700 ">Status :</span>
-                    <span class="ml-2 bg-green-100 text-green-500 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{{ detail?.status }}</span>
+                    <span class="font-bold text-gray-700 dark:text-gray-300">Status :</span>
+                    <span class="ml-2 bg-green-100 text-green-500 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-500">{{ detail?.status }}</span>
                     <div class="mt-5 ml-5">
                         <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
                             <li class="ms-4" v-for="getStatus in detail?.meeting_status">
