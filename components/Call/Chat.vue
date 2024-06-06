@@ -217,7 +217,7 @@ const handleClearChat = () => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="col-span-2 ">
                 <div class="flex flex-col" :class="collapse ? 'fixed top-0 right-0 left-0 bottom-0' : ''">
-                    <div v-if="chatList.length" class="h-fit">
+                    <div v-if="chatList?.length" class="h-fit">
                         <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat" />
                     </div>
                     <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white dark:bg-gray-700 overflow-hidden flex flex-col">
@@ -230,7 +230,7 @@ const handleClearChat = () => {
                         </div>
                     </div>
                 </div>
-                <div v-if="quickQuestionLists.length" class="mt-5">
+                <div v-if="quickQuestionLists?.length" class="mt-5">
                     <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">Quick Questions</label>
                     <div class="rounded-lg bg-white dark:bg-gray-700 p-5 text-gray-600 dark:text-gray-300 text-sm leading-7">
                         <ul class="w-full flex items-center flex-wrap">
