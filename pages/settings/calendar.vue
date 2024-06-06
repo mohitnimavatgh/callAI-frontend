@@ -99,18 +99,16 @@ const saveCalendarSetting = () => {
 }
 
 const getFolderList = () => {
-    loader.loading = true
+    // loader.loading = true
     folders.list({search:''}).then((resp:any) => {
-        loader.loading = false
+        // loader.loading = false
     }).catch((error) => {      
         catchResponse(error)  
     })
 }
 
 const getCalendarStatus = () => {
-    loader.loading = true
     calendar.calendarStatus().then(() => {
-        loader.loading = false
     }).catch((error) => {       
         catchResponse(error)  
     });
@@ -118,11 +116,11 @@ const getCalendarStatus = () => {
 
 const calendarStatusHandle = (platform:any)=>{
     if(platform == 'google_calendar'){
-        googleCalendarLoading.value = !googleCalendarLoading.value
+        // googleCalendarLoading.value = !googleCalendarLoading.value
         googleBtnDisabled.value = !googleBtnDisabled.value
         !googleBtnDisabled.value ? resetData() : ''            
     }else{
-        microsoftCalendarLoading.value = !microsoftCalendarLoading.value
+        // microsoftCalendarLoading.value = !microsoftCalendarLoading.value
         microsoftBtnDisabled.value = !microsoftBtnDisabled.value
         !microsoftBtnDisabled.value ? resetData() : '' 
     }   
@@ -152,14 +150,16 @@ const getCodeGoogleCalendar = async () =>{
 }
 
 const googleConnecting = () => {    
+    loader.loading = true
     folder.value.code = authCode.value
     folder.value.folder_id = localStorage.getItem('folder_id')
     calendar.google(folder.value).then((resp:any) => {  
-        if(resp?.success) {       
+        if(resp?.success) {    
+            loader.loading = false
             $toast.success('google calendar account connected..', { duration: 5000 })
             calendarStatusHandle('google_calendar')
             calendar.google_calendar_connection = true;
-            authCode.value = ''
+            authCode.value = ''            
             router.push('/settings/calendar');        
         }
     }).catch((error) => {
@@ -189,12 +189,14 @@ const getCodeMicrosoftTeamsCalendar = async () => {
 }
 
 const microsoftConnecting = () =>{  
+    loader.loading = true
     folder.value.code = authCode.value
     folder.value.folder_id = localStorage.getItem('folder_id')  
     calendar.microsoftTeams(folder.value).then((resp:any) => {
         if(resp?.success) {   
             $toast.success('microsoft teams calendar account connected..', { duration: 5000 })
             calendarStatusHandle('microsoft_outlook')
+            loader.loading = false
             calendar.microsoft_calendar_connection = true; 
             authCode.value = ''           
             router.push('/settings/calendar'); 
@@ -210,6 +212,7 @@ const disconnectedCalendar = (platformType:any) => {
     let data = {
         platform: platformType 
     }
+    loader.loading = true
     calendarStatusHandle(platformType)
     calendar.disconnectCalendar(data).then((resp:any) => {    
         if(resp?.success) {   
@@ -219,7 +222,8 @@ const disconnectedCalendar = (platformType:any) => {
                 calendar.google_calendar_connection = false;
             }else{
                 calendar.microsoft_calendar_connection = false;
-            }      
+            }  
+            loader.loading = false    
         }
     }).catch((error) => {
         calendarStatusHandle(platformType)        
@@ -269,12 +273,12 @@ const resetData = () => {
     v$.value.$reset()
 }
 
-const queryRequest = (data:any) => {
+const queryRequest = async(data:any) => {
     if(data?.state == 'google_calendar'){
         if(data?.code){
             authCode.value = data?.code
             calendarStatusHandle('google_calendar')
-            googleConnecting();
+            await googleConnecting();
         }
         if(data?.error == 'access_denied'){
             $toast.error('google calendar access denied', { duration: 5000 });            
@@ -283,7 +287,7 @@ const queryRequest = (data:any) => {
         if(data?.code){
             authCode.value = data?.code
             calendarStatusHandle('microsoft_outlook')
-            microsoftConnecting();
+            await microsoftConnecting();
         }
         if(data?.error == 'access_denied'){
             $toast.error('microsoft temas access denied', { duration: 5000 });             

@@ -13,6 +13,7 @@ const { $toast } = useNuxtApp()
 
 onMounted(() => {
     initFlowbite();
+    getbot();
 })
 
 var action_type = 'action';
@@ -34,20 +35,20 @@ const rules = {
         after_complete_run_actions: {
             required: helpers.withMessage("The Meeting Action field is required", required),
         },
-        action: {
-            required: requiredIf(function (nestedModel) {
-                return bot.value.after_complete_run_actions == action_type
-            }),
-        },
+        // action: {
+        //     required: requiredIf(function (nestedModel) {
+        //         return bot.value.after_complete_run_actions == action_type
+        //     }),
+        // },
         multiple_emails: {
+            email: helpers.withMessage("Please Enter a valid Email Address", email),
             required: requiredIf(function (nestedModel) {
                 if(bot.value.after_complete_run_actions == action_type){
                     if(emailArray.value.length == 0){
                         return true
                     }
                 }
-            }),
-            email: helpers.withMessage("Please Enter a valid Email Address", email),
+            })
         },
         transcription_tool: {},
         recording_type: {}
@@ -60,14 +61,30 @@ const actionList = ref([
     { id: 'action', name: 'Send Email' }
 ])
 
+const getbot = async () => {
+    loader.loading = true
+    bots.botList().then((resp: any) => {
+        console.log("resp---",resp)
+        loader.loading = false
+        bot.value.bot_name = resp.bot_name
+        bot.value.after_complete_run_actions = resp.after_complete_run_actions
+        bot.value.action = resp.action
+        emailArray.value = resp.multiple_emails
+    }).catch((err) => {
+        loader.loading = false
+        catchResponse(err)
+    })
+}
 
 const botSave = async () => {
     const result = await v$.value.$validate()
     if (result) {
+        resetBotValidation();
         loader.loading = true
-        if (bot.value.after_complete_run_actions == 'Send Email') {
+        if (bot.value.after_complete_run_actions == 'action') {
             bot.value.multiple_emails = emailArray.value
         }
+        console.log("bot.value--",bot.value)
         bots.create(bot.value).then((resp: any) => {
             loader.loading = false
             resetBotValidation()
@@ -103,26 +120,22 @@ const catchResponse = (err: any) => {
 }
 
 const resetBotValidation = () => {
-    bot.value = {
-        bot_name: null,
-        after_complete_run_actions: null,
-        action: null,
-        transcription_tool: null,
-        recording_type: null,
-        multiple_emails: null,
-    }
+    bot.value.multiple_emails = []
     v$.value.$reset()
 }
 
-const handleKeys = (event: any) => {
+const handleKeys = async (event: any) => {
     // console.log("v$.value.$errors.length--",v$.value.$errors.length)
-    if (event.key === 'Enter' || event.key === 'Backspace') {
-        event.preventDefault();
-        if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
-            if(!emailArray.value.includes(bot.value.multiple_emails.trim())){
-                emailArray.value.push(bot.value.multiple_emails.trim());
+    const result = await v$.value.$validate()
+    if (result) {
+        if (event?.key === 'Enter' || event?.key === ' ' || event === undefined) {
+            event?.preventDefault();
+            if (bot.value.multiple_emails.length > 0 && bot.value.multiple_emails.trim().length > 0) {
+                if(!emailArray.value.includes(bot.value.multiple_emails.trim())){
+                    emailArray.value.push(bot.value.multiple_emails.trim());
+                }
+                bot.value.multiple_emails = null;
             }
-            bot.value.multiple_emails = null;
         }
     }
 }
@@ -156,12 +169,12 @@ const deleteField = (index : any) => {
                 v-model="v$.bot.after_complete_run_actions.$model" :errors="v$.bot.after_complete_run_actions.$errors"
                 :options="actionList" rules="required" />
             <div v-if="bot.after_complete_run_actions == action_type">
-                <FormInput id="Action" class="mt-4" label="What Action You Want To Perform" name="Action" type="text"
+                <!-- <FormInput id="Action" class="mt-4" label="What Action You Want To Perform" name="Action" type="text"
                     placeholder="Enter Action" rules="required" v-model="v$.bot.action.$model"
-                    :errors="v$.bot.action.$errors" />
+                    :errors="v$.bot.action.$errors" /> -->
                 <FormInput id="Email" class="mt-4" label="Enter Email" name="Email" type="text" placeholder="Enter Email"
                     rules="required|email" v-model="v$.bot.multiple_emails.$model" :errors="v$.bot.multiple_emails.$errors"
-                    @keydown="handleKeys" @blur="handleKeys" />
+                    @keydown="handleKeys" @focusOut="handleKeys" :onBlur="true"/>
                 <ul class="flex items-center flex-wrap">
                     <li v-for="(item, index) in emailArray" :key="index">
                         <p class="mt-2 mr-2 dark:text-white text-ref-500 w-fit">
