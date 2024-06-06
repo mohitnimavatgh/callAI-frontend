@@ -84,7 +84,7 @@ const historyPageChange = (page: any) => {
 </script>
 
 <template>
-    <div class="box mt-5 bg-white">
+    <div class="box mt-5 bg-white dark:bg-gray-800">
         <Table :headings="tableHeadings" :data="historyData.data" :isSearchable="true" title="History" @search="handleSearch">
             <template v-slot:action="{ item, value, index }">
                 <div class="flex justify-start">

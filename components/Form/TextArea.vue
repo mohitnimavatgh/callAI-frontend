@@ -1,6 +1,6 @@
 <template>
     <div>
-      <label v-if="label" :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-white">{{ label }}</label>
+      <label v-if="label" :for="id" class="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">{{ label }}</label>
       <div class="relative">
         <textarea
           :id="id"
@@ -78,12 +78,15 @@
           "bg-gray-50",
           "border",
           "border-gray-300",
+          "dark:border-gray-500",
           "text-gray-900",
           "text-sm",
           "rounded-lg",
           "block",
           "w-full",
           "dark:text-white",
+          "dark:bg-gray-700",
+          "dark:placeholder:text-gray-300",
           "focus:ring-primary-600",
           "focus:border-primary-600",
           { "border-red-500": this.hasError },

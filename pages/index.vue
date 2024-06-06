@@ -18,7 +18,7 @@ const getDashboard = () => {
     loader.loading = true
     dashboardStore.list().then((res) => {
         loader.loading = false
-    }).catch((err) => {
+    }).catch((err: any) => {
         loader.loading = false
     })
 }
@@ -40,12 +40,13 @@ const actionName = ref('Action')
 const UpcomingTabItems = ref([
     { value: 'all', label: "All Calls", icon: "fa-regular fa-clock" },
     { value: 'calendar', label: "Calendar Calls", icon: "fas fa-calendar" },
-    { value: 'manual', label: "Manual Call", icon: "fas fa-pen-fancy" }
+    { value: 'manual', label: "Manual Call", icon: "fas fa-pen-fancy" },
 ]);
 const tabItems = ref([
     { value: 'all', label: "All Calls", icon: "fas fa-people-group" },
     { value: 'your', label: "Your Calls", icon: "fas fa-user" },
-    { value: 'teams', label: "Teams Call", icon: "fas fa-user-plus" }
+    { value: 'teams', label: "Teams Call", icon: "fas fa-user-plus" },
+    { value: 'failed', label: 'Failed Call', icon: 'fas fa-circle-exclamation' }
 ]);
 
 const tableHeadings = ref([
@@ -258,6 +259,7 @@ const resetFolderData = () => {
 
 const shareCall = (index: any) => {
     folder.value.meeting_id = recordedData.value[index]?.id
+    folder.value.folder_id = recordedData.value[index]?.folder_id
     shareModal.value = true
 }
 
@@ -309,60 +311,72 @@ const recordedMeeting = computed(() => {
 <template>
     <div>
         <div class="flex space-x-5 mt-4">
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-folder-open"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Folders</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.folders }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            <nuxt-link to="/settings/folders">
+                <div
+                    class="max-w-sm w-60 p-3 cursor-pointer bg-white dark:text-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-folder-open"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Folders</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.folders }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-question"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Quick Question</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.quick_question }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            </nuxt-link>
+            <nuxt-link to="/settings/quick-questions">
+                <div
+                    class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-question"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Quick Question</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.quick_question }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-people-group"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">All Calls</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.all_meetings }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            </nuxt-link>
+            <nuxt-link to="/calls">
+                <div
+                    class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-people-group"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">All Calls</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.all_meetings }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-user"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Your Calls</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.your_meetings }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            </nuxt-link>
+            <nuxt-link to="/calls">
+                <div
+                    class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-user"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Your Calls</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.your_meetings }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-user-plus"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Teams Call</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.teams_meetings }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            </nuxt-link>
+            <nuxt-link to="/calls">
+                <div
+                    class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-user-plus"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Teams Call</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.teams_meetings }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="max-w-sm w-60 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <i class="fas fa-circle-exclamation"></i>
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Failed Call</h5>
-                <div class="flex items-center justify-between">
-                    <div>Count : <span>{{ dashboard?.failed_meeting }}</span></div>
-                    <i class="fas fa-arrow-right cursor-pointer"></i>
+            </nuxt-link>
+            <nuxt-link to="/calls">
+                <div
+                    class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Failed Call</h5>
+                    <div class="flex items-center justify-between">
+                        <div>Count : <span>{{ dashboard?.failed_meeting }}</span></div>
+                        <i class="fas fa-arrow-right cursor-pointer"></i>
+                    </div>
                 </div>
-            </div>
+            </nuxt-link>
         </div>
         <div class="w-full my-12 h-full">
             <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
