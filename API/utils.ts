@@ -18,6 +18,7 @@ export const apiUpdateUser = (params: any): Promise<any> => { return put('/user/
 export const apiDeleteUsers = (id: any): Promise<any> => { return del(`/user/${id}`) };
 //Bot Api
 export const apiCreateBot = (params: any): Promise<any> => { return post('/settings', params) };
+export const apiGetBot = (params: any): Promise<any> => { return get('/settings', params) };
 
 //Calandar
 export const apiGetCalanderStatus = (): Promise<any> => { return get('/calendar/connect/status') };
