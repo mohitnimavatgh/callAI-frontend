@@ -89,7 +89,11 @@ const resetFolderData = () => {
 }
 
 const viewCall = (index: any) => {
-  router.push(`/calls/${recordedData.value[index]?.id}`);
+  if(recordedData.value[index]?.status == 'completed'){
+    router.push(`/calls/${recordedData.value[index]?.id}`);
+  }else{
+    router.push('/calls');
+  }
 }
 
 const deleteMeet = (index: any) => {

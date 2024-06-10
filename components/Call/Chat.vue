@@ -29,17 +29,14 @@ const chat = ref({
 const detail = ref(null)
 const faqsList = computed(() => {
     detail.value = props.meetingDetail
-    if (props.meetingDetail?.faqs) {
-        return JSON.parse(JSON.parse(props.meetingDetail?.faqs))
-    }
-    return [];
+    return props.meetingDetail?.faqs 
 });
 
 const quickQuestionParams = { page: null, search: '' }
 const chatToCallParams = { meeting_id: meetingId.value, history_id: route.query.history }
 
 
-onMounted(async () => {
+onMounted(async () => { 
     initFlowbite();
     chatToCall.getChatList = []
     await nextTick()
@@ -50,6 +47,14 @@ onMounted(async () => {
     },900)
 });
 
+watchEffect(() => {
+      const url = route.fullPath; 
+      const urlParams = new URLSearchParams(url.split('?')[1]); 
+      const historyParam = urlParams.get('history');
+      if(historyParam == null){
+        chatToCall.getChatList = []
+      }
+    });
 const scrollBehavior = () => {
     let element = document.getElementById('chatContainer');
     element.scroll({ top: element.scrollHeight,block: 'end' })
@@ -126,7 +131,7 @@ const typeWriter = () => {
     if (writerCount.value < chatTxt.value.length) {
         chatList.value[chatList.value.length -1].answer += chatTxt.value[writerCount.value++];
         scrollBehavior()
-        setTimeout(typeWriter, 50);
+        setTimeout(typeWriter, 10);
     }else{
         writerCount.value = 0;
         is_typing.value = false;

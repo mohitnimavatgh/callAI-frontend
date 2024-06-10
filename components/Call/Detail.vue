@@ -7,7 +7,7 @@ const { $toast } = useNuxtApp()
 const props = defineProps({
     meetingDetail: null,
 });
-
+const router = useRouter()
 const detail = ref(null)
 const notes = ref(null);
 const openTranscript = ref<boolean>(false)
@@ -23,10 +23,7 @@ const v$ = useVuelidate(rules, { notes });
 const faqsList = computed(() => {
     detail.value = props.meetingDetail       
     notes.value = detail.value?.notes
-    if(props.meetingDetail?.faqs){
-        return JSON.parse(JSON.parse(props.meetingDetail?.faqs))
-    }
-    return  [];
+    return props.meetingDetail?.faqs;    
 });
 
 const meetingDateTime = (type) => {
@@ -43,6 +40,10 @@ const meetingDateTime = (type) => {
         return  hours ? `${hours}:${minutes}:${seconds}`: `${minutes}:${seconds}`;
     }       
 }
+
+onMounted(async () => { 
+    router.replace({query: {}})
+})
 
 const getStatusColor = (status: string) =>{
     if(status == 'pending'){

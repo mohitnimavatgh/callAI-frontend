@@ -264,7 +264,11 @@ const shareCall = (index: any) => {
 }
 
 const viewCall = (index: any) => {
-    router.push(`/calls/${recordedData.value[index]?.id}`);
+    if(recordedData.value[index]?.status == 'completed'){
+        router.push(`/calls/${recordedData.value[index]?.id}`);
+    }else{
+        router.push('/');
+    }
 }
 
 const deleteMeet = (index: any) => {
