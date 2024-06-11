@@ -9,13 +9,14 @@
 
 <script setup lang="ts">
 import { defineProps, ref, onMounted } from 'vue';
+import posterImage from '@/assets/image/confra.png';
 const base_Url = import.meta.env.VITE_BASE_URL;
 
 const props = defineProps({
   videoUrl: String,
 });
 
-const posterUrl = ref('');
+const posterUrl = ref(posterImage);
 
 const setPosterDimensions = () => {
   const video = document.getElementById("videoRef");
@@ -30,9 +31,6 @@ const setPosterDimensions = () => {
 
 onMounted(() => {
   if (props.videoUrl) {
-
-    posterUrl.value = ``;
-
     const video = document.getElementById("videoRef");
     video.load();
     setPosterDimensions();
