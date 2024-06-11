@@ -1,12 +1,12 @@
 <template>
   <div class="relative overflow-hidden py-2 sm:rounded-lg">
     <label class="block mb-2 text-md font-medium text-gray-700 dark:text-gray-300">{{ title }}</label>
-    <div class="flex items-center justify-end flex-column flex-wrap md:flex-row pb-4 bg-white dark:bg-gray-800">
-      <div class="my-1 overflow-x-auto mr-2">
+    <div class="flex items-center space-x-3 justify-end flex-column flex-wrap md:flex-row pb-4 bg-white dark:bg-gray-800">
+      <div class="my-1 overflow-x-auto">
         <tab-button-group :items="filterTab" @tab-click="handleTabClick" />
       </div>
-      <div class="my-1 mr-2">
-        <div v-if="isActionable">
+      <div v-if="isActionable" class="my-1">
+        <div>
           <DropDown :buttonText="actionName" :actions="actions" @select="onSelect"/>
         </div>
       </div>

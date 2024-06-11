@@ -183,10 +183,10 @@ const edit = (data: any) => {
       <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch"
         class="sm:w-56 w-full" />
     </div>
-    <div class="mt-5 flex flex-wrap items-center bg-white dark:bg-gray-800 p-5 py-5 rounded-[20px]">
+    <div class="mt-5 flex flex-wrap items-center bg-white dark:bg-gray-800 dark:p-0 p-5 py-5 rounded-[20px]">
       <div v-if="foldersLists?.data.length" v-for="folderItem in foldersLists?.data" :key="folderItem"
-        class="relative px-2 py-3 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-700">
-        <div class="flex justify-between border border-gray-100 px-3 py-2 rounded-lg items-center dark:border-none">
+        class="relative px-2 py-2 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-800">
+        <div class="flex justify-between border dark:bg-gray-700 border-gray-100 px-3 py-2 rounded-lg items-center dark:border-none">
           <div class="flex items-center">
             <div class="bg-primary-50 dark:bg-gray-800 w-12 h-12 rounded-md">
               <div class="flex w-full h-full items-center text-center justify-center">

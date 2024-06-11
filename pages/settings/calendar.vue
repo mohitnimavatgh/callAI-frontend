@@ -364,7 +364,7 @@ onMounted(async () => {
                 <Button :text="'Cancel'" @click="closeModal()" outline/>
             </div>
         </Modal>
-        <div class="box w-full mt-2 bg-white dark:bg-gray-800">
+        <div class="box dark:px-0 w-full mt-2 bg-white dark:bg-gray-800">
             <div class="flex justify-between p-3 bg-primary-50 mt-2 rounded-t-lg">
                 <span class="font-medium text-gray-500 text-sm">Record All Meetings</span>
                 <label class="inline-flex items-center cursor-pointer">

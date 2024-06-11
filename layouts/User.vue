@@ -135,7 +135,7 @@ const resetBotData = () => {
             <AppTopbar />
         </div>
         <div class="px-4 sm:px-12 xl:px-28 mt-16">
-            <div class="">
+            <div class="dark:px-4">
                 <div class="flex flex-wrap justify-between align-items-center">
                     <div class="pr-6">
                         <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Confra</h4>

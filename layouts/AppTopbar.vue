@@ -89,7 +89,7 @@
           class="font-light py-4 mt-4 border-t border-primary-500 rtl:space-x-reverse dark:bg-gray-900 dark:border-gray-700">
           <li class="py-1" v-for="(menu, index) in mainMenuItems" :key="index" @click="handleMenuChange(menu)">
             <nuxt-link @click="collapsed = !collapsed" class="text-sm" :to="menu.link"
-              :class="getMenuClass(menu.active)">{{ menu.label }}</nuxt-link>
+              :class="getMenuClass(menu.label)">{{ menu.label }}</nuxt-link>
             <!-- <a v-else @click="menu.expand  = !menu.expand" class="text-sm cursor-pointer" :class="getMenuClass(menu.active)" aria-current="page">{{ menu.label }} <i class="fa-solid fa-chevron-down"></i></a>
               <div v-if="menu?.submenu?.length && menu.expand" id="dropdownNavbar" class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
@@ -231,7 +231,9 @@ const onSelect = (item: any) => {
 };
 
 const getMenuClass = (active: any) => {
-  return isActive.value === active
+  console.log(active, '==============');
+  
+  return route.name.includes(active.toLowerCase())
     ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
     : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium ';
 };

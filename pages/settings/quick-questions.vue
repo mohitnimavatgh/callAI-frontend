@@ -177,7 +177,7 @@ const confirmation = (data: Boolean) => {
       <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Quick Questions</h4>
       <p class="text-xs font-normal text-gray-500 mt-0.5">Customize your Quick Questions</p>
     </div>
-    <div class="box mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
+    <div class="box dark:p-0 mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
       <FormInput id="Title" class="mt-4" label="Title" name="Title" type="text" placeholder="Enter Title"
         v-model="v$.quickQuestion.name.$model" :errors="v$.quickQuestion.name.$errors" :modelValue="quickQuestion.name" />
       <div class="mt-3">
@@ -198,7 +198,7 @@ const confirmation = (data: Boolean) => {
       </div>
     </div>
 
-    <div class="box mt-5 bg-white dark:bg-gray-800">
+    <div class="box mt-5 dark:p-0 bg-white dark:bg-gray-800">
       <Table :headings="tableHeadings" :data="quickQuestionLists?.data" :isSearchable="true" title="Quick Questions"
         @search="handleSearch">
         <template v-slot:action="{ item, value, index }">
@@ -206,7 +206,6 @@ const confirmation = (data: Boolean) => {
             <i @click="edit(index)" class="fas fa-pen cursor-pointer text-blue-400 mr-3"></i>
             <i @click="deleteQuickQuestion(index)" class="fas fa-trash cursor-pointer text-red-400"></i>
           </div>
-
         </template>
       </Table>
       <Pagination

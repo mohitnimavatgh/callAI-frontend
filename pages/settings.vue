@@ -1,5 +1,5 @@
 <template>
-  <div class="my-5">
+  <div class="my-5 dark:px-4">
     <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab" />
     <NuxtPage />
   </div>
