@@ -45,17 +45,25 @@ onMounted(async () => {
     router.replace({query: {}})
 })
 
-const getStatusColor = (status: string) =>{
+const getStatusColor = (status: string,text:any) =>{
     if(status == 'pending'){
-        return 'orange'
+        if(text){ return 'text-orange-500 dark:text-orange-800'
+        }else{ return 'bg-orange-200 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
     }else if(status == 'in_progress'){
-        return 'yellow'
-    }else if(status == 'complete'){
-        return 'green'
+        if(text){ return 'text-yellow-500 dark:text-yellow-800'
+        }else{ return 'bg-yellow-200 border-yellow-600 dark:border-yellow-600 dark:bg-yellow-300' }       
+    }else if(status == 'processing'){
+        if(text){ return 'text-blue-500 dark:text-blue-800'
+        }else{ return 'bg-blue-200 border-blue-600 dark:border-blue-600 dark:bg-blue-300' } 
+    }else if(status == 'completed'){
+        if(text){ return 'text-green-500 dark:text-green-800'
+        }else{ return 'bg-green-200 border-green-600 dark:border-green-600 dark:bg-green-100' }
     }else if(status == 'failed'){
-        return 'red'
+        if(text){ return 'text-red-500 dark:text-red-800'
+        }else{ return 'bg-red-200 border-red-600 dark:border-red-600 dark:bg-red-300' }       
     }else{
-        return 'orange'
+        if(text){ return 'text-orange-500 dark:text-orange-500'
+        }else{ return 'bg-orange-200 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
     }
 }
 
@@ -191,15 +199,17 @@ const catchResponse = (err) => {
                     <span class="font-bold text-gray-700 dark:text-gray-300">Type :</span>
                     <span class="font-medium text-gray-600 dark:text-gray-200 ml-2">{{ detail?.is_type }}</span>
                 </div>
+
                 <div class="text-sm dark:text-white mt-3.5">
                     <span class="font-bold text-gray-700 dark:text-gray-300">Status :</span>
-                    <span class="ml-2 bg-green-100 text-green-500 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-500">{{ detail?.status }}</span>
+                    <span :class="`ml-2 ${getStatusColor(detail?.status)} text-xs font-medium px-2.5 py-0.5 capitalize rounded ${getStatusColor(detail?.status,true)}`">{{ detail?.status }}</span>
                     <div class="mt-5 ml-5">
-                        <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
+                        <ol class="relative border-s border-gray-200 dark:border-gray-500">                  
                             <li class="ms-4" v-for="getStatus in detail?.meeting_status">
-                                <div :class="`absolute w-3 h-3 bg-${getStatusColor(getStatus?.status)}-400 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700`"></div>
-                                <time class="mb-1 text-xs font-normal leading-none text-gray-600 dark:text-gray-500">{{ formatTimestamp(getStatus?.created_at) }}</time>
-                                <p class="pb-8 mt-2 dark:text-white" :class="`text-${getStatusColor(getStatus?.status)}-500`"><span class="text-xs capitalize font-medium px-2.5 py-0.5 rounded" :class="`text-${getStatusColor(getStatus?.status)}-500 bg-${getStatusColor(getStatus?.status)}-100 dark:bg-${getStatusColor(getStatus?.status)}-900 dark:text-${getStatusColor(getStatus?.status)}-300`">{{ getStatus?.status.replace(/_/g, ' ') }}</span></p>
+                                <div :class="`absolute w-3 h-3 ${getStatusColor(getStatus?.status)} rounded-full mt-1.5 -start-1.5`"></div>                               
+                                <time class="mb-1 text-xs font-normal leading-none text-gray-600 dark:text-gray-300">{{ formatTimestamp(getStatus?.created_at) }}</time>
+                                <p class="pb-8 mt-2 dark:text-white" :class="`${getStatusColor(getStatus?.status,true)}`">
+                                    <span class="text-xs capitalize font-medium px-2.5 py-0.5 rounded" :class="`${getStatusColor(getStatus?.status)}`">{{ getStatus?.status.replace(/_/g, ' ') }}</span></p>
                             </li>
                         </ol>
                     </div>

@@ -27,7 +27,7 @@ const accordionsData = computed(() => {
       return resultArray;
     }else{
         is_faq_string.value = true;
-        return props.accordions.replace(/"/g, '');
+        return props.accordions?.replace(/"/g, '');
     }
   }
 });
