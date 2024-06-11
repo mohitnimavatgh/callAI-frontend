@@ -192,7 +192,7 @@ const recordedMeeting = computed(() => {
 
 <template>
   <div class="w-full h-full">
-    <div class="box my-5 bg-white dark:bg-gray-800">
+    <div class="box my-5 dark:px-4 bg-white dark:bg-gray-800">
       <Table :headings="tableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
         :actions="folders?.folders" title="Calls" @search="recordedSearch" :filterTab="tabItems" :actionName="actionName"
         @tab-click="handleTabClick" @select="onSelect">

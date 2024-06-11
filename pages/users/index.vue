@@ -213,15 +213,15 @@ const handlePageChange = (page: any) => {
 </script>
 
 <template>
-    <div class="w-full h-full pb-8 overflow-y-auto dark:text-gray-300">
-        <div class="text-gray-700 text-3xl">
+    <div class="w-full h-full pb-8 overflow-y-auto dark:px-4 dark:text-gray-300">
+        <div class="text-gray-700 dark:text-gray-300 mt-4 text-3xl">
             Users
         </div>
         <div class="mt-4 sm:mt-6">
             <div class="flex justify-end">
                 <Button @click="joinModal = true" :text="'Add User'" class="font-semibold w-fit mt-5" />
             </div>
-            <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
+            <div class="p-3 sm:p-5 dark:p-0 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
                 <Table title="Users" :isSearchable="true" :headings="tableHeadings"  @search="searchUser" :data="userList.data">
                     <template v-slot:action="{ item, value, index }">
                         <div class="flex space-x-2">

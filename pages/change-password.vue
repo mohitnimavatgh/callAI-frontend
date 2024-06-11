@@ -113,7 +113,7 @@ const handleConfirmChangeType = () => {
 }
 </script>
 <template>
-    <div class="mt-5">
+    <div class="mt-5 px-4">
         <Loader />
         <div>
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Change Password</h4>

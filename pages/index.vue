@@ -314,12 +314,14 @@ const recordedMeeting = computed(() => {
 </script>
 <template>
     <div>
-        <div class="flex space-x-5 mt-4">
+        <div class="flex overflow-x-auto space-x-5 dark:px-4 mt-4">
             <nuxt-link to="/settings/folders">
                 <div
                     class="max-w-sm w-60 p-3 cursor-pointer bg-white dark:text-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-folder-open"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Folders</h5>
+                    <div class="flex mb-2 space-x-3 items-center">
+                        <i class="fas fa-folder-open"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Folders</h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.folders }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>
@@ -329,8 +331,11 @@ const recordedMeeting = computed(() => {
             <nuxt-link to="/settings/quick-questions">
                 <div
                     class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-question"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Quick Question</h5>
+                    <div class="flex mb-2 space-x-3 items-center">
+                        <i class="fas fa-question"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Quick Question
+                        </h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.quick_question }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>
@@ -340,8 +345,10 @@ const recordedMeeting = computed(() => {
             <nuxt-link to="/calls">
                 <div
                     class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-people-group"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">All Calls</h5>
+                    <div class="flex mb-2 items-center space-x-3">
+                        <i class="fas fa-people-group"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">All Calls</h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.all_meetings }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>
@@ -351,8 +358,10 @@ const recordedMeeting = computed(() => {
             <nuxt-link to="/calls">
                 <div
                     class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-user"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Your Calls</h5>
+                    <div class="flex mb-2 items-center space-x-3">
+                        <i class="fas fa-user"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Your Calls</h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.your_meetings }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>
@@ -362,8 +371,10 @@ const recordedMeeting = computed(() => {
             <nuxt-link to="/calls">
                 <div
                     class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-user-plus"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Teams Call</h5>
+                    <div class="flex mb-2 items-center space-x-3">
+                        <i class="fas fa-user-plus"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Teams Call</h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.teams_meetings }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>
@@ -373,8 +384,11 @@ const recordedMeeting = computed(() => {
             <nuxt-link to="/calls">
                 <div
                     class="max-w-sm w-60 p-3 bg-white dark:text-white cursor-pointer border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-500">
-                    <i class="fas fa-circle-exclamation"></i>
-                    <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Failed Call</h5>
+                    <div class="flex mb-2 items-center space-x-3">
+                        <i class="fas fa-circle-exclamation"></i>
+                        <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Failed Call
+                        </h5>
+                    </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.failed_meeting }}</span></div>
                         <i class="fas fa-arrow-right cursor-pointer"></i>

@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="border-t pt-3 md:px-3 border-gray-500">
-          <Button text="Download" @click="downloadTranscript"/>
+          <Button text="Download" @click="downloadTranscript" />
         </div>
       </div>
     </div>
@@ -57,24 +57,26 @@ export default {
       this.$emit('close');
     },
     downloadTranscript() {
-      const chatString = this.data;
+      if (this.data.length) {
+        const chatString = this.data;
 
-      // Create a blob from the string
-      const blob = new Blob([chatString], { type: 'text/plain' });
+        // Create a blob from the string
+        const blob = new Blob([chatString], { type: 'text/plain' });
 
-      // Create a link element
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'chat.txt';
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'chat.txt';
 
-      // Append the link to the body
-      document.body.appendChild(link);
+        // Append the link to the body
+        document.body.appendChild(link);
 
-      // Trigger the download
-      link.click();
+        // Trigger the download
+        link.click();
 
-      // Clean up
-      document.body.removeChild(link);
+        // Clean up
+        document.body.removeChild(link);
+      }
     }
   }
 };
