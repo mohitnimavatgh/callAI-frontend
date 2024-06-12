@@ -35,6 +35,7 @@ const call_meeting_id = ref(null)
 const recordedData = ref([])
 const upcomingData = ref([])
 const deleteAction = ref('')
+const is_calendar_meeting = ref(false)
 const joinModal = ref(false);
 const actionName = ref('Action')
 const UpcomingTabItems = ref([
@@ -52,7 +53,7 @@ const tabItems = ref([
 const tableHeadings = ref([
     { title: "Name", value: "name" },
     { title: "Type", value: "access_type" },
-    { title: "Record", value: "record" },
+    // { title: "Record", value: "record" },
     { title: "Calendar Platform", value: "is_type" },
     { title: "Date", value: "date" },
     { title: "Time", value: "time" },
@@ -88,6 +89,9 @@ const edit = (index: any) => {
     bot.value.name = data.name
     bot.value.folder_id = data.folder_id
     bot.value.meeting_link = data.meeting_link
+    if(data.is_type == "calendar"){
+        is_calendar_meeting.value = true
+    }
     joinModal.value = true
 }
 
@@ -96,6 +100,7 @@ const updateBot = async () => {
     if (result) {
         meetings.update(bot.value).then((resp: any) => {
             joinModal.value = false
+            is_calendar_meeting.value = false;
             getUpcoming()
         }).catch((error) => {
             catchResponse(error)
@@ -402,9 +407,9 @@ const recordedMeeting = computed(() => {
                     :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch"
                     @tab-click="upcomingHndleTabClick">
                     <template v-slot:action="{ item, value, index }">
-                        <div class="flex space-x-2" v-if="item.is_type != 'calendar'">
+                        <div class="flex space-x-2" >
                             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
-                            <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+                            <i @click="deleteUpcomingMeet(index)" v-if="item.is_type != 'calendar'" class="fas fa-trash text-red-400 cursor-pointer"></i>
                         </div>
                     </template>
                 </Table>
@@ -449,7 +454,7 @@ const recordedMeeting = computed(() => {
                 <div class="modal-content  p-4 md:p-5">
                     <div class="col-span-2 mb-3">
                         <FormInput id="Name" label="Meeting Name" name="Name" type="text" placeholder="Name"
-                            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" />
+                            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" :disabled="is_calendar_meeting ?? true" />
                     </div>
                     <div class="col-span-2 mb-3">
                         <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"

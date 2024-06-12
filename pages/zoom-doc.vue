@@ -29,7 +29,7 @@
                 <li class="mt-4">
                     Login to Confra: You can log in at the following URL with your email and password:
                     <a class="text-blue-500 underline"
-                        href="https://confra.cuotainfotech.com/login">https://confra.cuotainfotech.com/login</a>
+                        href="https://platform.confra.io/login">https://platform.confra.io/login</a>
                 </li>
                 <li class="mt-4">
                     Seamless joining: Easily join meetings with the bot via provided meeting URLs and essential details.

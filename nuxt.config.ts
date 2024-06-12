@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      API_BASE_URL: 'https://confra.cuotainfotech.com/api/public/api',
+      API_BASE_URL: 'https://api.confra.io/public/api',
     },
   },
   app: {
