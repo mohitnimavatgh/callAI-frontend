@@ -26,6 +26,10 @@ const faqsList = computed(() => {
     return props.meetingDetail?.faqs;    
 });
 
+const nextActionsList = computed(() => {    
+    return JSON.parse(props.meetingDetail?.actions);
+});
+
 const meetingDateTime = (type) => {
     const specificDate = new Date(detail.value?.meeting_date);
     if(type == 'date'){
@@ -48,22 +52,22 @@ onMounted(async () => {
 const getStatusColor = (status: string,text:any) =>{
     if(status == 'pending'){
         if(text){ return 'text-orange-500 dark:text-orange-800'
-        }else{ return 'bg-orange-200 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
+        }else{ return 'bg-orange-200 text-orange-500 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
     }else if(status == 'in_progress'){
         if(text){ return 'text-yellow-500 dark:text-yellow-800'
-        }else{ return 'bg-yellow-200 border-yellow-600 dark:border-yellow-600 dark:bg-yellow-300' }       
+        }else{ return 'bg-yellow-200 text-yellow-500 border-yellow-600 dark:border-yellow-600 dark:bg-yellow-300' }       
     }else if(status == 'processing'){
         if(text){ return 'text-blue-500 dark:text-blue-800'
-        }else{ return 'bg-blue-200 border-blue-600 dark:border-blue-600 dark:bg-blue-300' } 
+        }else{ return 'bg-blue-200 text-blue-500 border-blue-600 dark:border-blue-600 dark:bg-blue-300' } 
     }else if(status == 'completed'){
         if(text){ return 'text-green-500 dark:text-green-800'
-        }else{ return 'bg-green-200 border-green-600 dark:border-green-600 dark:bg-green-100' }
+        }else{ return 'bg-green-200 text-green-500 border-green-600 dark:border-green-600 dark:bg-green-100' }
     }else if(status == 'failed'){
         if(text){ return 'text-red-500 dark:text-red-800'
-        }else{ return 'bg-red-200 border-red-600 dark:border-red-600 dark:bg-red-300' }       
+        }else{ return 'bg-red-200 text-red-500 border-red-600 dark:border-red-600 dark:bg-red-300' }       
     }else{
         if(text){ return 'text-orange-500 dark:text-orange-500'
-        }else{ return 'bg-orange-200 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
+        }else{ return 'bg-orange-200 text-orange-500 border-orange-600 dark:border-orange-600 dark:bg-orange-300' }
     }
 }
 
@@ -166,8 +170,7 @@ const catchResponse = (err) => {
                     placeholder="Write your thoughts here..."
                     />
                     <p class="text-red-600" v-if="v$.notes?.$errors">{{ v$.notes?.$errors?.[0]?.$message }}</p>
-                    <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" @click="saveNote()" /></div>
-                        
+                    <div class="mt-3 flex justify-end text-end"><Button :text="'Save'" @click="saveNote()" /></div>  
             </div>
         </div>
         <div>
@@ -214,6 +217,9 @@ const catchResponse = (err) => {
                         </ol>
                     </div>
                 </div>
+            </div>
+            <div class="bg-white dark:bg-gray-600 rounded my-5">
+                <NextAction :data="nextActionsList" />
             </div>
             <div class="bg-white rounded mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
         </div>

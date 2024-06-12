@@ -7,7 +7,8 @@ import {
   apiGetMeetingDetail,
   apiShareMeeting,
   apiCreateNote,
-  apiUpdateMeeting
+  apiUpdateMeeting,
+  apiUpdateNextActions
 } from '@/API/utils'
 
 export const useMeetings = defineStore('meetings', {
@@ -15,6 +16,7 @@ export const useMeetings = defineStore('meetings', {
     upcoming: null,
     recorded: null,
     getMeetingDetail: null,
+    nextActions: [],
   }),
   actions: {
     async create(bot: any) {
@@ -53,7 +55,7 @@ export const useMeetings = defineStore('meetings', {
       try {
         const response = await apiGetRecordedMeeting(search)
         const responseData = response.data;
-        if(response.success){
+        if (response.success) {
           this.recorded = responseData;
         }
         return responseData;
@@ -65,7 +67,7 @@ export const useMeetings = defineStore('meetings', {
       try {
         const response = await apiGetMeetingDetail(id)
         const responseData = response.data;
-        if(response.success){
+        if (response.success) {
           this.getMeetingDetail = responseData;
         }
         return responseData;
@@ -98,6 +100,15 @@ export const useMeetings = defineStore('meetings', {
     async notes(notes: any) {
       try {
         const response = await apiCreateNote(notes)
+        const responseData = response.data;
+        return responseData;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async updateNextActions(payload: any) {
+      try {
+        const response = await apiUpdateNextActions(payload)
         const responseData = response.data;
         return responseData;
       } catch (error) {
