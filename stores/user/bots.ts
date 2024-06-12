@@ -18,8 +18,7 @@ export const useBots = defineStore('bots', {
     async botList() {
       try {
         const response = await apiGetBot()
-        const responseData = response.data;
-        return responseData;
+        return response;
       } catch (error) {
         throw error;
       }
