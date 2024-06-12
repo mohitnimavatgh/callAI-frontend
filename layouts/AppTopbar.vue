@@ -231,8 +231,6 @@ const onSelect = (item: any) => {
 };
 
 const getMenuClass = (active: any) => {
-  console.log(active, '==============');
-  
   return route.name.includes(active.toLowerCase())
     ? 'font-medium block py-2 px-3 text-white bg-primary-700 rounded md:bg-transparent md:text-primary-700 md:p-0 md:dark:text-primary-500 '
     : 'block py-2 px-3 md:p-0 text-medium-gray rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 dark:text-white md:dark:hover:text-primary-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-medium ';

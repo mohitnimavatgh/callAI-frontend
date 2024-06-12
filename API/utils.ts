@@ -41,7 +41,7 @@ export const apiGetDashboardData = (): Promise<any> => { return get('/dashboard'
 //Folder Api
 export const apiCreateFolder = (params: any): Promise<any> => { return post('/folders', params) };
 export const apiGetFolders = (params: any): Promise<any> => { return get('/folders',params) };
-export const apiUpdateFolder = (id: number,params: any): Promise<any> => { return patch(`/folders/update/?id=${id}`, params) };
+export const apiUpdateFolder = (id: number,params: any): Promise<any> => { return patch(`/folders/update`, params) };
 
 //Meeting Api
 export const apiGetUpcomingMeeting = (params: any): Promise<any> => { return get('/meeting',params) };
@@ -57,7 +57,7 @@ export const apiUpdateNextActions = (params: any): Promise<any> => { return post
 //Quick Question Api
 export const apiCreateQuickQuestion = (params: any): Promise<any> => { return post('/quick-question', params) };
 export const apiGetQuickQuestion = (params: any): Promise<any> => { return get('/quick-question',params) };
-export const apiUpdateQuickQuestion = (id: number,params: any): Promise<any> => { return patch(`/quick-question/update/?id=${id}`, params) };
+export const apiUpdateQuickQuestion = (id: number,params: any): Promise<any> => { return patch(`/quick-question/update`, params) };
 export const apiDeleteQuickQuestion = (id: any): Promise<any> => { return del(`/quick-question/${id}`) };
 
 
