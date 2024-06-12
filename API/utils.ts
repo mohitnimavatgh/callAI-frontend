@@ -52,6 +52,7 @@ export const apiShareMeeting = (params: any): Promise<any> => { return post('/sh
 export const apiGetMeetingDetail = (id: any): Promise<any> => { return get('/meeting-detail', id) };
 export const apiDeleteMeeting = (id: any): Promise<any> => { return del(`/meeting/${id}`) };
 export const apiCreateNote = (params: any): Promise<any> => { return post('/notes', params) };
+export const apiUpdateNextActions = (params: any): Promise<any> => { return post('/updateAction', params) };
 
 //Quick Question Api
 export const apiCreateQuickQuestion = (params: any): Promise<any> => { return post('/quick-question', params) };
