@@ -67,7 +67,7 @@ const handleOnError = () => {
     $toast.error('Login failed', { duration: 5000 })
 };
 
-const catchResponse = (err) => {
+const catchResponse = (err: any) => {
     if(err?.response?.status == 422){
         let data = err?.response?.data?.data
         if(data){

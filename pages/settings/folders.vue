@@ -66,11 +66,11 @@ onMounted(async () => {
 async function createFolder() {
   const result = await v$.value.$validate()
   if (result) {
+    ShowAddModal.value = false
     loader.loading = true
     folders.create(folder.value).then((resp : any) => {
         $toast.success('Folder Create Successfully', { duration: 10000 })
         loader.loading = false
-        ShowAddModal.value = false;
         resetFolderData()
         getFolder();
     }).catch((err: any) => {
@@ -83,11 +83,12 @@ async function createFolder() {
 const updateFolder = async () => {
   const result = await v$.value.$validate()
   if (result) {
+    ShowAddModal.value = false
     loader.loading = true
     folders.update(folder.value).then((resp: any) => {
-      ShowAddModal.value = false
       loader.loading = false
       folderUpdate.value = false;
+      resetFolderData()
       $toast.success('Folder Updated Successfully', { duration: 10000 })
       getFolder();
     }).catch((err: any) => {

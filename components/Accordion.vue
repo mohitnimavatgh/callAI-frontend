@@ -48,7 +48,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <label class="block px-5 py-4 text-md font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 border dark:border-gray-500"><i :class="icon" class="mr-2"></i>{{title}}</label>
+    <label class="block px-5 py-4 rounded text-md font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 border dark:border-gray-500"><i :class="icon" class="mr-2"></i>{{title}}</label>
     <div class="flex items-center justify-between w-full p-5" v-if="is_faq_string">
       <span>{{ accordionsData }}</span>
     </div>
@@ -56,7 +56,7 @@ onMounted(async () => {
        <div data-accordion="collapse">
         <h2 :id="`accordion-collapse-heading-${index}`">
           <button type="button"
-            class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+            class="flex items-center justify-between rounded-md w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
             :data-accordion-target="`#accordion-collapse-body-${index}`" aria-expanded="true"
             :aria-controls="`accordion-collapse-body-${index}`">
             <span>{{  accordion[0] }}</span>
@@ -67,7 +67,7 @@ onMounted(async () => {
             </svg>
           </button>
         </h2>
-        <div :id="`accordion-collapse-body-${index}`" class="hidden" :aria-labelledby="`accordion-collapse-heading-${index}`">
+        <div :id="`accordion-collapse-body-${index}`" class="hidden rounded-md overflow-hidden" :aria-labelledby="`accordion-collapse-heading-${index}`">
           <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
             <p class="mb-2 text-gray-500 dark:text-gray-400">{{  accordion[1] }}</p>
           </div>
