@@ -110,6 +110,7 @@ export const useMeetings = defineStore('meetings', {
       try {
         const response = await apiUpdateNextActions(payload)
         const responseData = response.data;
+        this.nextActions = JSON.parse(response.data)
         return responseData;
       } catch (error) {
         throw error;

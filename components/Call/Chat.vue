@@ -259,7 +259,7 @@ const handleClearChat = () => {
                 </div>
             </div>
             <div>
-                <div class="bg-white dark:bg-gray-600 rounded my-5">
+                <div class="bg-white dark:bg-gray-600 rounded mb-5">
                     <NextAction :data="nextActionsList" />
                 </div>
                 <div class="bg-white rounded">

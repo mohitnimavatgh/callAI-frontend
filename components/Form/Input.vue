@@ -12,7 +12,7 @@
         class="absolute inset-y-0 flex items-center"
         :class="[pointer?'pointer-events-none':'', iconPosition == 'right' ? 'end-0 pe-4' : 'start-0 ps-3.5']"
       >
-        <i :class="icon" @click="changeInputType" class="w-4 h-4 cursor-pointer text-gray-500"></i>
+        <i :class="icon" @click="changeInputType" class="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-300"></i>
       </div>
       <input
         :type="type"
@@ -38,6 +38,7 @@
       v-if="hasError"
       v-for="error of errors"
       :key="error.$uid"
+      :class="hideError ? 'hidden' : ''"
       class="mt-2 text-xs text-red-600 dark:text-red-500"
     >
       {{ error.$message }}
@@ -59,6 +60,7 @@ const props = defineProps({
   size: { type: String, default: "medium" },
   disabled: { type: Boolean, default: false },
   errors: { type: Array, default: [] },
+  hideError: {type: Boolean, default: false},
   iconPosition: { type: String, default: 'left' },
   pointer: { type: Boolean, default: true },
   onBlur: { type: Boolean, default: false },
@@ -92,7 +94,7 @@ const inputClasses = computed(() => [
     "ps-10": props.icon && props.iconPosition == 'left',
     "pe-10 ps-6": props.icon && props.iconPosition == 'right',
   },
-  { "border-red-500": hasError.value },
+  { "border-red-500 dark:border-red-500": hasError.value },
 ]);
 
 const valueUpdate = computed({

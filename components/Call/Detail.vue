@@ -28,6 +28,7 @@ const faqsList = computed(() => {
 
 const nextActionsList = computed(() => {   
     if(props.meetingDetail?.actions){
+        meetings.nextActions = JSON.parse(props.meetingDetail?.actions);
         return JSON.parse(props.meetingDetail?.actions);
     }else{
         return [];
@@ -225,7 +226,7 @@ const catchResponse = (err) => {
             <div class="bg-white dark:bg-gray-600 rounded my-5">
                 <NextAction :data="nextActionsList" />
             </div>
-            <div class="bg-white rounded mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
+            <div class="bg-white mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
         </div>
       </div>
     </div>
