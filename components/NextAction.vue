@@ -8,11 +8,10 @@ const props = defineProps(['data'])
 const edit = ref<boolean>(false)
 const meetings = useMeetings()
 const nextActions = ref<any>([])
-const ghhags = ref([]);
 
 onMounted(async () => {
     await initFlowbite();
-    ghhags.value = props.data
+    nextActions.value = JSON.parse(JSON.stringify(props.data));
 });
 
 const SubmitAction = () => {
@@ -56,8 +55,7 @@ const updateNextAction = (event : any) => {
 }
 
 const cancelSubmit = () => {
-    console.log(ghhags.value, '=============');
-    nextActions.value = props.data
+    nextActions.value = JSON.parse(JSON.stringify(props.data))
     edit.value = false
 }
 

@@ -48,13 +48,22 @@ onMounted(async () => {
 });
 
 watchEffect(() => {
-      const url = route.fullPath; 
-      const urlParams = new URLSearchParams(url.split('?')[1]); 
-      const historyParam = urlParams.get('history');
-      if(historyParam == null){
-        chatToCall.getChatList = []
-      }
-    });
+    const url = route.fullPath; 
+    const urlParams = new URLSearchParams(url.split('?')[1]); 
+    const historyParam = urlParams.get('history');
+    if(historyParam == null){
+    chatToCall.getChatList = []
+    }
+});
+
+const nextActionsList = computed(() => {   
+    if(props.meetingDetail?.actions){
+        return JSON.parse(props.meetingDetail?.actions);
+    }else{
+        return [];
+    } 
+});
+
 const scrollBehavior = () => {
     let element = document.getElementById('chatContainer');
     element.scroll({ top: element.scrollHeight,block: 'end' })
@@ -250,6 +259,9 @@ const handleClearChat = () => {
                 </div>
             </div>
             <div>
+                <div class="bg-white dark:bg-gray-600 rounded my-5">
+                    <NextAction :data="nextActionsList" />
+                </div>
                 <div class="bg-white rounded">
                     <Accordion :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" />
                 </div>

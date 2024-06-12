@@ -26,8 +26,12 @@ const faqsList = computed(() => {
     return props.meetingDetail?.faqs;    
 });
 
-const nextActionsList = computed(() => {    
-    return JSON.parse(props.meetingDetail?.actions);
+const nextActionsList = computed(() => {   
+    if(props.meetingDetail?.actions){
+        return JSON.parse(props.meetingDetail?.actions);
+    }else{
+        return [];
+    } 
 });
 
 const meetingDateTime = (type) => {
