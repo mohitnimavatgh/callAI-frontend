@@ -55,6 +55,7 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
     if (responseData.ok) {
         const userInfo = await responseData.json();       
         loginData.value.email = userInfo.email
+        loginData.value.name = userInfo.name
         loginData.value.google_id = userInfo.sub
         loginData.value.social_type = 'google';
         loginAction()

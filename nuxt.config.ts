@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     'nuxt-vue3-google-signin'
   ],
   googleSignIn: {
-    clientId: import.meta.env.GOOGLE_CLIENT_ID,
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
   },
   devServer: {
       host: ' 192.168.1.18',

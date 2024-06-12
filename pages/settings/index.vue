@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useBots } from "@/stores/user/bots";
+import { useAuth } from "@/stores/auth";
 import { initFlowbite } from 'flowbite'
 import { useLoader } from "@/stores/loader";
 import { useVuelidate } from "@vuelidate/core";
@@ -9,6 +10,7 @@ definePageMeta({
 })
 const bots = useBots()
 const loader = useLoader();
+const userState = useAuth();
 const { $toast } = useNuxtApp()
 
 onMounted(() => {
@@ -18,8 +20,8 @@ onMounted(() => {
 
 var action_type = 'action';
 const bot = ref({
-    bot_name: null,
-    after_complete_run_actions: '',
+    bot_name: `Bot ${userState?.userInfo?.name}`,
+    after_complete_run_actions: 'nothing',
     action: null,
     transcription_tool: null,
     recording_type: null,
@@ -35,20 +37,15 @@ const rules = {
         after_complete_run_actions: {
             required: helpers.withMessage("The Meeting Action field is required", required),
         },
-        // action: {
-        //     required: requiredIf(function (nestedModel) {
-        //         return bot.value.after_complete_run_actions == action_type
-        //     }),
-        // },
-        multiple_emails: {
-            email: helpers.withMessage("Please Enter a valid Email Address", email),
-            required: requiredIf(function (nestedModel) {
-                if(bot.value.after_complete_run_actions == action_type){
+        multiple_emails: { 
+            email: helpers.withMessage("Please Enter a valid Email Address", email),           
+            required: requiredIf(function (nestedModel) {           
+                if(bot.value.after_complete_run_actions === action_type){                 
                     if(emailArray.value.length == 0){
                         return true
                     }
                 }
-            })
+            })                     
         },
         transcription_tool: {},
         recording_type: {}
@@ -64,12 +61,33 @@ const actionList = ref([
 const getbot = async () => {
     loader.loading = true
     bots.botList().then((resp: any) => {
-        console.log("resp---",resp)
+        if(resp.success){
+            if(resp.data !== null){
+                const data = resp?.data
+                loader.loading = false
+                bot.value.bot_name = data?.bot_name
+                bot.value.after_complete_run_actions = data?.after_complete_run_actions
+                bot.value.action = data?.action
+                emailArray.value = data?.multiple_emails == null ? [] : data?.multiple_emails
+            }else{
+                loader.loading = false
+                botCreate();
+                setTimeout(() =>{
+                    getbot();
+                },500)
+            }            
+        }
+    }).catch((err) => {
         loader.loading = false
-        bot.value.bot_name = resp.bot_name
-        bot.value.after_complete_run_actions = resp.after_complete_run_actions
-        bot.value.action = resp.action
-        emailArray.value = resp.multiple_emails
+        catchResponse(err)
+    })
+}
+
+const botCreate = () => {  
+    bots.create(bot.value).then((resp: any) => {
+        loader.loading = false
+        resetBotValidation()
+        return true;
     }).catch((err) => {
         loader.loading = false
         catchResponse(err)
@@ -84,15 +102,9 @@ const botSave = async () => {
         if (bot.value.after_complete_run_actions == 'action') {
             bot.value.multiple_emails = emailArray.value
         }
-        console.log("bot.value--",bot.value)
-        bots.create(bot.value).then((resp: any) => {
-            loader.loading = false
-            resetBotValidation()
+        if(botCreate()){
             $toast.success('Bot create Successfully', { duration: 5000 })
-        }).catch((err) => {
-            loader.loading = false
-            catchResponse(err)
-        })
+        }
     }
 }
 

@@ -109,7 +109,6 @@ const changeInputType = () => {
 }
 
 const handleBlur =() => {
-  console.log("asdfas--------------------")
   if(props.onBlur === true){
     emit('focusOut')
   }
