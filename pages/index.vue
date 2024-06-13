@@ -4,6 +4,7 @@ import { useLoader } from "@/stores/loader";
 import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
 import { useVuelidate } from "@vuelidate/core";
+import { useAuth } from "@/stores/auth";
 import { required, url, helpers } from "@vuelidate/validators";
 
 definePageMeta({
@@ -32,6 +33,7 @@ const { $toast } = useNuxtApp()
 const shareModal = ref(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null)
+const userState = useAuth();
 const recordedData = ref([])
 const upcomingData = ref([])
 const deleteAction = ref('')
@@ -276,6 +278,14 @@ const viewCall = (index: any) => {
     }
 }
 
+const is_show = (index: any) => {
+  if(recordedData.value[index]?.user_id == userState?.userInfo.id){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 const deleteMeet = (index: any) => {
     confirmationPopUP.value = true
     deleteAction.value = 'recorded'
@@ -424,9 +434,9 @@ const recordedMeeting = computed(() => {
                     @tab-click="handleTabClick" @select="onSelect" :actionName="actionName">
                     <template v-slot:action="{ item, value, index }">
                         <div class="flex justify-around space-x-2">
-                            <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
+                            <i @click="shareCall(index)" v-if="is_show(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
                             <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
-                            <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
+                            <i @click="deleteMeet(index)" v-if="is_show(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                         </div>
                     </template>
                 </Table>

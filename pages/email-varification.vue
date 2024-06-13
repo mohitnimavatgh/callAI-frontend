@@ -5,15 +5,17 @@
         </div> -->
         <div class="flex flex-col px-4 items-center justify-center h-full w-full">
             <div class="w-fit bg-white shadow rounded-xl px-10 py-6 text-center h-fit">
-                <i class="fa-solid text-5xl text-primary-600 fa-envelope-circle-check"></i>
-                <div class="text-primary-500 mt-6 text-center font-wrap text-xl sm:text-2xl">
-                    {{ isVerified ? 'Email Verifiede successfully !' : 'Failed to verify Email' }}
+                <i class="fa-solid text-9xl text-primary-600 fa-envelope-circle-check" v-if="!isVerified && !isVerifiedFail"></i>
+                <i class="fa-solid fa-circle-check text-9xl text-primary-600 " v-if="isVerified"></i>
+                <i class="fa-solid fa-circle-exclamation text-9xl text-primary-600 " v-if="isVerifiedFail"></i>
+                <div v-if="!isVerified && !isVerifiedFail" class="text-primary-500 mt-6 text-center font-wrap text-xl sm:text-2xl">
+                    Email Verification...
                 </div>
-                <div class="text-primary-500 mt-4 text-center font-wrap text-xl sm:text-2xl">
-                    {{ isVerified ? 'Thank you' : 'Please Try again' }}
+                <div v-if="isVerified" class="text-primary-500 mt-6 text-center font-wrap text-xl sm:text-2xl">
+                    Email Verifiede successfully !
                 </div>
-                <div class="text-primary-500 mt-4 text-center font-wrap text-xl sm:text-2xl">
-                    Login
+                <div v-if="isVerifiedFail" class="text-primary-500 mt-4 text-center font-wrap text-xl sm:text-2xl">
+                    Please Try again
                 </div>
             </div>
         </div>
@@ -32,6 +34,7 @@ definePageMeta({
     layout: 'login-layout'
 })
 const isVerified = ref<boolean>(false)
+const isVerifiedFail = ref<boolean>(false)
 
 onMounted(async () => {
   await nextTick()
@@ -42,12 +45,15 @@ const verifyEmail = (tokenId:any) => {
         if(resp.success){
             isVerified.value = true
             $toast.success('Email Varification sucessfully', { duration: 5000 })
+            // setTimeout(() => {
+            //     router.push('/login')
+            // },1500)
         }else{
-            isVerified.value = false
+            isVerifiedFail.value = true
             $toast.error('Email is not Varification..', { duration: 5000 })
         }
     }).catch((error) => {
-        isVerified.value = false
+        isVerifiedFail.value = true
         catchResponse(error)               
     })
 }
