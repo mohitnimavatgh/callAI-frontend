@@ -2,10 +2,13 @@
 import AppTopbar from "./AppTopbar.vue";
 import { useMeetings } from "@/stores/user/meetings";
 import { useFolders } from "@/stores/user/folders";
+import { useLoader } from '@/stores/loader'
 import { useVuelidate } from "@vuelidate/core";
 import { required, url, helpers } from "@vuelidate/validators";
 const meetings = useMeetings()
 const folders = useFolders()
+const loader = useLoader()
+const route = useRoute()
 const { $toast } = useNuxtApp()
 const bot = ref({
     name: '',
@@ -26,7 +29,7 @@ const rules = {
         }
     }
 }
-const v$ = useVuelidate(rules, { bot })
+var v$ = useVuelidate(rules, { bot })
 
 const joinModal = ref(false);
 const menuItems = ref([
@@ -80,17 +83,22 @@ const handleSearch = (value: any) => {
     console.log('Search value:', value);
 };
 const createBot = async () => {
-    const v$ = useVuelidate(rules, { bot })
-    const result = await v$.value.$validate()
+    var url = route.name
+    const result = await v$.value.$validate();
+    if (url?.includes('folders')) {
+        v$ = useVuelidate(rules, { bot })
+    }
     if (result) {
+        loader.loading = true
+        joinModal.value = false
         meetings.create(bot.value).then((resp: any) => {
             resetBotData()
             $toast.success('Create Bot Successfully', { duration: 10000 })
             meetings.upcomingMeeting(upcomingParams)
-            joinModal.value = false
+            loader.loading = false
         }).catch((err) => {
             catchResponse(err)
-            joinModal.value = false
+            loader.loading = false
         })
     }
 }

@@ -313,7 +313,7 @@ onMounted(async () => {
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Configure Your Calendar</h4>
             <p class="text-xs font-normal text-gray-500 mt-0.5">Get started by connecting your calendar account </p>
         </div>
-        <div class="flex flex-col lg:flex-row bg-white mt-3 box bg-white dark:bg-gray-800">
+        <div class="flex flex-col lg:flex-row bg-white dark:border border-gray-500 mt-3 box bg-white dark:bg-gray-800">
             <div class="flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">
                     <img class="w-6 mr-2" src="@/assets/image/google-calendar.png" alt="Google Calendar"/>
@@ -364,44 +364,44 @@ onMounted(async () => {
                 <Button :text="'Cancel'" @click="closeModal()" outline/>
             </div>
         </Modal>
-        <div class="box dark:px-0 w-full mt-2 bg-white dark:bg-gray-800">
-            <div class="flex justify-between p-3 bg-primary-50 mt-2 rounded-t-lg">
-                <span class="font-medium text-gray-500 text-sm">Record All Meetings</span>
+        <div class="box w-full mt-2 bg-white dark:border border-gray-500 dark:bg-gray-800">
+            <div class="flex justify-between p-3 bg-primary-50 dark:bg-gray-600 mt-2 rounded-t-lg">
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record All Meetings</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_all" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                 </label>
             </div>
             <div class="flex justify-between p-3">
-                <span class="font-medium text-gray-500 text-sm">Record meetings where I am the host</span>
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record meetings where I am the host</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_im_host" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                 </label>
             </div>
             <div class="flex justify-between p-3">
-                <span class="font-medium text-gray-500 text-sm">Record meetings where I am not the host</span>
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record meetings where I am not the host</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_im_not_host" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                 </label>
             </div>
             <div class="flex justify-between p-3">
-                <span class="font-medium text-gray-500 text-sm">Record external meetings</span>
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record external meetings</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_external" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                 </label>
             </div>
             <div class="flex justify-between p-3">
-                <span class="font-medium text-gray-500 text-sm">Record internal meetings</span>
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record internal meetings</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_internal" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                 </label>
             </div>
             <div class="flex justify-between p-3">
-                <span class="font-medium text-gray-500 text-sm">Record confirmed-only meetings</span>
+                <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Record confirmed-only meetings</span>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="checkbox" v-model="calendarSettings.record_confirmed" class="sr-only peer">
                     <div class="relative w-8 h-4 bg-gray-200 dark:peer-focus:ring-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:end-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>

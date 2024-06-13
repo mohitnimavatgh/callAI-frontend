@@ -29,56 +29,66 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    buttonText: {
-      type: String,
-      default: "Action"
-    },
-    actions: {
-      type: Array,
-      default: () => []
-    },
-    image: {
-      type: String,
-      default: null
-    }
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+// Define props
+const props = defineProps({
+  buttonText: {
+    type: String,
+    default: "Action"
   },
-  data() {
-    return {
-      dropdownOpen: false,
-      selectedAction: null
-    };
+  actions: {
+    type: Array,
+    default: () => []
   },
-  mounted() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  },
-  beforeUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  },
-  methods: {
-    toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
-    },
-    selectAction(action) {
-      this.selectedAction = action.name;
-      this.$emit('select', action);
-      this.dropdownOpen = false;
-    },
-    close() {
-      event.stopPropagation();
-      this.selectedAction = null;
-      this.$emit('select', null);
-    },
-    handleClickOutside(event) {
-      const dropdown = this.$refs.dropdown;
-      if (dropdown && !dropdown.contains(event.target)) {
-        this.dropdownOpen = false;
-      }
-    }
+  image: {
+    type: String,
+    default: null
+  }
+});
+
+// Define emits
+const emit = defineEmits(['select']);
+
+// Reactive data properties
+const dropdownOpen = ref(false);
+const selectedAction = ref(null);
+
+// Methods
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+const selectAction = (action: any) => {
+  selectedAction.value = action.name;
+  emit('select', action);
+  dropdownOpen.value = false;
+};
+
+const close = (event : any) => {
+  event.stopPropagation();
+  selectedAction.value = null;
+  emit('select', null);
+};
+
+const handleClickOutside = (event : any) => {
+  const dropdown = dropdownRef.value;
+  if (dropdown && !dropdown.contains(event.target)) {
+    dropdownOpen.value = false;
   }
 };
+
+const dropdownRef = ref(null);
+
+// Lifecycle hooks
+onMounted(() => {
+  document.addEventListener('mousedown', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', handleClickOutside);
+});
 </script>
 
 <style>/* Add any custom styles for the dropdown button component here */</style>
