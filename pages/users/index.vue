@@ -109,10 +109,10 @@ const edit = (index: any) => {
 }
 
 const addUpdateUser = async () => {
-    joinModal.value = false
-    loader.loading = true
     const result = await vv$.value.$validate()
     if (result) {
+        joinModal.value = false
+        loader.loading = true
         if (isEdit.value) {
             let data = {
                 name: formData.value.name,

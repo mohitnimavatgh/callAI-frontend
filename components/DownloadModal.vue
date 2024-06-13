@@ -32,52 +32,55 @@
   </div>
 </template>
   
-<script>
-export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    subTitle: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+
+// Define props
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: true
   },
-  methods: {
-    closeModal() {
-      this.$emit('close');
-    },
-    downloadTranscript() {
-      if (this.data.length) {
-        const chatString = this.data;
+  title: {
+    type: String,
+    default: ''
+  },
+  subTitle: {
+    type: String,
+    default: ''
+  },
+  data: {
+    type: String,
+    default: ''
+  }
+});
 
-        // Create a blob from the string
-        const blob = new Blob([chatString], { type: 'text/plain' });
+// Define emits
+const emit = defineEmits(['close']);
 
-        // Create a link element
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'chat.txt';
+const closeModal = () => {
+  emit('close');
+};
 
-        // Append the link to the body
-        document.body.appendChild(link);
+const downloadTranscript = () => {
+  if (props.data.length) {
+    const chatString = props.data;
 
-        // Trigger the download
-        link.click();
+    // Create a blob from the string
+    const blob = new Blob([chatString], { type: 'text/plain' });
 
-        // Clean up
-        document.body.removeChild(link);
-      }
-    }
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'chat.txt';
+
+    // Append the link to the body
+    document.body.appendChild(link);
+
+    // Trigger the download
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
   }
 };
 </script>
