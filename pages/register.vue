@@ -9,6 +9,7 @@ const auth = useAuth()
 const loader = useLoader()
 const { $toast } = useNuxtApp()
 const router = useRouter()
+const loader = useLoader();
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength, sameAs, helpers } from "@vuelidate/validators";
 definePageMeta({
@@ -67,7 +68,7 @@ const handleOnError = () => {
 };
 
 const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
-    console.log("onSuccess--", response)
+    // console.log("onSuccess--", response)
     const responseData = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: {
             Authorization: `Bearer ${response.access_token}`,
@@ -118,10 +119,13 @@ const catchResponse = (err) => {
 
 
 const userSignup = () => {
+    loader.loading = true
     auth.signup(signupData.value).then((resp: any) => {
         $toast.success('Register Successfully', { duration: 10000 })
+        loader.loading = false
         router.push('/login');
     }).catch((error) => {
+        loader.loading = false
         catchResponse(error)
     })
 }
@@ -150,6 +154,7 @@ const signup = async () => {
     <Loader />
     <div class="flex flex-col dark:bg-gray-800 min-h-screen">
         <AuthHeader />
+        <Loader />
         <section class="flex-grow flex items-center overflow-y-auto justify-center h-full w-full bg-white relative dark:bg-gray-800">
             <div class="flex px-3 pb-3 justify-center items-center ">
                 <div class="container mx-auto px-4 lg:px-20 xl:px-44 py-8">
