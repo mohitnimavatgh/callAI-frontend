@@ -54,11 +54,11 @@
             </td>
             <td v-for="(value, key) in item" :key="key" class="px-6 text-nowrap py-4">
               <slot :item="item" :value="value" :index="index" :key="key" :name="key">
-                <FormInput v-if="key == 'title' && (editTitleIndex == index && editName == true)" id="name" class="mt-3" name="name" type="text" v-model="v$.editTitle.$model"
-                                        :errors="v$.editTitle.$errors"
-                  placeholder="Name" />
+                <FormInput v-if="key == 'title' && (editTitleIndex == index && editName == true)" id="name" :onBlur="true"
+                  @focusOut="handleBlur(index, editTitle)" class="mt-3" name="name" type="text"
+                  v-model="v$.editTitle.$model" :errors="v$.editTitle.$errors" placeholder="Name" />
                 <div @click="handleEditTitle(index, value)" class="capitalize">
-                  {{ key != 'title' ? value : isEditTitle == false ? value : ''}}
+                  {{ key != 'title' ? value : isEditTitle == false ? value : '' }}
                 </div>
               </slot>
             </td>
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es';
 import { useVuelidate } from "@vuelidate/core";
-import { required, email, helpers } from "@vuelidate/validators";
+import { required } from "@vuelidate/validators";
 const props = defineProps({
   headings: Array,
   data: {
@@ -120,8 +120,8 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['search', 'tab-click', 'select']);
-const editTitle = ref<String>('')
+const emit = defineEmits(['search', 'tab-click', 'select', 'changeTitle']);
+const editTitle = ref<string>('')
 const editTitleIndex = ref<number | null>(-1)
 const isEditTitle = ref<boolean>(false)
 
@@ -130,10 +130,21 @@ const rules = {
 }
 const v$ = useVuelidate(rules, { editTitle })
 
-const handleEditTitle = (index : number, title : string) => {
-  editTitle.value = title
+const handleEditTitle = (index: number, title: string) => {
   isEditTitle.value = true
+  editTitle.value = title
   editTitleIndex.value = index
+}
+
+const handleBlur = (index: number, value: string) => {
+  v$.value.$touch()
+  if (!v$.value.$invalid) {
+    isEditTitle.value = false
+    return emit('changeTitle', index, value)
+  }
+  else {
+    isEditTitle.value = false
+  }
 }
 
 const dropdownOpen = ref(false);

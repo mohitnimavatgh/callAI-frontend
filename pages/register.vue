@@ -9,7 +9,6 @@ const auth = useAuth()
 const loader = useLoader()
 const { $toast } = useNuxtApp()
 const router = useRouter()
-const loader = useLoader();
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength, sameAs, helpers } from "@vuelidate/validators";
 definePageMeta({

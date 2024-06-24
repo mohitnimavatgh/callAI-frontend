@@ -31,6 +31,11 @@ const addQueryParams = (id: any) => {
     router.replace({ query: queryParams });
 }
 
+const updateTitle = (index : number, value: string) => {
+    let history_id = historyData.value.data[index]?.id
+    alert(value)
+}
+
 const viewCall = (index: any, name: string) => {
     let history_id = historyData.value.data[index]?.id
     addQueryParams(history_id);
@@ -93,7 +98,7 @@ const historyPageChange = (page: any) => {
 
 <template>
     <div class="box mt-5 bg-white dark:bg-gray-800">
-        <Table :editName="true" :headings="tableHeadings" :data="historyData.data" :isSearchable="true" title="History"
+        <Table :editName="true" :headings="tableHeadings" :data="historyData.data" :isSearchable="true" @changeTitle="updateTitle" title="History"
             @search="handleSearch">
             <template v-slot:action="{ item, value, index }">
                 <div class="flex justify-start">
