@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useQuickQuestions } from "@/stores/user/quickQuestions";
 import { useChatToCall } from "@/stores/user/chatToCall";
+import { useLoader } from "@/stores/loader";
 import { useRoute } from 'vue-router';
 import { initFlowbite } from "flowbite";
 const route = useRoute();
 const router = useRouter();
 const quickQuestions = useQuickQuestions()
+const loader = useLoader()
 const chatToCall = useChatToCall()
 const { $toast } = useNuxtApp()
 const props = defineProps({
@@ -29,51 +31,54 @@ const chat = ref({
 const detail = ref(null)
 const faqsList = computed(() => {
     detail.value = props.meetingDetail
-    return props.meetingDetail?.faqs 
+    return props.meetingDetail?.faqs
 });
 
 const quickQuestionParams = { page: null, search: '' }
-const chatToCallParams = { meeting_id: meetingId.value, history_id: route.query.history }
+const chatToCallParams = { meeting_id: meetingId.value, history_id: history_id.value }
 
 
-onMounted(async () => { 
+onMounted(async () => {
+    loader.loading = true
     initFlowbite();
-    chatToCall.getChatList = []
-    await nextTick()
+    await nextTick();
     await getChatToCall()
     await getQuickQuestions()
-    setTimeout(()=>{
-        scrollBehavior();  
-    },900)
+    loader.loading = false
 });
 
 watchEffect(() => {
-    const url = route.fullPath; 
-    const urlParams = new URLSearchParams(url.split('?')[1]); 
+    const url = route.fullPath;
+    const urlParams = new URLSearchParams(url.split('?')[1]);
     const historyParam = urlParams.get('history');
-    if(historyParam == null){
-    chatToCall.getChatList = []
+    if (historyParam == null) {
+        chatToCall.getChatList = []
     }
 });
 
-const nextActionsList = computed(() => {   
-    if(props.meetingDetail?.actions){
+const nextActionsList = computed(() => {
+    if (props.meetingDetail?.actions) {
         return JSON.parse(props.meetingDetail?.actions);
-    }else{
+    } else {
         return [];
-    } 
+    }
 });
 
 const scrollBehavior = () => {
     let element = document.getElementById('chatContainer');
-    element.scroll({ top: element.scrollHeight,block: 'end' })
+    element.scroll({ top: element.scrollHeight, block: 'end' })
 }
+
+const chatList = ref(null);
 
 const getQuickQuestions = () => {
     quickQuestions.list(quickQuestionParams)
 }
-const getChatToCall = () => {
-    chatToCall.list(chatToCallParams)
+const getChatToCall = async () => {
+    await chatToCall.list(chatToCallParams).then((res) => {
+        chatList.value = res
+    })
+    scrollBehavior()
 }
 const quickQuestionPageChange = (page: any) => {
     quickQuestionParams.page = page
@@ -81,7 +86,6 @@ const quickQuestionPageChange = (page: any) => {
 };
 
 const quickQuestionLists = computed(() => quickQuestions.allQuickQuestions);
-const chatList = ref(chatToCall.getChatList);
 const chatToCallLists = computed({
     get() {
         return chatList.value;
@@ -123,9 +127,9 @@ const sendMessage = () => {
             history_id.value = chat_id;
             router.push({ query: { history: history_id.value } })
         }
-        setTimeout(async() => {
+        setTimeout(async () => {
             chatTxt.value = resp.data.answer;
-            await stopTyping();                       
+            await stopTyping();
         }, 4000)
         //@ts-ignore
         document.getElementById("question").value = null;
@@ -138,28 +142,28 @@ const sendMessage = () => {
 
 const typeWriter = () => {
     if (writerCount.value < chatTxt.value.length) {
-        chatList.value[chatList.value.length -1].answer += chatTxt.value[writerCount.value++];
+        chatList.value[chatList.value.length - 1].answer += chatTxt.value[writerCount.value++];
         scrollBehavior()
         setTimeout(typeWriter, 10);
-    }else{
+    } else {
         writerCount.value = 0;
         is_typing.value = false;
     }
 }
 
-const startTyping = () =>{    
+const startTyping = () => {
     is_typing.value = true;
-    type.value = "";  
-    setTimeout(()=>{
+    type.value = "";
+    setTimeout(() => {
         scrollBehavior()
-    },400)  
+    }, 400)
     intervalId.value = setInterval(() => {
         type.value += ".";
         if (type.value.length >= 4) {
             type.value = "";
         }
     }, 500);
-    
+
 }
 
 const stopTyping = () => {
@@ -201,13 +205,13 @@ const catchResponse = (err: any) => {
 }
 
 const quickQuestionCall = (item: any) => {
-    if(!is_typing.value){
+    if (!is_typing.value) {
         //@ts-ignore
         chat.value.question = null;
         chat.value.quick_question_id = item.id;
         chat.value.question = item.name;
         addChat()
-    }else{
+    } else {
         return;
     }
 }
@@ -230,13 +234,16 @@ const handleClearChat = () => {
     <div class="mt-5">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="col-span-2 ">
-                <div class="flex flex-col" :class="collapse ? 'fixed top-0 right-0 left-0 bottom-0' : ''">
+                <div class="flex flex-col" :class="collapse ? 'fixed top-0 right-0 left-0 bottom-0 z-50' : ''">
                     <div v-if="chatList?.length" class="h-fit">
                         <CallChatTopBar @collapse="handleCollapse" @clearData="handleClearChat" />
                     </div>
-                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'" class="bg-white dark:bg-gray-700 overflow-hidden flex flex-col">
-                        <div id="chatContainer" ref="chatContainer" class="p-5 h-full overflow-y-scroll">
-                            <CallChatTiles id="chat" :lists="chatToCallLists" :typing="type" />
+                    <div :class="collapse ? 'h-full' : 'h-600 min-h-600'"
+                        class="bg-white dark:bg-gray-700 overflow-hidden flex flex-col">
+                        <div class="p-3 h-full overflow-hidden">
+                            <div id="chatContainer" ref="chatContainer" class="h-full overflow-y-scroll">
+                                <CallChatTiles id="chat" :lists="chatToCallLists" :typing="type" />
+                            </div>
                         </div>
                         <div class="p-4 h-fit">
                             <FormInput size="large" id="question" :onEnterPress="true" v-model="chat.question"
@@ -246,7 +253,8 @@ const handleClearChat = () => {
                 </div>
                 <div v-if="quickQuestionLists?.length" class="mt-5">
                     <label class="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-300">Quick Questions</label>
-                    <div class="rounded-lg bg-white dark:bg-gray-700 p-5 text-gray-600 dark:text-gray-300 text-sm leading-7">
+                    <div
+                        class="rounded-lg bg-white dark:bg-gray-700 p-5 text-gray-600 dark:text-gray-300 text-sm leading-7">
                         <ul class="w-full flex items-center flex-wrap">
                             <li class="me-2 mb-2" v-for="(quickQuestion, index) in quickQuestionLists" :key="index">
                                 <button type="button" @click="quickQuestionCall(quickQuestion)"
@@ -259,10 +267,10 @@ const handleClearChat = () => {
                 </div>
             </div>
             <div>
-                <div class="bg-white dark:bg-gray-600 rounded mb-5">
+                <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-500 rounded shadow-md mb-5">
                     <NextAction :data="nextActionsList" />
                 </div>
-                <div class="bg-white rounded">
+                <div class="bg-white dark:bg-gray-700 rounded">
                     <Accordion :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" />
                 </div>
             </div>

@@ -147,7 +147,7 @@ const resetBotData = () => {
                 <div class="flex flex-wrap justify-between align-items-center">
                     <div class="pr-6">
                         <h4 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Confra</h4>
-                        <p class="mb-3 sm:mb-6 text-sm text-nowrap font-normal text-gray-500 mt-1 dark:text-gray-400">
+                        <p class="mb-3 sm:mb-6 text-sm text-nowrap font-normal text-gray-500 mt-1 dark:text-gray-300">
                             AI-Powered Meeting
                             Recording Simplified</p>
                     </div>

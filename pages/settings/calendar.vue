@@ -310,14 +310,14 @@ onMounted(async () => {
 <template>
     <div class="mt-5">
         <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Configure Your Calendar</h4>
-            <p class="text-xs font-normal text-gray-500 mt-0.5">Get started by connecting your calendar account </p>
+            <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-300">Configure Your Calendar</h4>
+            <p class="text-xs font-normal text-gray-500 dark:text-gray-400 mt-0.5">Get started by connecting your calendar account </p>
         </div>
         <div class="flex flex-col lg:flex-row bg-white dark:border border-gray-500 mt-3 box bg-white dark:bg-gray-800">
             <div class="flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">
                     <img class="w-6 mr-2" src="@/assets/image/google-calendar.png" alt="Google Calendar"/>
-                    <span class="font-medium text-gray-500 text-sm">Google Calendar</span>
+                    <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Google Calendar</span>
                 </div>
                 <div class="flex relative items-center mt-2">
                     <Button :text="'Connect'" outline class="mr-2" v-if="!calendar.google_calendar_connection" :disabled="googleBtnDisabled" @click="openModal('google')" />
@@ -334,7 +334,7 @@ onMounted(async () => {
             <div class="lg:border-l border-gray-300 lg:flex-1 p-5 flex flex-col justify-center items-center">
                 <div class="flex items-center mb-3">
                     <img class="w-6 mr-2" src="@/assets/image/teams-calendar.png" alt="Microsoft Teams Calendar"/>
-                    <span class="font-medium text-gray-500 text-sm">Microsoft Teams Calendar</span>
+                    <span class="font-medium text-gray-500 dark:text-gray-300 text-sm">Microsoft Teams Calendar</span>
                 </div>
                 <div class="flex relative items-center mt-2">
                     <Button :text="'Connect'" outline class="mr-2" :disabled="microsoftBtnDisabled" v-if="!calendar.microsoft_calendar_connection"  @click="openModal('microsoft')" />
@@ -350,7 +350,7 @@ onMounted(async () => {
             </div>
         </div>
         <div>
-            <p class="text-sm font-normal text-gray-500 mt-3">Change Your Calendar Meeting Settings</p>
+            <p class="text-sm font-normal text-gray-500 dark:text-gray-300 mt-3">Change Your Calendar Meeting Settings</p>
         </div>        
         <Modal :title="'Select Folder'" :show="joinModal" @close="closeModal()">
             <div class="modal-content  p-4 md:p-5">           

@@ -21,6 +21,7 @@
         v-model="valueUpdate"
         :class="inputClasses"
         :placeholder="placeholder"
+        :value="value"
         autocomplete="off"
         :disabled="disabled"
         @blur="handleBlur"
@@ -64,7 +65,8 @@ const props = defineProps({
   iconPosition: { type: String, default: 'left' },
   pointer: { type: Boolean, default: true },
   onBlur: { type: Boolean, default: false },
-  onEnterPress: {type: Boolean, default: false}
+  onEnterPress: {type: Boolean, default: false},
+  value : {type : String, default: ""}
 });
 
 // const valueUpdate = ref(props.modelValue);
@@ -94,7 +96,7 @@ const inputClasses = computed(() => [
     "ps-10": props.icon && props.iconPosition == 'left',
     "pe-10 ps-6": props.icon && props.iconPosition == 'right',
   },
-  { "border-red-500 dark:border-red-500": hasError.value },
+  { "border-red-500 dark:border-red-500 focus:border-red-500": hasError.value },
 ]);
 
 const valueUpdate = computed({

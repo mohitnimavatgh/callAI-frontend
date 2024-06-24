@@ -171,7 +171,7 @@ const deleteField = (index : any) => {
     <div class="mt-5">
         <div>
             <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Bot Configuration</h4>
-            <p class="text-xs font-normal text-gray-500 mt-0.5">Change your meeting bot settings</p>
+            <p class="text-xs font-normal text-gray-500 dark:text-gray-400 mt-0.5">Change your meeting bot settings</p>
         </div>
         <div class="p-5 mt-3 dark:p-0 lg:w-1/2 w-full bg-white dark:bg-gray-800 rounded-lg">
             <FormInput id="Bot Name" class="mt-4" label="Bot Name" name="Bot Name" type="text" placeholder="Enter Bot Name"

@@ -10,7 +10,7 @@ const emit = defineEmits(["collapse", 'clearData']);
 const collapse = ref<boolean>(false)
 
 const data = ref<any>({
-    id : route.params.id,
+    id : route.query.history,
     title : ''
 })
 
@@ -23,6 +23,9 @@ const originalTitle = ref(data.value.title)
 
 onMounted(async () => {
     initFlowbite();
+    if(route.query.history){
+        data.value.title = chatToCall.chatTitle
+    }
 });
 
 const copyChat = () => {

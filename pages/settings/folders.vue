@@ -170,7 +170,7 @@ const edit = (data: any) => {
     <div class="flex flex-wrap justify-between">
       <div class="mr-3">
         <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Folders</h4>
-        <p class="text-xs mb-3 text-nowrap font-normal text-gray-500 mt-0.5">Organize and customize your folders</p>
+        <p class="text-xs mb-3 text-nowrap font-normal text-gray-500 dark:text-gray-400 mt-0.5">Organize and customize your folders</p>
       </div>
       <div>
         <Button @click="ShowAddModal = true" frontIcon="fas fa-plus" :text="'Folder'" />
@@ -184,7 +184,7 @@ const edit = (data: any) => {
       <FormInput type="text" icon="fas fa-search" :placeholder="`Search Folders`" v-model="search" @input="handleSearch"
         class="sm:w-56 w-full" />
     </div>
-    <div class="mt-5 flex flex-wrap items-center bg-white dark:border border-gray-500 overflow-hidden dark:bg-gray-800 p-5 py-5 rounded-[20px]">
+    <div class="mt-5 flex flex-wrap items-center bg-white dark:border border-gray-500 dark:bg-gray-800 p-5 py-5 rounded-[20px]">
       <div v-if="foldersLists?.data.length" v-for="folderItem in foldersLists?.data" :key="folderItem"
         class="relative px-2 py-2 w-full sm:w-6/12 lg:w-4/12 xl:w-3/12 bg-white dark:bg-gray-800">
         <div class="flex justify-between border dark:bg-gray-700 border-gray-100 px-3 py-2 rounded-lg items-center dark:border-none">

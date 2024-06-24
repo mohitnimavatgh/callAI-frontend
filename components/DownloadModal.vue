@@ -6,8 +6,8 @@
         <div
           class="flex items-center justify-between border-b border-gray-500 pb-1 md:px-3 rounded-t dark:border-gray-600">
           <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">{{ title }}</h4>
-            <p class="text-xs font-normal text-gray-500 mt-0.5">{{ subTitle }}</p>
+            <h4 class="font-semibold text-gray-500 dark:text-gray-300">{{ title }}</h4>
+            <p class="text-xs font-normal text-gray-500 dark:text-gray-300 mt-0.5">{{ subTitle }}</p>
           </div>
           <button @click="closeModal" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -21,7 +21,7 @@
         </div>
         <div class="p-4">
           <div class="overflow-y-auto max-h-96">
-            <p v-html="data.replace(/\n/g, '<br />')"></p>
+            <p class="text-gray-500 text-sm dark:text-gray-300" v-html="data.replace(/\n/g, '<br />')"></p>
           </div>
         </div>
         <div class="border-t pt-3 md:px-3 border-gray-500">

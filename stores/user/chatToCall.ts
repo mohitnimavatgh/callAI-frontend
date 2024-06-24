@@ -5,9 +5,13 @@ export const useChatToCall = defineStore('chatToCall', {
   state: () => ({
     getChatList: [],
     chatId: null,
+    chatTitle: '',
     getChatHistory: [],
   }),
   actions: {
+    async setChatTitle(name: string) {
+      this.chatTitle = name
+    },
     async create(chatMessage: any) {
       try {
         const response = await apiCreateChatToCall(chatMessage)

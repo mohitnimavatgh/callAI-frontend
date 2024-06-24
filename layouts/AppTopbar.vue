@@ -108,8 +108,10 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import { useAuth } from "@/stores/auth";
+import { useGloble } from '~/stores/globle';
 import { adminAuth } from "@/stores/admin/auth";
 const auth = useAuth()
+const globle = useGloble()
 const adminState = adminAuth()
 const { $toast } = useNuxtApp()
 const usersMenuItems = ref([
@@ -146,7 +148,7 @@ const route = useRoute() as any;
 const currentTheme = ref<any>(null);
 
 const setTheme = (theme: any) => {
-  if (theme === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (theme === 'dark' || (!globle.mode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
@@ -156,12 +158,13 @@ const setTheme = (theme: any) => {
 onMounted(() => {
   
   setActiveMenuItem()
-  currentTheme.value = localStorage.getItem("color-theme");
+  currentTheme.value = globle.mode;
   if (!currentTheme.value) {
-    localStorage.setItem("color-theme", 'light');
-    setTheme('light');
+    globle.theme('light');
+    setTheme('light')
   } else {
-    setTheme(currentTheme.value);
+    globle.theme(currentTheme.value);
+    setTheme(currentTheme.value)
   }
 
   // const currentPath = router.currentRoute.value.path;
@@ -181,9 +184,9 @@ const handleMenuChange = (menuItem: any) => {
 };
 
 const changeTheme = () => {
-  currentTheme.value = localStorage.getItem("color-theme");
+  currentTheme.value = globle.mode;
   const newTheme = currentTheme.value === "dark" ? "light" : "dark";
-  localStorage.setItem("color-theme", newTheme);
+  globle.mode = newTheme;
   setTheme(newTheme);
 };
 

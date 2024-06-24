@@ -3,8 +3,10 @@ import AuthHeader from '@/layouts/AuthHeader'
 import AppFooter from '@/layouts/AppFooter'
 import FacebookBtn from '@/components/Facebook'
 import { useAuth } from "@/stores/auth";
+import { useLoader } from "@/stores/loader";
 import type { useTokenClient, AuthCodeFlowSuccessResponse } from "vue3-google-signin";
 const auth = useAuth()
+const loader = useLoader()
 const { $toast } = useNuxtApp()
 const router = useRouter()
 import { useVuelidate } from "@vuelidate/core";
@@ -145,6 +147,7 @@ const signup = async () => {
 }
 </script>
 <template>
+    <Loader />
     <div class="flex flex-col dark:bg-gray-800 min-h-screen">
         <AuthHeader />
         <section class="flex-grow flex items-center overflow-y-auto justify-center h-full w-full bg-white relative dark:bg-gray-800">

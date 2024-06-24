@@ -205,7 +205,7 @@ const handlePageChange = (page: any) => {
             <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
                 <Table title="Users" :isSearchable="true" :headings="tableHeadings"  @search="searchUser" :data="userList.data">
                     <template v-slot:action="{ item, value, index }">
-                        <div class="flex space-x-2">
+                        <div class="flex justify-start space-x-4">
                             <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
                             <i class="fas fa-eye text-blue-400 cursor-pointer" @click="view(index)"></i>
                             <i @click="deleteUpcomingMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>

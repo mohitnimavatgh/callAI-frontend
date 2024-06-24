@@ -30,6 +30,7 @@ const tableHeadings = ref([
   { title: "Type", value: "access_type" },
   // { title: "Record", value: "record" },
   { title: "Calendar Platform", value: "is_type" },
+  { title: "Status", value: "status" },
   { title: "Date", value: "date" },
   { title: "Time", value: "time" },
   { title: "Meeting Platform", value: "platform" },
@@ -197,9 +198,9 @@ const recordedMeeting = computed(() => {
         :actions="folders?.folders" title="Calls" @search="recordedSearch" :filterTab="tabItems" :actionName="actionName"
         @tab-click="handleTabClick" @select="onSelect">
         <template v-slot:action="{ item, value, index }">
-          <div class="flex space-x-2 justify-around">
+          <div class="flex space-x-4 justify-start">
             <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-            <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+            <i @click="viewCall(index)" :class="recordedMeeting?.data[index].status != 'in_progress' ? 'cursor-pointer' : 'opacity-80'" class="fas fa-eye text-blue-400"></i>
             <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
           </div>
         </template>
@@ -217,7 +218,7 @@ const recordedMeeting = computed(() => {
           </div>
         </div>
         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-          <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder()" />
+          <Button class="mr-2" :text="'Share Meeting'" frontIcon="fas fa-share-nodes" @click="shareFolder()" />
           <Button :text="'Cancel'" @click="shareModal = false" outline />
         </div>
       </Modal>

@@ -30,6 +30,7 @@ const folders = useFolders()
 const router = useRouter()
 const { $toast } = useNuxtApp()
 const shareModal = ref(false)
+const showCalendar = ref<boolean>(false)
 const confirmationPopUP = ref(false)
 const call_meeting_id = ref(null)
 const recordedData = ref([])
@@ -61,6 +62,20 @@ const tableHeadings = ref([
     { title: "Folder", value: "folder" },
     { title: "Action", value: "action" }
 ]);
+
+const recordedTableHeadings = ref([
+    { title: "Name", value: "name" },
+    { title: "Type", value: "access_type" },
+    // { title: "Record", value: "record" },
+    { title: "Calendar Platform", value: "is_type" },
+    { title: "Status", value: "status" },
+    { title: "Date", value: "date" },
+    { title: "Time", value: "time" },
+    { title: "Meeting Platform", value: "platform" },
+    { title: "Folder", value: "folder" },
+    { title: "Action", value: "action" }
+]);
+
 const bot = ref({
     name: '',
     folder_id: '',
@@ -89,7 +104,7 @@ const edit = (index: any) => {
     bot.value.name = data.name
     bot.value.folder_id = data.folder_id
     bot.value.meeting_link = data.meeting_link
-    if(data.is_type == "calendar"){
+    if (data.is_type == "calendar") {
         is_calendar_meeting.value = true
     }
     joinModal.value = true
@@ -269,9 +284,9 @@ const shareCall = (index: any) => {
 }
 
 const viewCall = (index: any) => {
-    if(recordedData.value[index]?.status == 'completed'){
+    if (recordedData.value[index]?.status == 'completed') {
         router.push(`/calls/${recordedData.value[index]?.id}`);
-    }else{
+    } else {
         router.push('/');
     }
 }
@@ -295,7 +310,6 @@ const confirmation = (data: Boolean) => {
     if (data) {
         loader.loading = true
         meetings.delete(call_meeting_id.value).then((resp: any) => {
-            loader.loading = false
             if (deleteAction.value = 'upcoming') {
                 getUpcoming();
             } else {
@@ -329,7 +343,6 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.folders }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
@@ -343,7 +356,6 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.quick_question }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
@@ -356,7 +368,6 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.all_meetings }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
@@ -369,7 +380,6 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.your_meetings }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
@@ -382,7 +392,6 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.teams_meetings }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
@@ -396,36 +405,51 @@ const recordedMeeting = computed(() => {
                     </div>
                     <div class="flex items-center justify-between">
                         <div>Count : <span>{{ dashboard?.failed_meeting }}</span></div>
-                        <i class="fas fa-arrow-right cursor-pointer"></i>
                     </div>
                 </div>
             </nuxt-link>
         </div>
         <div class="w-full my-12 h-full">
             <div class="p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-[20px]">
-                <Table title="Upcoming Meetings " :isSearchable="true" :filterTab="UpcomingTabItems"
-                    :headings="tableHeadings" :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch"
-                    @tab-click="upcomingHndleTabClick">
-                    <template v-slot:action="{ item, value, index }">
-                        <div class="flex space-x-2" >
-                            <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
-                            <i @click="deleteUpcomingMeet(index)" v-if="item.is_type != 'calendar'" class="fas fa-trash text-red-400 cursor-pointer"></i>
-                        </div>
-                    </template>
-                </Table>
-                <Pagination
-                    v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page"
-                    class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total" :currentPage="upcomingParams.page"
-                    :recordsPerPage="upcomingMeeting.per_page" @pageChange="upcomingPageChange" />
+                <div class="flex items-center justify-between">
+                    <div class="text-gray-700 dark:text-gray-300">
+                        Upcoming Meetings
+                    </div>
+                    <div>
+                        <Button :frontIcon="!showCalendar ? 'fa-regular fa-calendar' : 'fa-solid fa-bars'"
+                            @click="showCalendar = !showCalendar" />
+                    </div>
+                </div>
+                <div v-if="!showCalendar">
+                    <Table :isSearchable="true" :filterTab="UpcomingTabItems" :headings="tableHeadings"
+                        :data="upcomingMeeting?.data" :actions="actionList" @search="upcomingSearch"
+                        @tab-click="upcomingHndleTabClick">
+                        <template v-slot:action="{ item, value, index }">
+                            <div class="flex justify-start space-x-4">
+                                <i class="fas fa-pencil text-primary-400 cursor-pointer" @click="edit(index)"></i>
+                                <i @click="deleteUpcomingMeet(index)" v-if="item.is_type != 'calendar'"
+                                    class="fas fa-trash text-red-400 cursor-pointer"></i>
+                            </div>
+                        </template>
+                    </Table>
+                    <Pagination
+                        v-if="upcomingMeeting && upcomingMeeting.total && upcomingMeeting.per_page && upcomingMeeting.total > upcomingMeeting.per_page"
+                        class="mt-4 flex justify-end" :totalRecords="upcomingMeeting.total"
+                        :currentPage="upcomingParams.page" :recordsPerPage="upcomingMeeting.per_page"
+                        @pageChange="upcomingPageChange" />
+                </div>
+                <div v-else class="mt-6">
+                    <ScheduleCelender :event="upcomingData"/>
+                </div>
             </div>
             <div class="p-3 sm:p-5 mt-5 bg-white dark:bg-gray-800 rounded-[20px]">
-                <Table :headings="tableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
+                <Table :headings="recordedTableHeadings" :data="recordedMeeting?.data" :isSearchable="true" :isActionable="true"
                     :actions="folders?.folders" title="Recorded Meetings" @search="recordedSearch" :filterTab="tabItems"
                     @tab-click="handleTabClick" @select="onSelect" :actionName="actionName">
                     <template v-slot:action="{ item, value, index }">
-                        <div class="flex justify-around space-x-2">
+                        <div class="flex justify-start space-x-4">
                             <i @click="shareCall(index)" class="fas fa-share-nodes cursor-pointer text-primary-400"></i>
-                            <i @click="viewCall(index)" class="fas fa-eye text-blue-400 cursor-pointer"></i>
+                            <i @click="viewCall(index)" :class="recordedMeeting?.data[index].status != 'in_progress' ? 'cursor-pointer' : 'opacity-80'" class="fas fa-eye text-blue-400"></i>
                             <i @click="deleteMeet(index)" class="fas fa-trash text-red-400 cursor-pointer"></i>
                         </div>
                     </template>
@@ -439,13 +463,13 @@ const recordedMeeting = computed(() => {
                 @close="closeModal">
                 <div class="modal-content  p-4 md:p-5">
                     <div class="col-span-2">
-                        <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"
+                        <FormSelect label="Select Folder" placeholder="Select Folder" id="Folder" name="folder"
                             v-model="v$.folder.folder_id.$model" :errors="v$.folder.folder_id.$errors"
                             :options="folders?.folders" />
                     </div>
                 </div>
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <Button class="mr-2" :text="'Share Meeintg'" frontIcon="fas fa-share-nodes" @click="shareFolder" />
+                    <Button class="mr-2" :text="'Share Meeting'" frontIcon="fas fa-share-nodes" @click="shareFolder" />
                     <Button :text="'Cancel'" @click="closeModal" outline />
                 </div>
             </Modal>
@@ -454,7 +478,8 @@ const recordedMeeting = computed(() => {
                 <div class="modal-content  p-4 md:p-5">
                     <div class="col-span-2 mb-3">
                         <FormInput id="Name" label="Meeting Name" name="Name" type="text" placeholder="Name"
-                            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors" :disabled="is_calendar_meeting ?? true" />
+                            v-model="vv$.bot.name.$model" :errors="vv$.bot.name.$errors"
+                            :disabled="is_calendar_meeting ?? true" />
                     </div>
                     <div class="col-span-2 mb-3">
                         <FormSelect label="Folder" placeholder="Select Folder" id="Folder" name="folder"

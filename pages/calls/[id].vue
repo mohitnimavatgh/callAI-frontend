@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useMeetings } from "@/stores/user/meetings";
+import { useLoader } from "@/stores/loader";
 definePageMeta({
     layout: 'user',
     middleware: "is-authenticate",
 })
 const meetings = useMeetings()
+const loader = useLoader()
 import { useRoute } from 'vue-router';
 const route = useRoute();
-const selectedTab = ref('Calls')
+const selectedTab = ref('')
 const tabItems = ref([
     { label: 'Calls', icon: 'fas fa-phone' },
     { label: 'Chat To Call', icon: 'fas fa-comment' },
@@ -20,10 +22,15 @@ const tabChanged = (item : any) => {
 
 onMounted(async () => {
     await nextTick()
+    loader.loading = true
+    await getMeetingDetail(route.params.id)
     if(route.query.history){
         selectedTab.value = 'Chat To Call'
     }
-    await getMeetingDetail(route.params.id)
+    else{
+        selectedTab.value = 'Calls'
+    }
+    loader.loading = false
 });
 
 const getMeetingDetail = async (id :any) => {
@@ -38,7 +45,7 @@ const meetingDetail = computed(() => meetings.getMeetingDetail);
 
 </script>
 <template>
-    <div class="my-5">
+    <div class="my-5 dark:px-4">
         <tab-button-group :items="tabItems" @tab-click="tabChanged" :selectedTab="selectedTab" />
         <CallDetail v-if="selectedTab == 'Calls'" :meetingDetail="meetingDetail" />
         <CallChat v-if="selectedTab == 'Chat To Call'" :meetingDetail="meetingDetail" />

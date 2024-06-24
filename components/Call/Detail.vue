@@ -11,6 +11,7 @@ const router = useRouter()
 const detail = ref(null)
 const notes = ref(null);
 const openTranscript = ref<boolean>(false)
+const meetingDetail = computed(() => meetings.getMeetingDetail);
 
 const rules = {
     notes: {
@@ -23,7 +24,7 @@ const v$ = useVuelidate(rules, { notes });
 const faqsList = computed(() => {
     detail.value = props.meetingDetail       
     notes.value = detail.value?.notes
-    return props.meetingDetail?.faqs;    
+    return props.meetingDetail?.faqs;
 });
 
 const nextActionsList = computed(() => {   
@@ -32,10 +33,10 @@ const nextActionsList = computed(() => {
         return JSON.parse(props.meetingDetail?.actions);
     }else{
         return [];
-    } 
+    }
 });
 
-const meetingDateTime = (type) => {
+const meetingDateTime = (type: any) => {
     const specificDate = new Date(detail.value?.meeting_date);
     if(type == 'date'){
         const date = specificDate.getDate();
@@ -50,7 +51,7 @@ const meetingDateTime = (type) => {
     }       
 }
 
-onMounted(async () => { 
+onMounted(async () => {
     router.replace({query: {}})
 })
 
@@ -93,7 +94,7 @@ const saveNote = async () =>{
     }
 }
 
-const formatTimestamp = (timestamp) =>{
+const formatTimestamp = (timestamp: any) =>{
     const date = new Date(timestamp);
     const formatted = new Intl.DateTimeFormat('en-US', {
         day: '2-digit',
@@ -111,7 +112,6 @@ const getDuration = () =>{
     const date1 = new Date(detail.value?.start_time);
     const date2 = new Date(detail.value?.end_time);
     const durationMs = date2 - date1;
-
     const hours = Math.floor(durationMs / 3600000);  
     const minutes = Math.floor((durationMs % 3600000) / 60000);  
     const seconds = Math.floor((durationMs % 60000) / 1000); 
@@ -180,7 +180,7 @@ const catchResponse = (err : any) => {
         </div>
         <div>
             <div class="rounded px-5 py-4 bg-white dark:bg-gray-700 border border-1 border-gray-200 dark:border-gray-500 shadow-md">
-                <label class="block mb-2 text-md font-medium text-gray-800 dark:text-gray-300">Meeintg Detail</label>
+                <label class="block mb-2 font-semibold text-gray-600 dark:text-gray-300">Meeintg Detail</label>
                 <!-- <hr class="bg-primary-500"/> -->
                 <div class="border-t border-primary-500 dark:border-gray-500 w-full"></div>
                 <div class="text-sm dark:text-white mt-5">
@@ -223,10 +223,10 @@ const catchResponse = (err : any) => {
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-600 rounded my-5">
+            <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-500 rounded shadow-md my-5">
                 <NextAction :data="nextActionsList" />
             </div>
-            <div class="bg-white mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
+            <div class="bg-white dark:bg-gray-700 mt-5"><Accordion  :title="`Meeting FAQ's`" :icon="'fas fa-circle-question'" :accordions="faqsList" /></div>
         </div>
       </div>
     </div>

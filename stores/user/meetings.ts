@@ -16,7 +16,7 @@ export const useMeetings = defineStore('meetings', {
     upcoming: null,
     recorded: null,
     getMeetingDetail: null,
-    nextActions: [],
+    nextActions: '',
   }),
   actions: {
     async create(bot: any) {
@@ -68,6 +68,7 @@ export const useMeetings = defineStore('meetings', {
         const response = await apiGetMeetingDetail(id)
         const responseData = response.data;
         if (response.success) {
+          this.nextActions = response?.data?.actions
           this.getMeetingDetail = responseData;
         }
         return responseData;
@@ -115,7 +116,7 @@ export const useMeetings = defineStore('meetings', {
       } catch (error) {
         throw error;
       }
-    }
+    },
   },
   persist: {
     storage: persistedState.localStorage,

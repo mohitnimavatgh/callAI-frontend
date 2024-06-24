@@ -175,13 +175,13 @@ const confirmation = (data: Boolean) => {
   <div class="mt-5">
     <div>
       <h4 class="text-lg font-semibold text-gray-600 dark:text-white">Manage Quick Questions</h4>
-      <p class="text-xs font-normal text-gray-500 mt-0.5">Customize your Quick Questions</p>
+      <p class="text-xs font-normal text-gray-500 dark:text-gray-400 mt-0.5">Customize your Quick Questions</p>
     </div>
     <div class="box dark:p-0 mt-3 lg:w-2/3 w-full bg-white dark:bg-gray-800">
       <FormInput id="Title" class="mt-4" label="Title" name="Title" type="text" placeholder="Enter Title"
         v-model="v$.quickQuestion.name.$model" :errors="v$.quickQuestion.name.$errors" :modelValue="quickQuestion.name" />
       <div class="mt-3">
-        <label class="text-sm font-medium text-gray-500 ">Quick Question Access</label>
+        <label class="text-sm font-medium text-gray-500 dark:text-gray-300">Quick Question Access</label>
         <ul class="grid w-full gap-3 md:grid-cols-2">
           <li v-for="(item, index) in items" :key="index" class="mt-2">
             <FormRadio :id="`radio-${index}`" name="access" :value="item.value"

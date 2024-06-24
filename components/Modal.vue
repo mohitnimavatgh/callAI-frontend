@@ -1,12 +1,12 @@
 <template>
-  <div v-if="show" class="fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center">
+  <div v-if="show" class="fixed top-0 right-0 left-0 bottom-0 z-40 flex justify-center items-center">
     <div class="fixed top-0 right-0 left-0 bottom-0 bg-gray-500 opacity-50"></div>
     <div class="relative p-4 w-full max-w-md max-h-full">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
         <div class="flex items-center justify-between p-4 md:px-5 py-2 border-b rounded-t dark:border-gray-600">
           <div>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-white">{{ title }}</h4>
-            <p class="text-xs font-normal text-gray-500 mt-0.5">{{ subTitle }}</p>
+            <h4 class="font-semibold text-gray-600 dark:text-gray-300">{{ title }}</h4>
+            <p class="text-xs font-normal text-gray-500 dark:text-gray-400 mt-0.5">{{ subTitle }}</p>
           </div>
           <button @click="closeModal" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
