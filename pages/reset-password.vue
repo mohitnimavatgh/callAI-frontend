@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppFooter from '@/layouts/AppFooter'
+import AppFooter from '@/layouts/AppFooter';
 import { useAuth } from "@/stores/auth";
 const auth = useAuth()
 const { $toast } = useNuxtApp()
